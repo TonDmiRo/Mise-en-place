@@ -4,6 +4,8 @@ using System.IO;
 
 namespace Launcher.Model.BuilderForUser {
     internal class JsonUserBuilder : UserBuilder {
+        const string _project = "'s_projects.json";
+        const string _usefulM = "'s_usefulMaterials.json";
         private User user;
         private readonly string username;
         private ISerializer json;
@@ -20,13 +22,13 @@ namespace Launcher.Model.BuilderForUser {
             //дополнительные свойства
         }
         public override void SetProjects() {
-            ObservableCollection<Project> projectsFromFile = json.Deserialize<ObservableCollection<Project>>(username + "'s_projects.json");
+            ObservableCollection<Project> projectsFromFile = json.Deserialize<ObservableCollection<Project>>(username + _project);
             foreach (var item in projectsFromFile) {
                 user.ProjectCollection.AddProject(item);
             }
         }
         public override void SetMaterials() {
-            Dictionary<string, Material> usefulMaterialsFromFile = json.Deserialize<Dictionary<string, Material>>(username + "'s_usefulMaterials.json");
+            Dictionary<string, Material> usefulMaterialsFromFile = json.Deserialize<Dictionary<string, Material>>(username + _usefulM);
             foreach (var item in usefulMaterialsFromFile) {
                 user.UsefulMaterials.Add(item.Value);
             }
@@ -36,17 +38,17 @@ namespace Launcher.Model.BuilderForUser {
         }
 
         private void CheckFiles() {
-            string directory = $"Users//";
+            string directory = "Users//";
             if (!File.Exists($"{directory}{username}.json")) {
                 throw new FileNotFoundException($"{username}.json not found!");
             }
 
-            if (!File.Exists($"{directory}{username}'s_projects.json")) {
-                throw new FileNotFoundException($"{username}'s_projects.json not found!");
+            if (!File.Exists($"{directory}{username}{_project}")) {
+                throw new FileNotFoundException($"{username}{_project} not found!");
             }
 
-            if (!File.Exists($"{directory}{username}'s_usefulMaterials.json")) {
-                throw new FileNotFoundException($"{username}'s_usefulMaterials.json not found!");
+            if (!File.Exists($"{directory}{username}{_usefulM}")) {
+                throw new FileNotFoundException($"{username}{_usefulM} not found!");
             }
 
         }
