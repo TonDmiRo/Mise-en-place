@@ -1,0 +1,88 @@
+﻿<Window x:Class="Launcher.View.FixMaterialPathV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Launcher.View"
+        xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
+        mc:Ignorable="d"
+        Title="FixMaterialPath" Height="360" Width="576">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+            <GradientStop Color="#FFCDF2FD" Offset="0"/>
+            <GradientStop Color="#FF31464B" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid>
+            <StackPanel>
+            <Label 
+             Content="{Binding Path=MaterialTitle, FallbackValue='NotFound'}" ContentStringFormat="Путь к {0}:" 
+                HorizontalAlignment="Center"
+                Width="556"
+                       Margin="10,0,10,0"
+                       FontSize="48"
+                       FontFamily="Calibri"
+                       Foreground="#FF1B6C85"
+                       FontWeight="Bold"/>
+                <Label x:Name="textBox1"
+                         HorizontalContentAlignment="Center"
+                         Margin="20,0,20,0"
+                         FontSize="24"
+                         FontFamily="Calibri"
+                         Foreground="#FF1B6C85"
+                         FontWeight="Bold"
+                         Background="{x:Null}"
+                         BorderBrush="#FF1B6C85"
+                         BorderThickness="4"
+                       
+                       Content="{Binding PathToMaterial, FallbackValue='PathToMaterial'}"
+                       />
+                <StackPanel Orientation="Horizontal"  Margin="20,0,20,0" HorizontalAlignment="Center">
+                    <Button
+                        Margin="20,20,20,0"
+                        Width="170"
+                        Content="Выбрать папку"
+                        FontSize="24"
+                        FontFamily="Calibri"
+                        Foreground="#FF1A596C"
+                        FontWeight="Bold"
+                        Background="{x:Null}"
+                        BorderBrush="#FF1A596C"
+                        BorderThickness="4"
+                        
+                        Command="{Binding GetPath}"
+                        />
+                    <Button
+                        Margin="20,20,20,0"
+                        Width="170"
+                        Content="Выбрать файл"
+                        FontSize="24"
+                        FontFamily="Calibri"
+                        Foreground="#FF1A596C"
+                        FontWeight="Bold"
+                        Background="{x:Null}"
+                        BorderBrush="#FF1A596C"
+                        BorderThickness="4" 
+                        
+                        Command="{Binding GetFile}"
+                        />
+
+                </StackPanel>
+            <Button
+                Margin="120,30,120,30"
+                Height="89"
+                Content="Добавить"
+                FontSize="24"
+                FontFamily="Calibri"
+                Foreground="#FF158AAE"
+                FontWeight="Bold"
+                BorderBrush="#FF1A596C"
+                BorderThickness="4"
+                Background="#33158AAE"
+                
+                Command="{Binding SetMaterialValues}"
+                />
+        </StackPanel>
+    </Grid>
+</Window>
