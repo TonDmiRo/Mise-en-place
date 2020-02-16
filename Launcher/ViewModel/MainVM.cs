@@ -3,63 +3,48 @@ using Launcher.Model.BuilderForUser;
 using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Launcher.ViewModel {
     public class MainVM : BaseVM {
-
+        private string _username;
         public MainVM() {
+            URLCheckVM viewModel = new URLCheckVM();
+            using (URLCheckV window = new URLCheckV(viewModel)) {
+                var result = window.ShowDialog();
+                if (result == true) {
+                    _username = viewModel.URL;
+                }
+            }
+
+            Administrator admin;
+            try {
+                JsonUserBuilder builder = new JsonUserBuilder(_username);
+                admin = new Administrator(builder);
+                admin.Construct();
+                _user = builder.GetUser();
+            }
+            catch (FileNotFoundException e) {
+                MessageBox.Show(e.Message + " Поместите json файлы в папку Users");
+
+                NewUserBuilder newBuilder = new NewUserBuilder(_username);
+                admin = new Administrator(newBuilder);
+                admin.Construct();
+                _user = newBuilder.GetUser();
+            }
+            catch (Exception e) {
+                MessageBox.Show(e.Message);
+            }
+
 
             StartTimer();
-            string username = "Dimka";
-            ///CheckFiles(username);// включение проверки или создание нового пользователя
-            ///
 
-            // _projectVM = new ProjectVM(StartButton_Click);// передаем повара
-            /// 
             _projectVM = new ProjectVM(Receiver);
             CurrentPage = new ProjectV(_projectVM);
-
-            if (true) {
-                JsonUserBuilder builder = new JsonUserBuilder(username);
-                Administrator admin = new Administrator(builder);
-                try {
-                    admin.Construct();
-                }
-                catch (Exception e) {
-                    MessageBox.Show(e.Message);
-
-                }
-
-                _user = builder.GetUser();
-                Projects = _user.ProjectCollection.Projects;
-            }
-            else {
-                MessageBoxResult result = MessageBox.Show("Пользователь не найден. Создать нового?", "Поиск", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (result == MessageBoxResult.Yes) {
-
-
-                    NewUserBuilder builder = new NewUserBuilder("Newss");
-                    Administrator admin = new Administrator(builder);
-                    admin.Construct();
-                    _user = builder.GetUser();
-
-                    // _user = new User(username);
-
-                }
-                //  Надо закрыть если нет
-            }
-
-
-            // -----------------------------default user
-            //NewUserBuilder builder = new NewUserBuilder("Newss");
-            //Administrator admin = new Administrator(builder);
-            //admin.Construct();
-            //_user = builder.GetUser();
-            //Projects = _user.ProjectCollection.Projects;
-
+            Projects = _user.ProjectCollection.Projects;
         }
 
 
@@ -307,16 +292,16 @@ namespace Launcher.ViewModel {
                     }
                     void OpenUsefulMaterials() {
                         bool oneWasOpen = false;
-                            oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
+                        oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
                         //TODO: проверить если несколько ошибок
                         foreach (var item in _user.UsefulMaterials.Values) {
                             if (item.Exists != true) {
                                 MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
-                            } 
+                            }
                         }
-                        
 
-                          
+
+
 
                         if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
                     }
