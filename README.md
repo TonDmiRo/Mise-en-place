@@ -35,4 +35,4 @@
 
 ## Factory Method
 
-![](https://i.imgur.com/c5HJ5am.png)
+<img src="https://i.imgur.com/c5HJ5am.png" alt="ClassDiagram"  />
