@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 
 namespace Launcher.Model.BuilderForUser {
-    internal class JsonUserBuilder : UserBuilder {
+    internal class JsonUserBuilder:UserBuilder {
         const string _project = "'s_projects.json";
         const string _usefulM = "'s_usefulMaterials.json";
         private User user;

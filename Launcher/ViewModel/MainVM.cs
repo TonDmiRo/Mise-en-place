@@ -22,7 +22,7 @@ namespace Launcher.ViewModel {
 
             Administrator admin;
             try {
-                JsonUserBuilder builder = new JsonUserBuilder(_username);
+                UserBuilder builder = new JsonUserBuilder(_username);
                 admin = new Administrator(builder);
                 admin.Construct();
                 _user = builder.GetUser();
@@ -30,7 +30,7 @@ namespace Launcher.ViewModel {
             catch (FileNotFoundException e) {
                 MessageBox.Show(e.Message + " Поместите json файлы в папку Users");
 
-                NewUserBuilder newBuilder = new NewUserBuilder(_username);
+                UserBuilder newBuilder = new NewUserBuilder(_username);
                 admin = new Administrator(newBuilder);
                 admin.Construct();
                 _user = newBuilder.GetUser();

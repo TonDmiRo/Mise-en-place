@@ -29,4 +29,9 @@
 
 - [ ] Блокировка
 
-  
+# Диаграммы
+
+## Factory Method
+
+<img src="https://i.imgur.com/c5HJ5am.png" alt="ClassDiagram"  />
+
