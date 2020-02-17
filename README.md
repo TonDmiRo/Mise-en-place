@@ -29,13 +29,9 @@
 
 - [ ] Блокировка
 
-  
-<<<<<<< HEAD
-
 # Диаграммы
 
 ## Factory Method
 
 <img src="https://i.imgur.com/c5HJ5am.png" alt="ClassDiagram"  />
-=======
->>>>>>> aeab42e322d23a737cb92ab3dc45451a7c1f2e6f
+
