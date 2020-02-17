@@ -30,3 +30,9 @@
 - [ ] Блокировка
 
   
+
+# Диаграммы
+
+## Factory Method
+
+![](https://i.imgur.com/c5HJ5am.png)
