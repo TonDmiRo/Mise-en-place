@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Launcher.Model {
-    public class CreatorWebMaterial : CreatorMaterial {
+    public class WebMaterialCreator : MaterialCreator {
         protected override Material Create(string title, string path) {
             if (CanCreate(title, path)) {
                 return new WebMaterial(title, path);

@@ -18,7 +18,7 @@ namespace Launcher.Model.BuilderForUser {
         public override void SetProjects() {
             Project newProject = new Project("Первый проект","Первая цель");
 
-            CreatorLocalMaterial creator = new CreatorLocalMaterial();
+            LocalMaterialCreator creator = new LocalMaterialCreator();
             newProject.Add(creator.CreateMaterial("Материал проекта", myDirectory + "\\help.txt"));
 
             newProject.ProjectTasks.Add(new Task("Первая задача"));
@@ -29,7 +29,7 @@ namespace Launcher.Model.BuilderForUser {
 
         public override void SetMaterials() {
 
-            CreatorLocalMaterial creator = new CreatorLocalMaterial();
+            LocalMaterialCreator creator = new LocalMaterialCreator();
             user.UsefulMaterials.Add(creator.CreateMaterial("Полезный материал", myDirectory + "\\help.txt"));
             user.UsefulMaterials.Add(creator.CreateMaterial("Полезный материал1", myDirectory + "\\help.txt"));
             user.UsefulMaterials.Add(creator.CreateMaterial("Полезный материал2", myDirectory + "\\help.txt"));

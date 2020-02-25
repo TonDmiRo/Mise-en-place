@@ -2,7 +2,7 @@
 using System.IO;
 
 namespace Launcher.Model {
-    public abstract class CreatorMaterial {
+    public abstract class MaterialCreator {
         public Material CreateMaterial(string title, string path) {
             if (CanCreate(title, path)) {
                 return Create(title, path);

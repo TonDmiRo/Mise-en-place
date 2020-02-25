@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Launcher.Model {
-    class CreatorLocalMaterial : CreatorMaterial {
+    class LocalMaterialCreator : MaterialCreator {
         protected override Material Create(string title, string path) {
             if (CanCreate(title, path)) {
                 return new LocalMaterial(title, path);

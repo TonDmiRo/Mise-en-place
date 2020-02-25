@@ -64,8 +64,8 @@
     <Compile Include="Infrastructure\Interfaces\ISerializer.cs" />
     <Compile Include="Infrastructure\MyTimer.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
-    <Compile Include="Model\Materials\SpecificCreators\CreatorLocalMaterial.cs" />
-    <Compile Include="Model\Materials\SpecificCreators\CreatorWebMaterial.cs" />
+    <Compile Include="Model\Materials\SpecificCreators\LocalMaterialCreator.cs" />
+    <Compile Include="Model\Materials\SpecificCreators\WebMaterialCreator.cs" />
     <Compile Include="Model\Materials\SpecificMaterials\WebMaterial.cs" />
     <Compile Include="Model\User\Collection\ISaveCollection.cs" />
     <Compile Include="Infrastructure\Serializers\DefaultSerializer.cs" />
@@ -77,7 +77,7 @@
     <Compile Include="ViewModel\MaterialVM\URLCheckVM.cs" />
     <Compile Include="View\Converter\TimeSpanToTimeConverter.cs" />
     <Compile Include="Model\Project\Project.cs" />
-    <Compile Include="Model\Materials\CreatorMaterial.cs" />
+    <Compile Include="Model\Materials\MaterialCreator.cs" />
     <Compile Include="Model\Materials\Material.cs" />
     <Compile Include="Model\User\Collection\UsefulMaterialDictionary.cs" />
     <Compile Include="Model\Project\Task.cs" />
