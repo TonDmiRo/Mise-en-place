@@ -15,8 +15,8 @@ namespace Launcher.Model {
         }
 
         private bool CanCreate(string title, string path) {
+            CheckWhiteSpace(title, path);
             //TODO: реализовать проверка на отклик сайта
-#warning нет проверок
             return true;
         }
     }

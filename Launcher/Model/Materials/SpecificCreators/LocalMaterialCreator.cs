@@ -15,12 +15,7 @@ namespace Launcher.Model {
             throw new ArgumentException("Сannot create material");
         }
         private bool CanCreate(string title, string path) {
-
-            bool titleAndPathNotIsNull = ( !string.IsNullOrWhiteSpace(title) ) && ( !string.IsNullOrWhiteSpace(path) );
-            if (!titleAndPathNotIsNull) {
-                //TODO: эта проверка есть в базовом классе 
-                throw new ArgumentException($"Title:{title} or Path:{path} is null or white space!");
-            }
+            CheckWhiteSpace(title, path);
 
             bool absentInvalidCharacters = ( title + path ).IndexOfAny(Path.GetInvalidPathChars()) == -1;
             if (!absentInvalidCharacters) {
