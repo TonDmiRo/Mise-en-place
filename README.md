@@ -33,5 +33,5 @@
 
 ## Factory Method
 
-<img src="https://i.imgur.com/Gow7Me7.png" alt="ClassDiagram"  />
+<img src="https://i.imgur.com/iJcEVov.png" alt="ClassDiagram"  />
 
