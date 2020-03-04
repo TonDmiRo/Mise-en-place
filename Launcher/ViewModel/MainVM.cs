@@ -3,56 +3,135 @@ using Launcher.Model.BuilderForUser;
 using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Launcher.ViewModel {
     public class MainVM : BaseVM {
-        private string _username;
+        /// <summary>
+        /// Время проведенное в программе
+        /// </summary>
+        public TimeSpan UsageTimeTotal => _user.UsageTimeTotal;
+        /// <summary>
+        /// Позволяет динамически изменять центральную часть программы.
+        /// </summary>
+        public Page CurrentPage {
+            /* Варианты замены:
+             * страница проекта
+             * настройка пользователя
+             * 
+             * Улучшения:
+             * TODO: Реализовать navigatorPage
+             */
+            get => _currentPage;
+            set {
+                _currentPage = value;
+                OnPropertyChanged("CurrentPage");
+            }
+        }
+        // Конструктор без параметров используется только для работы с View
         public MainVM() {
-            URLCheckVM viewModel = new URLCheckVM();
-            using (URLCheckV window = new URLCheckV(viewModel)) {
-                var result = window.ShowDialog();
-                if (result == true) {
-                    _username = viewModel.URL;
-                }
-            }
-
+            // для  <Window.DataContext>
+            // TODO: удалить 
             Administrator admin;
-            try {
-                UserBuilder builder = new JsonUserBuilder(_username);
-                admin = new Administrator(builder);
-                admin.Construct();
-                _user = builder.GetUser();
-            }
-            catch (FileNotFoundException e) {
-                MessageBox.Show(e.Message + " Поместите json файлы в папку Users");
-
-                UserBuilder newBuilder = new NewUserBuilder(_username);
-                admin = new Administrator(newBuilder);
-                admin.Construct();
-                _user = newBuilder.GetUser();
-            }
-            catch (Exception e) {
-                MessageBox.Show(e.Message);
-            }
-
+            NewUserBuilder newUserBuilder = new NewUserBuilder("Test");
+            admin = new Administrator(newUserBuilder);
+            admin.Construct();
+            _user = newUserBuilder.GetUser();
 
             StartTimer();
+            InitializeProjectPage();
 
-            _projectVM = new ProjectVM(Receiver);
-            CurrentPage = new ProjectV(_projectVM);
+            Projects = _user.ProjectCollection.Projects;
+
+        }
+        public MainVM(User user) {
+            _user = user; // model
+
+            StartTimer();
+            InitializeProjectPage();
             Projects = _user.ProjectCollection.Projects;
         }
 
+        #region Timer
+        private DispatcherTimer timer;
+        private void StartTimer() {
+            timer = new DispatcherTimer {
+                //Interval = TimeSpan.FromMinutes(1)
+                Interval = TimeSpan.FromSeconds(60)
+            };
+            timer.Tick += new EventHandler(Tick);
+            timer.Start();
+        }
+        private void Tick(object sender, EventArgs e) {
+            ///может это хороший вариант?
+            /// можно подписаться на tick у пользователя 
+
+            OnPropertyChanged("UsageTimeTotal");
+        }
+        #endregion
+
+        #region Collection
+        /// <summary>
+        /// Основная коллекция. 
+        /// Элементы коллекции являются моделью для ProjectVM.
+        /// </summary>
+        public ReadOnlyObservableCollection<Project> Projects { get; set; }
+        /// <summary>
+        /// Элемент основной коллекции. Передает значение ProjectVM.
+        /// </summary>
+        public Project SelectedProject {
+            get => _projectVM.CurrentProject;
+            set {
+                try {
+                    _projectVM.CurrentProject = value;
+                }
+                catch (Exception e) {
+                    MessageBox.Show(e.Message);
+                }
+            }
+        }
+
+        public int ProjectsCount => Projects.Count;
+        /// <summary>
+        /// Свойство для блокировки ListProjects.
+        /// </summary>
+        public bool ProjectIsCurrentlyChanging => _projectVM.ProjectIsCurrentlyChanging;
+
+
+        public ReadOnlyObservableCollection<Material> UsefulMaterialValues => _user.UsefulMaterials.Values;
+        public int UsefulMaterialsCount => UsefulMaterialValues.Count;
+        #endregion
+
+        #region private
+        private readonly User _user;
+        private ProjectVM _projectVM;
+        private Page _currentPage;
+
+        private void InitializeProjectPage() {
+            _projectVM = new ProjectVM(Receiver);
+            CurrentPage = new ProjectV(_projectVM);
+        }
+        private void InitializeUserSettingsPage() {
+            // TODO: страница настройки
+            /*
+             * сохраняем ProjectV 
+             * открываем настройки
+             * блокируем List
+             * сохраняем изменения
+             * возвращаем ProjectV
+             */
+        }
+        #endregion
 
         #region  Receiver
-        /// Для отдельного класса не хватает только коллекции с которой он будет работать 
-        /// 
-        /// при создании экземпляра должен получить ProjectCollection
-        /// 
+        /*
+         * Заменить на паттерн Command
+         * Для отдельного класса не хватает только коллекции с которой он будет работать 
+         * при создании экземпляра передавать ProjectCollection
+         * =new Receiver(ProjectCollection collection);
+         */
         private void Receiver(object sender, ProjectEventArgs e) {
             switch (e.Command) {
                 case CommandProject.Start:
@@ -72,11 +151,10 @@ namespace Launcher.ViewModel {
             }
         }
 
+        #region Methods for receiver
         private void ChangeProject(object sender) {
             OnPropertyChanged("ProjectIsCurrentlyChanging");
         }
-
-        //Методы для команд
         private void StartProject() {
             //TODO: новая страница с таймером
             ///Должен открываться таймер для этого проекта
@@ -96,7 +174,6 @@ namespace Launcher.ViewModel {
 
             //MessageBox.Show($"Переименование проекта: {e.Project.Name} на новое имя выполнено.");
         }
-
         private void RemoveProject(ProjectEventArgs e) {
             _user.ProjectCollection.RemoveProject(e.Project);
             OnPropertyChanged("ProjectsCount");
@@ -104,92 +181,6 @@ namespace Launcher.ViewModel {
         }
         #endregion
 
-        #region Timer
-        private DispatcherTimer timer;
-        private void StartTimer() {
-            timer = new DispatcherTimer {
-                //Interval = TimeSpan.FromMinutes(1)
-                Interval = TimeSpan.FromSeconds(60)
-            };
-            timer.Tick += new EventHandler(Tick);
-            timer.Start();
-        }
-        private void Tick(object sender, EventArgs e) {
-            //может это хороший вариант?
-
-            OnPropertyChanged("UsageTimeTotal");
-        }
-        #endregion
-
-        #region CheckFile
-        private void CheckFiles(string username) {
-            FilesCheckVM viewModel = new FilesCheckVM(username);
-            using (FilesCheckV window = new FilesCheckV(viewModel)) {
-                var result = window.ShowDialog();
-                if (result == true) {
-
-                }
-            }
-        }
-        #endregion
-
-        #region public prop
-        //Время для таймера
-        public TimeSpan UsageTimeTotal => _user.UsageTimeTotal;
-        //коллекции
-        public ReadOnlyObservableCollection<Project> Projects { get; set; }
-        public int ProjectsCount => Projects.Count;
-        //Блокировка для List
-        public bool ProjectIsCurrentlyChanging => _projectVM.ProjectIsCurrentlyChanging;
-        public ReadOnlyObservableCollection<Material> UsefulMaterialValues => _user.UsefulMaterials.Values;
-
-        public int UsefulMaterialsCount => UsefulMaterialValues.Count;
-
-        //Первая из страниц взаимодействующая с проектом
-        public Page CurrentPage {
-            /// <summary>
-            /// нужно для смены центральной части 
-            /// пока существует только страница проекта
-            /// можно добавить
-            /// настройку программы
-            /// редактирование проекта
-            /// создание проекта
-            /// 
-            /// везде нужна кнопка назад для неё нужен navigatorPage
-            /// </summary>
-            get => _currentPage;
-            set {
-                _currentPage = value;
-                OnPropertyChanged("CurrentPage");
-            }
-        }
-        public Project SelectedProject {
-            get => _projectVM.CurrentProject;
-            set {
-
-                try {
-                    _projectVM.CurrentProject = value;
-                }
-
-                ///насколько оправдан _selectedProject? может его полностью заменить?
-                ///останавливает то что это свойство привязано к SelectedItem 
-
-                catch (Exception e) {
-
-                    MessageBox.Show(e.Message);
-
-                    /// TODO: Не знаю как решить
-                    /// Проблема: визуальная часть не соответствует программной 
-                    /// я блокирую изменение выбранного элемента, но ListBox меняет визуальную часть
-                    /// проверил SelectedValue = null; не работает
-                    /// провери SelectedIndex = -1; не работает 
-                    /// 
-                    /// isEnabled ListBox прировнять к ProjectNameIsCurrentlyChanging
-
-
-                }
-            }
-        }
         #endregion
 
         #region Commands
@@ -333,12 +324,6 @@ namespace Launcher.ViewModel {
         }
         #endregion
 
-        #endregion
-
-        #region private
-        private readonly User _user;
-        private ProjectVM _projectVM;
-        private Page _currentPage;
         #endregion
     }
 }
