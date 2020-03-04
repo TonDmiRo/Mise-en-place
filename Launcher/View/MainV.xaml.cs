@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Launcher.ViewModel;
+using System.Windows;
 namespace Launcher {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -8,8 +9,9 @@ namespace Launcher {
         //private const int standartWidth = 768;
         //private const int standartHeight = 640;
         //private bool standartSize = true;
-        public MainV() {
+        public MainV(MainVM viewModel) {
             InitializeComponent();
+            DataContext = viewModel;
         }
         //private void ChangeSize() {
         //    this.MinWidth = ( standartSize == true ) ? 480 : standartWidth;

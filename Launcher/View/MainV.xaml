@@ -59,11 +59,13 @@
                         </Expander.Header>
                         <Expander.Content>
                             <StackPanel>
+                                <!--Убрал из listbox: IsSynchronizedWithCurrentItem="True"-->
                                 <ListBox Height="220"
+                                    Name="ListProjects"
                                     ItemsSource="{Binding Projects,UpdateSourceTrigger=PropertyChanged}"
                                     SelectedItem="{Binding SelectedProject,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    IsSynchronizedWithCurrentItem ="True"
                                     BorderThickness="0"
+                                      
                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
                                     <ListBox.ItemTemplate>
@@ -143,7 +145,7 @@
                                     </ListBox.ItemTemplate>
                                 </ListBox>
                                 <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                                    
+
                                     <Button 
                                         
                                     x:Name="StartUsefulMaterials" 
@@ -157,9 +159,9 @@
                                                     Stretch="Fill"/>
                                             <TextBlock Text="Start"/>
                                         </StackPanel>
-                                        
+
                                     </Button>
-                                    
+
                                     <Button 
                                     x:Name="AddUsefulMaterial" 
                                     Content="+" 

@@ -98,11 +98,11 @@ namespace Launcher.ViewModel {
                     throw new ArgumentNullException("Вы создали пустой материал!");
                 //break;
                 case MaterialType.Local:
-                    material = new CreatorLocalMaterial().CreateMaterial(MaterialTitle, PathToMaterial);
+                    material = new LocalMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
                 case MaterialType.Web:
                     //TODO: сделать web_button
-                    material = new CreatorWebMaterial().CreateMaterial(MaterialTitle, PathToMaterial);
+                    material = new WebMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
                 default:
                     throw new InvalidOperationException();

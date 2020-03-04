@@ -218,7 +218,7 @@
             Margin="20,0,20,0"
             TextWrapping="Wrap" 
             x:Name="Aim_tb"
-            Text="{Binding Goal, FallbackValue='NotFoundddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd'}"
+            Text="{Binding Goal, FallbackValue='NotFound'}"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             Background="{x:Null}"

@@ -11,8 +11,9 @@ namespace Launcher.View {
     public partial class ProjectV : Page {
         public ProjectV(ProjectVM vm) {
 
-            DataContext = vm;
+           
             InitializeComponent();
+            DataContext = vm;
         }
         private void ToChangeMaterials_Click(object sender, System.Windows.RoutedEventArgs e) {
             bool EditingEnabled = ( sender as ToggleButton ).IsChecked ?? false;
