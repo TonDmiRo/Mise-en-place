@@ -50,7 +50,6 @@ namespace Launcher.Model.BuilderForUser {
             if (!File.Exists($"{directory}{username}{_usefulM}")) {
                 throw new FileNotFoundException($"{username}{_usefulM} not found!");
             }
-
         }
     }
 }
