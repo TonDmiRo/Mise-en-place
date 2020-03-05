@@ -12,10 +12,11 @@
         WindowStartupLocation="CenterScreen"
         MinWidth="768" MinHeight="640"
         WindowStyle="ToolWindow" ResizeMode="NoResize" >
+    <!--
     <Window.DataContext>
         <viewmodel:MainVM/>
-    </Window.DataContext>
-
+  </Window.DataContext>
+-->
     <Window.Resources>
         <local:TimeSpanToTimeConverter x:Key="myTimeConverter" />
     </Window.Resources>
