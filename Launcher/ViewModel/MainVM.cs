@@ -1,4 +1,5 @@
-﻿using Launcher.Model;
+﻿//#define EditMainV
+using Launcher.Model;
 using Launcher.Model.BuilderForUser;
 using Launcher.View;
 using System;
@@ -30,10 +31,11 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged("CurrentPage");
             }
         }
-        // Конструктор без параметров используется только для работы с View
+       
+#if EditMainV
         public MainVM() {
-            // для  <Window.DataContext>
-            // TODO: удалить 
+            // Конструктор без параметров используется только для работы с MainV
+            // TODO: Убрать комментарий <Window.DataContext>
             Administrator admin;
             NewUserBuilder newUserBuilder = new NewUserBuilder("Test");
             admin = new Administrator(newUserBuilder);
@@ -46,6 +48,7 @@ namespace Launcher.ViewModel {
             Projects = _user.ProjectCollection.Projects;
 
         }
+#endif
         public MainVM(User user) {
             _user = user; // model
 
