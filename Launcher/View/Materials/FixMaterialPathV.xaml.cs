@@ -20,7 +20,6 @@ namespace Launcher.View {
     public partial class FixMaterialPathV : Window, IDisposable {
         public FixMaterialPathV(MaterialVM vm) {
             DataContext = vm;
-            vm.ChangeDialogResult += ChangeDialogResultMethod;
             InitializeComponent();
         }
 

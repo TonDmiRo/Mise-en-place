@@ -2,23 +2,14 @@
 using System.Timers;
 
 namespace Launcher.Model {
-    /// <summary>
-    /// Пока
-    /// Увеличивает временной интервал каждый раз когда истекает интервал времени таймера
-    /// 
-    /// Возможно:
-    /// Настраивать запуск и остановку таймера
-    /// Настраивать увелечения и уменьшение значения только это будет не Magnifier
-    /// </summary>
     internal class TimeSpanMagnifier {
-
         /// <summary>
         /// Значение по умолчанию 60000.0
         /// </summary>
         public double MillisecondsForTimer {
             get => _millisecondsForTimer;
             set {
-                if (( 100 < value ) && ( value < System.Int32.MaxValue )) {
+                if (( 100 <= value ) && ( value < System.Int32.MaxValue )) {
                     _millisecondsForTimer = value;
                 }
                 else {
@@ -80,17 +71,6 @@ namespace Launcher.Model {
 
         private Timer _timer;
         private double _millisecondsForTimer;
-
-        
-
-        //TODO: удалить
-        // остановить таймер ~ закрыть программу.
-        private void Start() {
-            _timer.Start();
-        }
-        private void Stop() {
-            _timer.Stop();
-        }
     }
 
     /// <summary>
