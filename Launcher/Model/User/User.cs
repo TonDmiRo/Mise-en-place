@@ -8,8 +8,6 @@ namespace Launcher.Model {
     [JsonObject(MemberSerialization.OptIn)]
     public class User : INotifyPropertyChanged {
         public User() {
-            Name = "BugUser";
-
             UsefulMaterials = new UsefulMaterialDictionary();
             ProjectCollection = new ProjectCollection();
             _launcherLaunchDate = DateTime.Now;
@@ -17,11 +15,12 @@ namespace Launcher.Model {
             UserSerializer = new DefaultSerializer();
         }
         public User(string name) : this() {
-            /// пользовательский конструктор для создании нового пользователя
+            /// конструктор для создании нового пользователя
             Name = name;
             UsageTimeTotal = TimeSpan.Zero;
             ///новый пользователь не вызывает метод SetTimeSpanMagnifier 
             magnifierForUsageTimeTotal = new TimeSpanMagnifier(UsageTimeTotal, ChangedUsageTimeTotal);
+
         }
 
         [JsonProperty]
@@ -37,7 +36,7 @@ namespace Launcher.Model {
         #region Magnifier
         private TimeSpanMagnifier magnifierForUsageTimeTotal;
         private void ChangedUsageTimeTotal(object sender, TimeSpanHasChangedEventArgs e) {
-            UsageTimeTotal = e.IncreasedTS;
+            UsageTimeTotal = e.IncreasedTimeSpan;
         }
         [OnDeserialized]
         private void SetTimeSpanMagnifier(StreamingContext context) {
