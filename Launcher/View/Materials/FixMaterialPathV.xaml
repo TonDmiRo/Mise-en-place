@@ -82,6 +82,8 @@
                 Background="#33158AAE"
                 
                 Command="{Binding SetMaterialValues}"
+                 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}"
                 />
         </StackPanel>
     </Grid>
