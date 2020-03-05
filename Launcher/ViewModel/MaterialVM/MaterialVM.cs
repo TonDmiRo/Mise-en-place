@@ -16,12 +16,10 @@ namespace Launcher.ViewModel {
     }
     public class MaterialVM : BaseVM {
         public MaterialVM() {
-
         }
         public MaterialVM(string title) {
             MaterialTitle = title;
         }
-        public event Action ChangeDialogResult;
         public bool ReadOnlyNewMaterial { get; private set; }
         public string MaterialTitle {
             get => _title;
@@ -41,6 +39,21 @@ namespace Launcher.ViewModel {
                 }
             }
         }
+        public string PathEnteredByUser {
+            get => _pathEnteredByUser;
+            set {
+                _pathEnteredByUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool AutomaticPathEntry {
+            get => _automaticPathEntry;
+            set {
+                _automaticPathEntry = value;
+                OnPropertyChanged("AutomaticPathEntry");
+            }
+        }
 
         public MaterialType MaterialType { get; private set; }
 
@@ -52,14 +65,16 @@ namespace Launcher.ViewModel {
                     setMaterialValues = new RelayCommand<object>(execute, canExecute);
                     void execute(object obj) {
                         ReadOnlyNewMaterial = true;
-                        ChangeDialogResult();// this.DialogResult = true; this.Close();
+                        Window window = (Window)obj;
+                        window.DialogResult = true;
+                        window.Close();
                     }
                     bool canExecute(object obj) {
                         bool isPathAndNameValid = ReadyToCreate();
                         return isPathAndNameValid;
                     }
                     bool ReadyToCreate() {
-                        /// Необходимость локальных переменных
+                        /// Необходимость локальных переменных m_title m_path
                         /// условие проверяется в цикле
                         /// пользователь может изменить одно из свойств в средине проверки
                         string m_title = MaterialTitle;
@@ -70,7 +85,7 @@ namespace Launcher.ViewModel {
 
                         if (titleAndPathNotIsNull && absentInvalidCharacters) {
 
-                            if (MaterialType==MaterialType.Local && Directory.Exists(Path.GetDirectoryName(m_path))) {
+                            if (MaterialType == MaterialType.Local && Directory.Exists(Path.GetDirectoryName(m_path))) {
                                 return true;
                             }
                             if (MaterialType == MaterialType.Web) {
@@ -114,22 +129,25 @@ namespace Launcher.ViewModel {
         public RelayCommand<object> GetPath {
             get {
                 if (getPath == null) {
-                    getPath = new RelayCommand<object>(execute);
+                    getPath = new RelayCommand<object>(execute, canExecute);
                     void execute(object obj) {
                         PathToMaterial = SelectedPath();
 
                     }
                     string SelectedPath() {
-                        WinForms.FolderBrowserDialog folderBrowser = new WinForms.FolderBrowserDialog();
-
-                        WinForms.DialogResult result = folderBrowser.ShowDialog();
-                        if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowser.SelectedPath)) {
-                            MessageBox.Show(folderBrowser.SelectedPath);
-                            MaterialType = MaterialType.Local;
-                            return folderBrowser.SelectedPath;
+                        using (WinForms.FolderBrowserDialog folderBrowser = new WinForms.FolderBrowserDialog()) {
+                            WinForms.DialogResult result = folderBrowser.ShowDialog();
+                            if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowser.SelectedPath)) {
+                                MessageBox.Show(folderBrowser.SelectedPath);
+                                MaterialType = MaterialType.Local;
+                                return folderBrowser.SelectedPath;
+                            }
+                            MaterialType = MaterialType.InvalidType;
+                            return string.Empty;
                         }
-                        MaterialType = MaterialType.InvalidType;
-                        return string.Empty;
+                    }
+                    bool canExecute(object obj) {
+                        return AutomaticPathEntry;
                     }
                     return getPath;
                 }
@@ -142,7 +160,7 @@ namespace Launcher.ViewModel {
         public RelayCommand<object> GetFile {
             get {
                 if (getFile == null) {
-                    getFile = new RelayCommand<object>(execute);
+                    getFile = new RelayCommand<object>(execute, canExecute);
                     void execute(object obj) {
                         PathToMaterial = SelectedFile();
                     }
@@ -156,6 +174,9 @@ namespace Launcher.ViewModel {
                         MaterialType = MaterialType.InvalidType;
                         return string.Empty;
                     }
+                    bool canExecute(object obj) {
+                        return AutomaticPathEntry;
+                    }
                     return getFile;
                 }
                 return getFile;
@@ -163,26 +184,49 @@ namespace Launcher.ViewModel {
         }
 
 
-
-
         private RelayCommand<object> getURL;
         public RelayCommand<object> GetURL {
             get {
                 if (getURL == null) {
-                    getURL = new RelayCommand<object>(execute);
+                    getURL = new RelayCommand<object>(execute, canExecute);
                     void execute(object obj) {
                         SelectedURL();
                     }
-
                     void SelectedURL() {
-                        URLCheckVM viewModel = new URLCheckVM();
-                        using (View.URLCheckV window = new View.URLCheckV(viewModel)) {
-                            var result = window.ShowDialog();
-                            if (result == true) {
-                                PathToMaterial = viewModel.URL;
+                        if (AutomaticPathEntry == true) {
+                            AutomaticPathEntry = false;
+                        }
+                        else {
+                            // Нажатие кнопки Применить
+                            //TODO: Сделать проверку существования сайта
+                            if (true) {
+                                PathToMaterial = PathEnteredByUser;
                                 MaterialType = MaterialType.Web;
+                                AutomaticPathEntry = true;
                             }
+                            else {
+                                MessageBox.Show("404 - Страница не найдена");
+                            }
+                            PathEnteredByUser = String.Empty;
+                        }
+                    }
 
+                    bool canExecute(object obj) {
+                        bool isURLValid = ReadyToCreate();
+                        return isURLValid;
+                    }
+                    bool ReadyToCreate() {
+                        if (AutomaticPathEntry == true) {
+                            return true;
+                        }
+                        else {
+                            string m_title = PathEnteredByUser;
+                            bool URLhNotIsNull = ( !string.IsNullOrWhiteSpace(m_title) );
+                            if (URLhNotIsNull && URLhNotIsNull) {
+
+                                return true;
+                            }
+                            return false;
                         }
                     }
                     return getURL;
@@ -196,5 +240,7 @@ namespace Launcher.ViewModel {
 
         private string _path;
         private string _title;
+        private bool _automaticPathEntry = true;
+        private string _pathEnteredByUser;
     }
 }
