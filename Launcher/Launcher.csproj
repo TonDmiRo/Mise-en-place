@@ -75,7 +75,6 @@
     <Compile Include="ViewModel\ProjectVM\CommandProject.cs" />
     <Compile Include="ViewModel\ProjectVM\RemoveProject.cs" />
     <Compile Include="ViewModel\ProjectVM\ProjectReceiver.cs" />
-    <Compile Include="ViewModel\MaterialVM\URLCheckVM.cs" />
     <Compile Include="View\Converter\TimeSpanToTimeConverter.cs" />
     <Compile Include="Model\Project\Project.cs" />
     <Compile Include="Model\Materials\MaterialCreator.cs" />
@@ -92,9 +91,6 @@
     </Compile>
     <Compile Include="View\LoginV.xaml.cs">
       <DependentUpon>LoginV.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\Materials\URLCheckV.xaml.cs">
-      <DependentUpon>URLCheckV.xaml</DependentUpon>
     </Compile>
     <Page Include="View\LoginV.xaml">
       <SubType>Designer</SubType>
@@ -139,10 +135,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\CleanWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\Materials\URLCheckV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
