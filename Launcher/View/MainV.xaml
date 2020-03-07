@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:debug="debug-mode"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
         xmlns:local="clr-namespace:Launcher"
@@ -19,7 +20,7 @@
   <Window.DataContext>
     <viewmodel:MainVM />
   </Window.DataContext>
- -->
+-->
 
   <Window.Resources>
     <local:TimeSpanToTimeConverter x:Key="myTimeConverter" />

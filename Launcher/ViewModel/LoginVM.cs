@@ -110,7 +110,6 @@ namespace Launcher.ViewModel {
             admin.Construct();
             newBuilder.GetUser().SaveUser();
             _usernames.Add(Username);
-            // return newBuilder.GetUser();
         }
 
         private List<string> GetListUsername() {
