@@ -111,12 +111,11 @@ namespace Launcher.ViewModel {
                 case MaterialType.InvalidType:
                     material = null;
                     throw new ArgumentNullException("Вы создали пустой материал!");
-                //break;
+                 // break;
                 case MaterialType.Local:
                     material = new LocalMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
                 case MaterialType.Web:
-                    //TODO: сделать web_button
                     material = new WebMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
                 default:
@@ -194,6 +193,7 @@ namespace Launcher.ViewModel {
                     }
                     void SelectedURL() {
                         if (AutomaticPathEntry == true) {
+                            // "Указать URL"
                             AutomaticPathEntry = false;
                         }
                         else {
