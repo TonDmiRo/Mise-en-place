@@ -1,92 +1,148 @@
 ﻿<Page x:Class="Launcher.View.ProjectV"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Launcher"
       xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
-      mc:Ignorable="d" 
-      d:DesignHeight="576" d:DesignWidth="576"
-      Title="Project" Opacity="0.99">
-    <Page.Background>
-        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-            <GradientStop Color="#FFCDF2FD" Offset="0"/>
-            <GradientStop Color="#FF31464B" Offset="1"/>
-        </LinearGradientBrush>
-    </Page.Background>
+      mc:Ignorable="d"
+      d:DesignHeight="576"
+      d:DesignWidth="576"
+      Title="Project"
+      Opacity="0.99">
+  <Page.Background>
+    <LinearGradientBrush EndPoint="0.5,1"
+                         MappingMode="RelativeToBoundingBox"
+                         StartPoint="0.5,0">
+      <GradientStop Color="#FFCDF2FD"
+                    Offset="0" />
+      <GradientStop Color="#FF31464B"
+                    Offset="1" />
+    </LinearGradientBrush>
+  </Page.Background>
 
-    <Page.Resources>
-        <Style TargetType="DataGrid">
-            <Setter Property="AutoGenerateColumns" Value="False"/>
-            <Setter Property="HeadersVisibility" Value="None"/>
-            <Setter Property="HorizontalGridLinesBrush" Value= "{x:Null}"   />
-            <Setter Property="VerticalGridLinesBrush" Value= "{x:Null}"   />
-            <Setter Property="Background" Value= "{x:Null}"   />
-            <Setter Property="BorderBrush" Value= "{x:Null}"   />
-            <Setter Property="RowBackground" Value= "{x:Null}"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontFamily" Value="Futura Md BT"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-        </Style>
+  <Page.Resources>
 
-        <Style x:Key="Heading3">
-            <Setter Property="Control.FontSize" Value="14"/>
-            <Setter Property="Control.FontFamily" Value="Arial" />
-            <Setter Property="Control.FontWeight" Value="Bold" />
-            <Setter Property="Control.HorizontalAlignment" Value="Left" />
-            <Setter Property="Control.VerticalAlignment" Value="Center" />
-            <Setter Property="Control.Margin" Value="10,0,0,0" />
+    <!--#region baseStyle-->
+    <Style TargetType="{x:Type Control}"
+           x:Key="baseStyle">
+      <Setter Property="FontSize"
+              Value="14" />
+    </Style>
+
+    <Style TargetType="{x:Type Button}"
+           BasedOn="{StaticResource baseStyle}" />
+    <Style TargetType="{x:Type Label}"
+           BasedOn="{StaticResource baseStyle}" />
+    <Style TargetType="{x:Type TextBox}"
+           BasedOn="{StaticResource baseStyle}" />
+    <Style TargetType="{x:Type ListView}"
+           BasedOn="{StaticResource baseStyle}" />
+    <!--#endregion-->
+    
+    <Style TargetType="DataGrid">
+      <Setter Property="AutoGenerateColumns"
+              Value="False" />
+
+      <Setter Property="HeadersVisibility"
+              Value="None" />
+
+      <Setter Property="HorizontalGridLinesBrush"
+              Value="{x:Null}" />
+
+      <Setter Property="VerticalGridLinesBrush"
+              Value="{x:Null}" />
+
+      <Setter Property="Background"
+              Value="{x:Null}" />
+
+      <Setter Property="BorderBrush"
+              Value="{x:Null}" />
+
+      <Setter Property="RowBackground"
+              Value="{x:Null}" />
+
+      <Setter Property="FontSize"
+              Value="14" />
+
+      <Setter Property="FontFamily"
+              Value="Futura Md BT" />
+
+      <Setter Property="VerticalAlignment"
+              Value="Top" />
+    </Style>
+
+    <Style x:Key="Heading3">
+      <Setter Property="Control.FontSize"
+              Value="14" />
+      <Setter Property="Control.FontFamily"
+              Value="Arial" />
+      <Setter Property="Control.FontWeight"
+              Value="Bold" />
+      <Setter Property="Control.HorizontalAlignment"
+              Value="Left" />
+      <Setter Property="Control.VerticalAlignment"
+              Value="Center" />
+      <Setter Property="Control.Margin"
+              Value="10,0,0,0" />
 
 
-        </Style>
+    </Style>
 
-        <Style x:Key="BlockGrid" TargetType="Grid">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="True">
-                    <Setter Property="IsEnabled" Value="False"/>
-                    <Setter Property="Background" Value="#4C7E7777"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+    <Style x:Key="BlockGrid"
+           TargetType="Grid">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                     Value="True">
+          <Setter Property="IsEnabled"
+                  Value="False" />
+          <Setter Property="Background"
+                  Value="#4C7E7777" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
 
 
-        <Style x:Key="VisibleIfChangeProjectNameFalse">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="True">
-                    <Setter Property="Control.Visibility" Value="Collapsed"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="False">
-                    <Setter Property="Control.Visibility" Value="Visible"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-        <Style x:Key="VisibleIfChangeProjectNameTrue">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="True">
-                    <Setter Property="Control.Visibility" Value="Visible"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="False">
-                    <Setter Property="Control.Visibility" Value="Collapsed"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+    <Style x:Key="VisibleIfChangeProjectNameFalse">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                     Value="True">
+          <Setter Property="Control.Visibility"
+                  Value="Collapsed" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                     Value="False">
+          <Setter Property="Control.Visibility"
+                  Value="Visible" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+    <Style x:Key="VisibleIfChangeProjectNameTrue">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                     Value="True">
+          <Setter Property="Control.Visibility"
+                  Value="Visible" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                     Value="False">
+          <Setter Property="Control.Visibility"
+                  Value="Collapsed" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
 
-    </Page.Resources>
-    <Grid IsEnabled="{Binding ProjectIsNotEmpty}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+  </Page.Resources>
+  <Grid IsEnabled="{Binding ProjectIsNotEmpty}">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="80" />
+      <RowDefinition Height="*" />
+    </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                <Label 
-               x:Name="NameProject_lbl"
+    <Grid Grid.Row="0">
+      <StackPanel Orientation="Horizontal"
+                  Margin="0,10,0,0">
+        <Label x:Name="NameProject_lbl"
                Height="70"
                Content="{Binding Name, FallbackValue='NotFound'}"
                HorizontalAlignment="Left"
@@ -97,359 +153,385 @@
                FontFamily="Calibri"
                Foreground="#FF158AAE"
                FontWeight="Bold"
-                Style="{StaticResource VisibleIfChangeProjectNameFalse}"
-               />
-                <TextBox 
-               x:Name="NewNameProject_tb"
-               Height="70"
-               Text="{Binding NewName, Mode=TwoWay,UpdateSourceTrigger = PropertyChanged, FallbackValue='NotFound'}"
-               HorizontalAlignment="Left"
-               Margin="10,0,0,0"
-               VerticalContentAlignment="Center"
-               Background="{x:Null}"
-               FontSize="48"
-               FontFamily="Calibri"
-               Foreground="#FF158AAE" Width="300" TextDecorations="Underline"
-                Style="{StaticResource VisibleIfChangeProjectNameTrue}" FontWeight="Bold"
-                />
+               Style="{StaticResource VisibleIfChangeProjectNameFalse}" />
+        <TextBox x:Name="NewNameProject_tb"
+                 Height="70"
+                 Text="{Binding NewName, Mode=TwoWay,UpdateSourceTrigger = PropertyChanged, FallbackValue='NotFound'}"
+                 HorizontalAlignment="Left"
+                 Margin="10,0,0,0"
+                 VerticalContentAlignment="Center"
+                 Background="{x:Null}"
+                 FontSize="48"
+                 FontFamily="Calibri"
+                 Foreground="#FF158AAE"
+                 Width="300"
+                 TextDecorations="Underline"
+                 Style="{StaticResource VisibleIfChangeProjectNameTrue}"
+                 FontWeight="Bold" />
 
-                <StackPanel 
-                Name="EditingStackPanel"
-                VerticalAlignment="Center"
-                Margin="5,0,0,0">
-                    <StackPanel.Style>
-                        <Style  TargetType="StackPanel">
-                            <Style.Triggers >
-                                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="True">
-                                    <Setter Property="Visibility" Value="Visible"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
-                        Value="False">
-                                    <Setter Property="Visibility" Value="Hidden"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </StackPanel.Style>
+        <StackPanel Name="EditingStackPanel"
+                    VerticalAlignment="Center"
+                    Margin="5,0,0,0">
+          <StackPanel.Style>
+            <Style TargetType="StackPanel">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                             Value="True">
+                  <Setter Property="Visibility"
+                          Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=ChangeProject, Path=IsChecked}"
+                             Value="False">
+                  <Setter Property="Visibility"
+                          Value="Hidden" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </StackPanel.Style>
 
-                    <Button
-                        Height="24"
-                        Background="{x:Null}"
-                        Margin="0,0,0,5"  
-                        Content="Переименовать проект"
-                        Style="{StaticResource VisibleIfChangeProjectNameTrue}"
-                        Command="{Binding RenameProject}"
-                    />
-                    <Button
-                        Margin="0,0,0,0"
-                        Background="{x:Null}"
-                        Command="{Binding RemoveProject}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image   
-                                Width="24" Height="24"
-                                Source="/Launcher;component/View/Images/delete.png"
-                                Stretch="Fill"/>
-                            <Label Content="Удалить проект"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
+          <Button Height="24"
+                  Background="{x:Null}"
+                  Margin="0,0,0,5"
+                  Content="Переименовать проект"
+                  Style="{StaticResource VisibleIfChangeProjectNameTrue}"
+                  Command="{Binding RenameProject}" />
+          <Button Margin="0,0,0,0"
+                  Background="{x:Null}"
+                  Command="{Binding RemoveProject}">
+            <StackPanel Orientation="Horizontal">
+              <Image Width="24"
+                     Height="24"
+                     Source="/Launcher;component/View/Images/delete.png"
+                     Stretch="Fill" />
+              <Label Content="Удалить проект" />
             </StackPanel>
-            <ToggleButton 
-                Name="ChangeProject"
-                Width="24" Height="24"
-                HorizontalAlignment="Right" VerticalAlignment="Center"
-                Margin="0,0,5,0"
-                IsChecked="{Binding ProjectIsCurrentlyChanging}"
-                Background="{x:Null}" Foreground="{x:Null}"
-                BorderThickness="0"
-                Command="{Binding ChangeProject}">
-                <Image 
-                    Source="/Launcher;component/View/Images/edit.png"
-                    Stretch="Fill"/>
-            </ToggleButton>
-        </Grid>
-        
-        
-        
-        <Grid Grid.Row="1" Style="{StaticResource BlockGrid}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="32"/>
-                <RowDefinition Height="60"/>
-                <RowDefinition Height="140"/>
-                <RowDefinition Height="120*"/>
-            </Grid.RowDefinitions>
-
-            <Grid Grid.Row="0" >
-                <Border BorderBrush="#FF1589AC" BorderThickness="0,1,0,1">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition   Width="80"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <Grid Grid.Column="0">
-                            <Button  x:Name="startButton" Content="Start" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Width="60" Height="25" FontSize="14"
-                             Command="{Binding LauncherTheProject}"/>
-                        </Grid>
-                        <Grid Grid.Column="1">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="14"/>
-                                <RowDefinition Height="14"/>
-
-                            </Grid.RowDefinitions>
-                            <Grid Grid.Row="0">
-                                <StackPanel Orientation="Horizontal" Margin="2,0,0,0">
-                                    <TextBlock Text="YOU STUDIED: " FontWeight="Bold" FontFamily="Arial"  VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding TimeSpentOnProject,FallbackValue='0h'}" FontWeight="Bold" FontFamily="Arial"  VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="NEXT LESSON: " FontWeight="Bold" FontFamily="Arial"  VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding NextLesson,FallbackValue='NOW'}" FontWeight="Bold" FontFamily="Arial"  VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-
-                    </Grid>
-                </Border>
-            </Grid>
-            <TextBox Grid.Row="1"
-            Margin="20,0,20,0"
-            TextWrapping="Wrap" 
-            x:Name="Aim_tb"
-            Text="{Binding Goal, FallbackValue='NotFound'}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Background="{x:Null}"
-            FontSize="18"
-            FontFamily="Futura Bk BT"
-            Foreground="#FF158AAE"
-            FontWeight="Bold" BorderBrush="{x:Null}"/>
-            <Grid Grid.Row="2"
-              VerticalAlignment="Top">
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0">
-                    <TextBlock 
-                    Text="Materials:"
-                    Style="{StaticResource Heading3}"/>
-
-                    <ToggleButton Name="ChangeMaterialsTB"
-                    Command=""
-                    Width="24" Height="24"
-                    HorizontalAlignment="Right" VerticalAlignment="Center"
+          </Button>
+        </StackPanel>
+      </StackPanel>
+      <ToggleButton Name="ChangeProject"
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
                     Margin="0,0,5,0"
-                    Click="ToChangeMaterials_Click"
-                    Background="{x:Null}" Foreground="{x:Null}"
-                    BorderThickness="0">
-                        <Image 
-                        Source="/Launcher;component/View/Images/edit.png"
-                        Stretch="Fill"/>
-                    </ToggleButton>
-                </Grid>
-
-                <DataGrid Grid.Row="1"
-                      x:Name="ProjectMaterials_DG"
-                      ItemsSource="{Binding ProjectMaterials}"
-                      HorizontalScrollBarVisibility="Hidden">
-                    <DataGrid.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel 
-                            MaxWidth="560"
-                            Orientation="Horizontal"
-                            IsItemsHost="True"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Left"/>
-                        </ItemsPanelTemplate>
-                    </DataGrid.ItemsPanel>
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn
-                        Width="146">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}" 
-                                              
-                                      VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding Path=MaterialTitle}" 
-                                                   MinWidth="130" MaxWidth="130"
-                                       />
-                                    </CheckBox>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn 
-                        x:Name="removeProjectMaterial_column"
-                        Width="34"
-                        Visibility="Hidden">
-                            <DataGridTemplateColumn.CellTemplate >
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" >
-                                        <Button 
-                               Command="{Binding ElementName=ProjectMaterials_DG,
-                               Path=DataContext.FixMaterial}" 
-                               CommandParameter="{Binding }"
-                               Width="16" Height="16" 
-                               BorderBrush="{x:Null}" 
-                               Foreground="{x:Null}" 
-                               Background="Transparent" >
-                                            <Image 
-                                        Source="/Launcher;component/View/Images/edit.png"
-                                        Stretch="Fill"/>
-                                        </Button>
-                                        <Button 
-                               Command="{Binding ElementName=ProjectMaterials_DG,
-                               Path=DataContext.RemoveProjectMaterial}" 
-                               CommandParameter="{Binding }"
-                               Width="16" Height="16" 
-                               BorderBrush="{x:Null}" 
-                               Foreground="{x:Null}" 
-                               Background="Transparent" >
-                                            <Image 
-                                        Source="/Launcher;component/View/Images/delete.png"
-                                        Stretch="Fill"/>
-                                        </Button>
-
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Exists,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Value="false">
-                                    <Setter Property="Background" Value="#FFF58787"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Exists,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}" Value="true">
-                                    <Setter Property="Background" Value="{x:Null}"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
-                </DataGrid>
-
-                <StackPanel Grid.Row="2"
-                Name="panelForAddMaterials"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal"
-                Visibility="Hidden"
-                        >
-
-                    <Button Name="AddNewMaterial"
-                        Margin="0,0,0,0"
-                        Width="50" Height="30" 
-                        Background="{x:Null}"
-                        BorderBrush="#FF34A3C8" BorderThickness="2"
-                        Command="{Binding AddMaterial}">
-
-                        <TextBlock Text="New" FontSize="16" FontWeight="Bold" TextAlignment="Center" 
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                    </Button>
-
-                   
-                </StackPanel>
-
-            </Grid>
-            <Grid Grid.Row="3" 
-              VerticalAlignment="Top">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="20"/>
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0">
-                    <TextBlock 
-                    Text="Tasks:"
-                    Style="{StaticResource Heading3}"/>
-
-                    <ToggleButton Name="ChangeTasksTB"
-                    Width="24" Height="24"
-                    HorizontalAlignment="Right" VerticalAlignment="Center"
-                    Margin="0,0,5,0"
-                    Click="ToChangeTasks_Click"
-                    Background="{x:Null}" Foreground="{x:Null}"
-                    BorderThickness="0">
-                        <Image 
-                        Source="/Launcher;component/View/Images/edit.png"
-                        Stretch="Fill"/>
-                    </ToggleButton>
-                </Grid>
-
-                <DataGrid Grid.Row="1"
-                      Name="Task_DG"
-                      ItemsSource="{Binding ProjectTasks}">
-
-                    <DataGrid.Columns>
-
-
-
-                        <DataGridCheckBoxColumn 
-                        Binding="{Binding TaskStatus}"
-                        Width="30"
-                        SortDirection="Ascending" CanUserResize="False"/>
-
-                        <DataGridTextColumn  
-                        x:Name="NameTask_colum"
-                        IsReadOnly="True"
-                        Binding="{Binding TaskName}"
-                        Width="105*"/>
-                        <DataGridTextColumn  
-                        IsReadOnly="True"
-                        Binding="{Binding DateOfCreation,StringFormat=\{0:dd.MM.yy\}}"
-                        Width="80"/>
-
-                        <DataGridTemplateColumn 
-                        x:Name="deleteTask_column"
-                        Width="32"
-                        Visibility="Hidden">
-                            <DataGridTemplateColumn.CellTemplate >
-                                <DataTemplate>
-                                    <Button 
-                                    Command="Delete" 
-                                    Width="16" Height="16" 
-                                    BorderBrush="{x:Null}" 
-                                    Foreground="{x:Null}" 
-                                    Background="Transparent" >
-                                        <Image 
-                                        Source="/Launcher;component/View/Images/delete.png"
-                                        Stretch="Fill"/>
-                                    </Button>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-
-
-                </DataGrid>
-
-                <StackPanel Grid.Row="2"
-                        Name ="panelForAddTasks" 
-                        Visibility="Hidden"
-                        HorizontalAlignment="Center"
-                        Orientation="Horizontal">
-                    <Button
-                    
-                    Width="40" Height="20"
+                    IsChecked="{Binding ProjectIsCurrentlyChanging}"
                     Background="{x:Null}"
-                    BorderBrush="#FF34A3C8"
-                    BorderThickness="2"
-                    Command="{Binding AddTask}">
-                        <TextBlock Text="+" FontSize="14" FontWeight="Bold" TextAlignment="Center" 
-                               HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Button>
+                    Foreground="{x:Null}"
+                    BorderThickness="0"
+                    Command="{Binding ChangeProject}">
+        <Image Source="/Launcher;component/View/Images/edit.png"
+               Stretch="Fill" />
+      </ToggleButton>
+    </Grid>
+
+
+
+    <Grid Grid.Row="1"
+          Style="{StaticResource BlockGrid}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="32" />
+        <RowDefinition Height="60" />
+        <RowDefinition Height="140" />
+        <RowDefinition Height="120*" />
+      </Grid.RowDefinitions>
+
+      <Grid Grid.Row="0">
+        <Border BorderBrush="#FF1589AC"
+                BorderThickness="0,1,0,1">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="80" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+              <Button x:Name="startButton"
+                      Content="Start"
+                      HorizontalAlignment="Left"
+                      Margin="10,0,0,0"
+                      VerticalAlignment="Center"
+                      Width="60"
+                      Height="25"
+                      FontSize="14"
+                      Command="{Binding LauncherTheProject}" />
+            </Grid>
+            <Grid Grid.Column="1">
+              <Grid.RowDefinitions>
+                <RowDefinition Height="14" />
+                <RowDefinition Height="14" />
+
+              </Grid.RowDefinitions>
+              <Grid Grid.Row="0">
+                <StackPanel Orientation="Horizontal"
+                            Margin="2,0,0,0">
+                  <TextBlock Text="YOU STUDIED: "
+                             FontWeight="Bold"
+                             FontFamily="Arial"
+                             VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding TimeSpentOnProject,FallbackValue='0h'}"
+                             FontWeight="Bold"
+                             FontFamily="Arial"
+                             VerticalAlignment="Center" />
                 </StackPanel>
+              </Grid>
+              <Grid Grid.Row="1">
+                <StackPanel Orientation="Horizontal">
+                  <TextBlock Text="NEXT LESSON: "
+                             FontWeight="Bold"
+                             FontFamily="Arial"
+                             VerticalAlignment="Center" />
+                  <TextBlock Text="{Binding NextLesson,FallbackValue='NOW'}"
+                             FontWeight="Bold"
+                             FontFamily="Arial"
+                             VerticalAlignment="Center" />
+                </StackPanel>
+              </Grid>
             </Grid>
 
+          </Grid>
+        </Border>
+      </Grid>
+      <TextBox Grid.Row="1"
+               Margin="20,0,20,0"
+               TextWrapping="Wrap"
+               x:Name="Aim_tb"
+               Text="{Binding Goal, FallbackValue='NotFound'}"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Background="{x:Null}"
+               FontSize="18"
+               FontFamily="Futura Bk BT"
+               Foreground="#FF158AAE"
+               FontWeight="Bold"
+               BorderBrush="{x:Null}" />
+      <Grid Grid.Row="2"
+            VerticalAlignment="Top">
+
+        <Grid.RowDefinitions>
+          <RowDefinition Height="30" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+          <TextBlock Text="Materials:"
+                     Style="{StaticResource Heading3}" />
+
+          <ToggleButton Name="ChangeMaterialsTB"
+                        Command=""
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,5,0"
+                        Click="ToChangeMaterials_Click"
+                        Background="{x:Null}"
+                        Foreground="{x:Null}"
+                        BorderThickness="0">
+            <Image Source="/Launcher;component/View/Images/edit.png"
+                   Stretch="Fill" />
+          </ToggleButton>
         </Grid>
+
+        <DataGrid Grid.Row="1"
+                  x:Name="ProjectMaterials_DG"
+                  ItemsSource="{Binding ProjectMaterials}"
+                  HorizontalScrollBarVisibility="Hidden">
+          <DataGrid.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel MaxWidth="560"
+                         Orientation="Horizontal"
+                         IsItemsHost="True"
+                         VerticalAlignment="Top"
+                         HorizontalAlignment="Left" />
+            </ItemsPanelTemplate>
+          </DataGrid.ItemsPanel>
+          <DataGrid.Columns>
+            <DataGridTemplateColumn Width="146">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
+                            VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Path=MaterialTitle}"
+                               MinWidth="130"
+                               MaxWidth="130" />
+                  </CheckBox>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+            <DataGridTemplateColumn x:Name="removeProjectMaterial_column"
+                                    Width="34"
+                                    Visibility="Hidden">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <StackPanel Orientation="Horizontal">
+                    <Button Command="{Binding ElementName=ProjectMaterials_DG,
+                               Path=DataContext.FixMaterial}"
+                            CommandParameter="{Binding }"
+                            Width="16"
+                            Height="16"
+                            BorderBrush="{x:Null}"
+                            Foreground="{x:Null}"
+                            Background="Transparent">
+                      <Image Source="/Launcher;component/View/Images/edit.png"
+                             Stretch="Fill" />
+                    </Button>
+                    <Button Command="{Binding ElementName=ProjectMaterials_DG,
+                               Path=DataContext.RemoveProjectMaterial}"
+                            CommandParameter="{Binding }"
+                            Width="16"
+                            Height="16"
+                            BorderBrush="{x:Null}"
+                            Foreground="{x:Null}"
+                            Background="Transparent">
+                      <Image Source="/Launcher;component/View/Images/delete.png"
+                             Stretch="Fill" />
+                    </Button>
+
+                  </StackPanel>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+          </DataGrid.Columns>
+
+          <DataGrid.RowStyle>
+            <Style TargetType="DataGridRow">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding Exists,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                             Value="false">
+                  <Setter Property="Background"
+                          Value="#FFF58787" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Exists,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
+                             Value="true">
+                  <Setter Property="Background"
+                          Value="{x:Null}" />
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </DataGrid.RowStyle>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2"
+                    Name="panelForAddMaterials"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal"
+                    Visibility="Hidden">
+
+          <Button Name="AddNewMaterial"
+                  Margin="0,0,0,0"
+                  Width="50"
+                  Height="30"
+                  Background="{x:Null}"
+                  BorderBrush="#FF34A3C8"
+                  BorderThickness="2"
+                  Command="{Binding AddMaterial}">
+
+            <TextBlock Text="New"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+
+          </Button>
+
+
+        </StackPanel>
+
+      </Grid>
+      <Grid Grid.Row="3"
+            VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="30" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="20" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+          <TextBlock Text="Tasks:"
+                     Style="{StaticResource Heading3}" />
+
+          <ToggleButton Name="ChangeTasksTB"
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="0,0,5,0"
+                        Click="ToChangeTasks_Click"
+                        Background="{x:Null}"
+                        Foreground="{x:Null}"
+                        BorderThickness="0">
+            <Image Source="/Launcher;component/View/Images/edit.png"
+                   Stretch="Fill" />
+          </ToggleButton>
+        </Grid>
+
+        <DataGrid Grid.Row="1"
+                  Name="Task_DG"
+                  ItemsSource="{Binding ProjectTasks}">
+
+          <DataGrid.Columns>
+
+
+
+            <DataGridCheckBoxColumn Binding="{Binding TaskStatus}"
+                                    Width="30"
+                                    SortDirection="Ascending"
+                                    CanUserResize="False" />
+
+            <DataGridTextColumn x:Name="NameTask_colum"
+                                IsReadOnly="True"
+                                Binding="{Binding TaskName}"
+                                Width="105*" />
+            <DataGridTextColumn IsReadOnly="True"
+                                Binding="{Binding DateOfCreation,StringFormat=\{0:dd.MM.yy\}}"
+                                Width="80" />
+
+            <DataGridTemplateColumn x:Name="deleteTask_column"
+                                    Width="32"
+                                    Visibility="Hidden">
+              <DataGridTemplateColumn.CellTemplate>
+                <DataTemplate>
+                  <Button Command="Delete"
+                          Width="16"
+                          Height="16"
+                          BorderBrush="{x:Null}"
+                          Foreground="{x:Null}"
+                          Background="Transparent">
+                    <Image Source="/Launcher;component/View/Images/delete.png"
+                           Stretch="Fill" />
+                  </Button>
+                </DataTemplate>
+              </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+          </DataGrid.Columns>
+
+
+        </DataGrid>
+
+        <StackPanel Grid.Row="2"
+                    Name="panelForAddTasks"
+                    Visibility="Hidden"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+          <Button Width="40"
+                  Height="20"
+                  Background="{x:Null}"
+                  BorderBrush="#FF34A3C8"
+                  BorderThickness="2"
+                  Command="{Binding AddTask}">
+            <TextBlock Text="+"
+                       FontSize="14"
+                       FontWeight="Bold"
+                       TextAlignment="Center"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center" />
+          </Button>
+        </StackPanel>
+      </Grid>
 
     </Grid>
+
+  </Grid>
 </Page>

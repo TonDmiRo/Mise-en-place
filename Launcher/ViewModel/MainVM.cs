@@ -37,7 +37,7 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged("CurrentPage");
             }
         }
-       
+
 #if EditMainV
         public MainVM() {
             // Конструктор без параметров используется только для работы с MainV
