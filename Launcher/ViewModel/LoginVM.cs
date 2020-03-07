@@ -4,12 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Configuration;
 
 namespace Launcher.ViewModel {
     internal class LoginVM : BaseVM {
-        private readonly List<string> _usernames;
+        
+        
         public string Username { get; set; }
         public LoginVM() {
+            pathToUsers= ConfigurationManager.AppSettings["FilesPath"];
+            afterUsernameForProjects = ConfigurationManager.AppSettings["ProjectsJson"];
+            afterUsernameForUsefulM = ConfigurationManager.AppSettings["UsefulMaterialsJson"];
+
             _usernames = GetListUsername();
         }
 
@@ -108,40 +114,55 @@ namespace Launcher.ViewModel {
         }
 
         private List<string> GetListUsername() {
-            DirectoryInfo Users = new DirectoryInfo("Users//");
-            FileInfo[] usersFiles = Users.GetFiles();
+            //TODO: создать модель для проверки файлов
             List<string> usernames = new List<string>();
+            if (CheckDirectory()) {
+                DirectoryInfo Users = new DirectoryInfo(pathToUsers);
+                FileInfo[] usersFiles = Users.GetFiles();
+                foreach (var file in usersFiles) {
+                    string fileName = file.Name;
 
-            foreach (var file in usersFiles) {
-                string fileName = file.Name;
-
-                bool fileOwnedByUser = false;
-                string username = String.Empty;
-
-                int indexOfSubstring = fileName.IndexOf("'s_projects.json");
-                if (indexOfSubstring > 0) {
-                    fileOwnedByUser = true;
-                    username = fileName.Remove(indexOfSubstring);
-                }
-                else {
-                    indexOfSubstring = fileName.IndexOf("'s_usefulMaterials.json");
+                    bool fileOwnedByUser = false;
+                    string username = String.Empty;
+                    int indexOfSubstring = fileName.IndexOf(afterUsernameForProjects);
                     if (indexOfSubstring > 0) {
                         fileOwnedByUser = true;
                         username = fileName.Remove(indexOfSubstring);
                     }
-                }
+                    else {
+                        indexOfSubstring = fileName.IndexOf(afterUsernameForUsefulM);
+                        if (indexOfSubstring > 0) {
+                            fileOwnedByUser = true;
+                            username = fileName.Remove(indexOfSubstring);
+                        }
+                    }
 
-                if (fileOwnedByUser == false) {
-                    username = Path.GetFileNameWithoutExtension(fileName);
-                }
+                    if (fileOwnedByUser == false) {
+                        username = Path.GetFileNameWithoutExtension(fileName);
+                    }
 
-                if (( username != String.Empty ) && ( !usernames.Contains(username) )) {
-                    usernames.Add(username);
-                }
+                    if (( username != String.Empty ) && ( !usernames.Contains(username) )) {
+                        usernames.Add(username);
+                    }
 
+                } 
             }
-
             return usernames;
         }
+        private bool CheckDirectory() {
+            if (Directory.Exists(pathToUsers)) {
+                return true;
+            }
+            else {
+                Directory.CreateDirectory(pathToUsers);
+                return false;
+            }
+        }
+
+        private readonly string pathToUsers;
+        private readonly string afterUsernameForProjects;
+        private readonly string afterUsernameForUsefulM;
+
+        private readonly List<string> _usernames;
     }
 }
