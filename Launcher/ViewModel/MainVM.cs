@@ -1,6 +1,5 @@
 ﻿//#define EditMainV
 using Launcher.Model;
-using Launcher.Model.BuilderForUser;
 using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
@@ -9,6 +8,13 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Launcher.ViewModel {
+    /*To-Do:
+     * TODO: Добавить кнопку копировать проект
+     * TODO: // => <summary>
+     * TODO: xaml: set uniformity in xaml code
+     * TODO: заменить повторяющиеся атрибуты стилями
+     * TODO: создать help
+    */
     public class MainVM : BaseVM {
         /// <summary>
         /// Время проведенное в программе
@@ -31,8 +37,8 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged("CurrentPage");
             }
         }
-       
-#if EditMainV
+
+#if EditMainV 
         public MainVM() {
             // Конструктор без параметров используется только для работы с MainV
             // TODO: Убрать комментарий <Window.DataContext>
@@ -46,7 +52,6 @@ namespace Launcher.ViewModel {
             InitializeProjectPage();
 
             Projects = _user.ProjectCollection.Projects;
-
         }
 #endif
         public MainVM(User user) {
