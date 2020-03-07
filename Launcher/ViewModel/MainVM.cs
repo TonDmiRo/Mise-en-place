@@ -9,6 +9,12 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Launcher.ViewModel {
+    /*To-Do:
+     * TODO: Добавить кнопку копировать проект
+     * TODO: // => <summary>
+     * TODO: xaml: set uniformity in xaml code
+     * TODO: заменить повторяющиеся атрибуты стилями
+    */
     public class MainVM : BaseVM {
         /// <summary>
         /// Время проведенное в программе
