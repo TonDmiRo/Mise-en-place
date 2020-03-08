@@ -13,7 +13,7 @@ namespace Launcher.View {
             InitializeComponent();
         }
         public void Dispose() {
-            // throw new NotImplementedException();
+            DataContext = null;
         }
         private void MaterialTitle_tb_GotFocus(object sender, RoutedEventArgs e) {
             TextBox tb = (TextBox)sender;
