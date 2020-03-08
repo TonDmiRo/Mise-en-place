@@ -8,8 +8,6 @@ using System.Configuration;
 
 namespace Launcher.ViewModel {
     internal class LoginVM : BaseVM {
-        
-        
         public string Username { get; set; }
         public LoginVM() {
             pathToUsers= ConfigurationManager.AppSettings["FilesPath"];
@@ -27,8 +25,9 @@ namespace Launcher.ViewModel {
                     void execute(object obj) {
                         if (_usernames.Contains(Username)) {
                             if (StartupMainWindow()) {
-                                Window window = (Window)obj;
+                                View.LoginV window = (View.LoginV)obj;
                                 window.Close();
+                                window.Dispose();
                             }
                         }
                         else {
@@ -58,6 +57,16 @@ namespace Launcher.ViewModel {
             }
         }
 
+        private User GetUser() {
+            Administrator admin;
+            UserBuilder builder = new JsonUserBuilder(Username);
+            admin = new Administrator(builder);
+            admin.Construct();
+            User user = builder.GetUser();
+            return user;
+        }
+
+
         private RelayCommand<object> createUserCommand;
         public RelayCommand<object> CreateUserCommand {
             get {
@@ -66,41 +75,26 @@ namespace Launcher.ViewModel {
                     void execute(object obj) {
                         CreateUser();
                         MessageBox.Show("Пользователь создан. Нажмите войти.");
-
                     }
+
                     bool canExecute(object obj) {
                         return CheckUsername();
                     }
                     bool CheckUsername() {
                         string str = Username;
-                        if (string.IsNullOrWhiteSpace(str))
-                            return false;
+                        if (string.IsNullOrWhiteSpace(str)) { return false; }
 
                         int indexOfSubstring = str.IndexOf("'");
-                        if (indexOfSubstring >= 0)
-                            return false;
+                        if (indexOfSubstring >= 0) { return false; }
 
-                        if (_usernames.Contains(str))
-                            return false;
+                        if (_usernames.Contains(str)) { return false; }
 
                         return true;
                     }
-
                     return createUserCommand;
                 }
                 return createUserCommand;
-
             }
-        }
-
-        
-        private User GetUser() {
-            Administrator admin;
-            UserBuilder builder = new JsonUserBuilder(Username);
-            admin = new Administrator(builder);
-            admin.Construct();
-            User user= builder.GetUser();
-            return user;
         }
 
         private void CreateUser() {
@@ -111,6 +105,7 @@ namespace Launcher.ViewModel {
             newBuilder.GetUser().SaveUser();
             _usernames.Add(Username);
         }
+       
 
         private List<string> GetListUsername() {
             //TODO: создать модель для проверки файлов

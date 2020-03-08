@@ -7,8 +7,7 @@ namespace Launcher {
     public partial class App : Application {
         protected override void OnStartup(StartupEventArgs e) {
             base.OnStartup(e);
-            ViewModel.LoginVM viewModel = new ViewModel.LoginVM();
-            View.LoginV window = new View.LoginV() { DataContext = viewModel };
+            View.LoginV window = new View.LoginV() { DataContext = new ViewModel.LoginVM()};
             window.Show();
         }
     }

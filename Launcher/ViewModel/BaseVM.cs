@@ -3,27 +3,22 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Launcher.ViewModel {
-    public abstract class  BaseVM : INotifyPropertyChanged, IDisposable {
-        protected BaseVM() {
-
-            }
-
+    public abstract class BaseVM : INotifyPropertyChanged, IDisposable {
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName="") {
+        private bool isDisposed = false;
+        protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "") {
             PropertyChangedEventHandler handler = this.PropertyChanged;
-            if ( handler != null ) {
+            if (handler != null) {
                 handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
-                }
-            }
-        public void Dispose() {
-            this.OnDispose();
-            }
-
-        protected virtual void OnDispose() {
-            throw new NotImplementedException();
             }
         }
-    
+        public virtual void Dispose() {
+            if (isDisposed)
+                return;
+            PropertyChanged = null;
+            isDisposed = true;
+        }
     }
+}
 
 
