@@ -5,57 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launcher.View"
         mc:Ignorable="d"
-         WindowStartupLocation="CenterScreen"
-        WindowStyle="ToolWindow" ResizeMode="NoResize"
-        Title="Login" Height="300" Width="286"
-        >
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize"
+        Title="Login"
+        Height="300"
+        Width="286">
 
-    <Grid>
-        <StackPanel Margin="0,50,0,0">
-            <Label 
-                Height="50"
-                Content="Вход" FontSize="24" 
-                HorizontalContentAlignment="Center" 
-                VerticalContentAlignment="Center"
-                />
-            <TextBox 
-                Width="238" Margin="20,10,0,0" 
-                MaxLength="28"
-                HorizontalAlignment="Left" 
-                Height="50" 
-                TextWrapping="NoWrap" 
-                Text="{Binding Username,Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}"
-                FontSize="16"
-                TextAlignment="Left"
-                VerticalContentAlignment="Center"
-                VerticalAlignment="Top" 
-             />
+  <Grid>
+    <StackPanel Margin="0,50,0,0">
+      <Label Height="50"
+             Content="Вход"
+             FontSize="24"
+             HorizontalContentAlignment="Center"
+             VerticalContentAlignment="Center" />
 
-            <DockPanel
-                Margin="10,50,10,0">
-                <Button 
-                    DockPanel.Dock="Left"
-                    x:Name="CreateUser" 
-                    Content="Создать" 
-                    HorizontalAlignment="Left" 
-                    VerticalAlignment="Top" 
-                    Width="75" BorderBrush="{x:Null}" Background="{x:Null}"
-                    Command="{Binding CreateUserCommand}"
-                    />
-                <Button 
-                    DockPanel.Dock="Right"
-                    x:Name="EnterLauncher" 
-                    Content="Войти" 
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Top" 
-                    Width="75" 
-                    Command="{Binding StartupLauncher}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
-                           AncestorType={x:Type Window}}}"
-                    />
-            </DockPanel>
+      <TextBox Width="238"
+               Margin="20,10,0,0"
+               MaxLength="28"
+               HorizontalAlignment="Left"
+               Height="50"
+               TextWrapping="NoWrap"
+               Text="{Binding Username,Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}"
+               FontSize="16"
+               TextAlignment="Left"
+               VerticalContentAlignment="Center"
+               VerticalAlignment="Top" />
 
-        </StackPanel>
+      <DockPanel Margin="10,50,10,0">
+        <Button DockPanel.Dock="Left"
+                Content="Создать"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="75"
+                BorderBrush="{x:Null}"
+                Background="{x:Null}"
+                Command="{Binding CreateUserCommand}" />
 
-    </Grid>
+        <Button DockPanel.Dock="Right"
+                Content="Войти"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Width="75"
+                Command="{Binding StartupLauncher}"
+                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}" />
+      </DockPanel>
+
+    </StackPanel>
+
+  </Grid>
 </Window>
