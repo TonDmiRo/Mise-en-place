@@ -26,7 +26,7 @@ namespace Launcher.ViewModel {
             set {
                 if (!ReadOnlyNewMaterial) {
                     _title = value;
-                    OnPropertyChanged("MaterialTitle");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace Launcher.ViewModel {
             set {
                 if (!ReadOnlyNewMaterial) {
                     _path = value;
-                    OnPropertyChanged("PathToMaterial");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -51,7 +51,7 @@ namespace Launcher.ViewModel {
             get => _automaticPathEntry;
             set {
                 _automaticPathEntry = value;
-                OnPropertyChanged("AutomaticPathEntry");
+                OnPropertyChanged();
             }
         }
 
@@ -111,7 +111,7 @@ namespace Launcher.ViewModel {
                 case MaterialType.InvalidType:
                     material = null;
                     throw new ArgumentNullException("Вы создали пустой материал!");
-                 // break;
+                // break;
                 case MaterialType.Local:
                     material = new LocalMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
@@ -134,17 +134,17 @@ namespace Launcher.ViewModel {
 
                     }
                     string SelectedPath() {
-                        using (WinForms.FolderBrowserDialog folderBrowser = new WinForms.FolderBrowserDialog()) {
-                            WinForms.DialogResult result = folderBrowser.ShowDialog();
-                            if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowser.SelectedPath)) {
-                                MessageBox.Show(folderBrowser.SelectedPath);
-                                MaterialType = MaterialType.Local;
-                                return folderBrowser.SelectedPath;
-                            }
-                            MaterialType = MaterialType.InvalidType;
-                            return string.Empty;
+                        folderBrowserPath = new WinForms.FolderBrowserDialog();
+                        WinForms.DialogResult result = folderBrowserPath.ShowDialog();
+                        if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserPath.SelectedPath)) {
+                            MessageBox.Show(folderBrowserPath.SelectedPath);
+                            MaterialType = MaterialType.Local;
+                            return folderBrowserPath.SelectedPath;
                         }
+                        MaterialType = MaterialType.InvalidType;
+                        return string.Empty;
                     }
+
                     bool canExecute(object obj) {
                         return AutomaticPathEntry;
                     }
@@ -153,7 +153,6 @@ namespace Launcher.ViewModel {
                 return getPath;
             }
         }
-
 
         private RelayCommand<object> getFile;
         public RelayCommand<object> GetFile {
@@ -164,11 +163,10 @@ namespace Launcher.ViewModel {
                         PathToMaterial = SelectedFile();
                     }
                     string SelectedFile() {
-                        OpenFileDialog folderBrowser = new OpenFileDialog();
-
-                        if (folderBrowser.ShowDialog() == true) {
+                        folderBrowserFile = new OpenFileDialog();
+                        if (folderBrowserFile.ShowDialog() == true) {
                             MaterialType = MaterialType.Local;
-                            return folderBrowser.FileName;
+                            return folderBrowserFile.FileName;
                         }
                         MaterialType = MaterialType.InvalidType;
                         return string.Empty;
@@ -242,5 +240,24 @@ namespace Launcher.ViewModel {
         private string _title;
         private bool _automaticPathEntry = true;
         private string _pathEnteredByUser;
+
+        private WinForms.FolderBrowserDialog folderBrowserPath;
+        private OpenFileDialog folderBrowserFile;
+        private bool isDisposed = false;
+        public override void Dispose() {
+            if (isDisposed)
+                return;
+            setMaterialValues = null;
+            getPath = null;
+            getFile = null;
+            getURL = null;
+            folderBrowserFile = null;
+            if (folderBrowserPath != null) {
+                folderBrowserPath.Dispose();
+                folderBrowserPath = null;
+            }
+            isDisposed = true;
+            base.Dispose();
+        }
     }
 }
