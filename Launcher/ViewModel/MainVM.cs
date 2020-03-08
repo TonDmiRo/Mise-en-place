@@ -14,6 +14,7 @@ namespace Launcher.ViewModel {
      * TODO: xaml: set uniformity in xaml code
      * TODO: заменить повторяющиеся атрибуты стилями
      * TODO: создать help
+     * TODO: property("")
     */
     public class MainVM : BaseVM {
         /// <summary>
@@ -236,19 +237,18 @@ namespace Launcher.ViewModel {
                         OnPropertyChanged("UsefulMaterialsCount");
                     }
                     void AddUsefulM() {
-                        MaterialVM viewModel = new MaterialVM();
-                        using (NewMaterialV window = new NewMaterialV(viewModel)) {
-                            var result = window.ShowDialog();
-                            if (result == true) {
-
-                                try {
-                                    _user.UsefulMaterials.Add(viewModel.GetMaterial());
-                                }
-                                catch (Exception e) {
-                                    MessageBox.Show(e.Message);
+                        using (MaterialVM viewModel = new MaterialVM()) {
+                            using (NewMaterialV window = new NewMaterialV(viewModel)) {
+                                var result = window.ShowDialog();
+                                if (result == true) {
+                                    try {
+                                        _user.UsefulMaterials.Add(viewModel.GetMaterial());
+                                    }
+                                    catch (Exception e) {
+                                        MessageBox.Show(e.Message);
+                                    }
                                 }
                             }
-
                         }
                     }
 
