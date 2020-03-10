@@ -43,7 +43,7 @@ namespace Launcher.ViewModel {
 
 #if EditMainV 
         public MainVM() {
-            // Конструктор без параметров используется только для работы с MainV
+            // Конструктор без параметров используется только для редактирования MainV
             // TODO: Убрать комментарий <Window.DataContext>
             Administrator admin;
             NewUserBuilder newUserBuilder = new NewUserBuilder("Test");
@@ -195,148 +195,77 @@ namespace Launcher.ViewModel {
         #endregion
 
         #region Commands
-        private ICommand saveUser;
-        public ICommand SaveUser {
-            get {
-                if (saveUser == null) {
-                    saveUser = new RelayCommand(execute);
-                    void execute(object obj) {
-                        _user.SaveUser();
-                    }
-                    return saveUser;
-                }
-                return saveUser;
-            }
+        private ICommand _saveUserCommand;
+        public ICommand SaveUserCommand => _saveUserCommand ?? ( _saveUserCommand = new RelayCommand(SaveUser) );
+        private void SaveUser(object parameter) {
+            _user.SaveUser();
         }
 
-
-        private ICommand addProject;
-        public ICommand AddProject {
-            get {
-                if (addProject == null) {
-                    addProject = new RelayCommand(execute);
-                    void execute(object obj) {
-                        _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
-                        OnPropertyChanged(nameof(ProjectsCount));
-                    }
-                    return addProject;
-                }
-                return addProject;
-
-            }
-
+        private ICommand _addProjectCommand;
+        public ICommand AddProjectCommand => _addProjectCommand ?? ( _addProjectCommand = new RelayCommand(AddProject) );
+        private void AddProject(object parameter) {
+            _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
+            OnPropertyChanged(nameof(ProjectsCount));
         }
 
 
         #region for UsefulMaterial
-        private ICommand addUsefulMaterial;
-        public ICommand AddUsefulMaterial {
-            get {
-                if (addUsefulMaterial == null) {
-                    addUsefulMaterial = new RelayCommand(execute);
-                    void execute(object obj) {
-                        AddUsefulM();
-                        OnPropertyChanged(nameof(UsefulMaterialsCount));
-                    }
-                    void AddUsefulM() {
-                        using (MaterialVM viewModel = new MaterialVM()) {
-                            using (NewMaterialV window = new NewMaterialV(viewModel)) {
-                                var result = window.ShowDialog();
-                                if (result == true) {
-                                    try {
-                                        _user.UsefulMaterials.Add(viewModel.GetMaterial());
-                                    }
-                                    catch (Exception e) {
-                                        MessageBox.Show(e.Message);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return addUsefulMaterial;
-                }
-                return addUsefulMaterial;
-
-            }
-
-        }
-
-
-        private ICommand startUsefulMaterial;
-        public ICommand StartUsefulMaterial {
-            get {
-                if (startUsefulMaterial == null) {
-                    startUsefulMaterial = new RelayCommand(execute);
-                    void execute(object startM) {
+        private ICommand _addUsefulMCommand;
+        public ICommand AddUsefulMCommand => _addUsefulMCommand ?? ( _addUsefulMCommand = new RelayCommand(AddUsefulMaterial) );
+        private void AddUsefulMaterial(object parameter) {
+            using (MaterialVM viewModel = new MaterialVM()) {
+                using (NewMaterialV window = new NewMaterialV(viewModel)) {
+                    var result = window.ShowDialog();
+                    if (result == true) {
                         try {
-                            if(startM is Material usefulMaterial)
-                            _user.UsefulMaterials.OpenUsefulMaterial(usefulMaterial.MaterialTitle);
+                            _user.UsefulMaterials.Add(viewModel.GetMaterial());
                         }
                         catch (Exception e) {
                             MessageBox.Show(e.Message);
                         }
                     }
-                    return startUsefulMaterial;
                 }
-                return startUsefulMaterial;
+            }
+
+            OnPropertyChanged(nameof(UsefulMaterialsCount));
+        }
+
+        private ICommand _startUsefulMCommand;
+        public ICommand StartUsefulMCommand => _startUsefulMCommand ?? ( _startUsefulMCommand = new RelayCommand(StartUsefulMaterial) );
+        private void StartUsefulMaterial(object startM) {
+            try {
+                if (startM is Material usefulMaterial)
+                    _user.UsefulMaterials.OpenUsefulMaterial(usefulMaterial.MaterialTitle);
+            }
+            catch (Exception e) {
+                MessageBox.Show(e.Message);
             }
         }
 
-        private ICommand launcherUsefulMaterials;
-        public ICommand LauncherUsefulMaterials {
-            get {
-                if (launcherUsefulMaterials == null) {
-                    launcherUsefulMaterials = new RelayCommand(execute, canExecute);
-                    void execute(object obj) {
-
-                        OpenUsefulMaterials();
-                    }
-                    void OpenUsefulMaterials() {
-                        bool oneWasOpen = false;
-                        oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
-                        //TODO: проверить если несколько ошибок
-                        foreach (var item in _user.UsefulMaterials.Values) {
-                            if (item.Exists != true) {
-                                MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
-                            }
-                        }
-
-
-
-
-                        if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
-                    }
-
-                    bool canExecute(object obj) => UsefulMaterialsCount > 0;
-
-                    return launcherUsefulMaterials;
+        private ICommand _launchUMaterialsCommand;
+        public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
+        private void LaunchUsefulMaterials(object parameter) {
+            bool oneWasOpen = false;
+            oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
+            //TODO: проверить если несколько ошибок
+            foreach (var item in _user.UsefulMaterials.Values) {
+                if (item.Exists != true) {
+                    MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
                 }
-                return launcherUsefulMaterials;
-
             }
 
+            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
         }
 
-        private ICommand removeUsefulMaterial;
-        public ICommand RemoveUsefulMaterial {
-            get {
-                if (removeUsefulMaterial == null) {
-                    removeUsefulMaterial = new RelayCommand(execute);
-                    void execute(object material) {
-                        if (material is Material materialToRemove) {
-                            _user.UsefulMaterials.Remove(materialToRemove.MaterialTitle);
-                            OnPropertyChanged(nameof(UsefulMaterialsCount));
-                        }
-                      
-                    }
-                    return removeUsefulMaterial;
-                }
-                return removeUsefulMaterial;
+        private ICommand _removeUsefulMCommand;
+        public ICommand RemoveUsefulMCommand => _removeUsefulMCommand ?? ( _removeUsefulMCommand = new RelayCommand(RemoveUsefulMaterial) );
+        private void RemoveUsefulMaterial(object material) {
+            if (material is Material materialToRemove) {
+                _user.UsefulMaterials.Remove(materialToRemove.MaterialTitle);
+                OnPropertyChanged(nameof(UsefulMaterialsCount));
             }
         }
         #endregion
-
         #endregion
     }
 }
