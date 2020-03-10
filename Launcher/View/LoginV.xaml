@@ -47,7 +47,7 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 Width="75"
-                Command="{Binding StartupLauncher}"
+                Command="{Binding SignInLauncher}"
                 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
                            AncestorType={x:Type Window}}}" />
       </DockPanel>

@@ -5,220 +5,238 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launcher.View"
         mc:Ignorable="d"
-        Title="NewMaterial" Height="576" Width="576"
+        Title="NewMaterial"
+        Height="576"
+        Width="576"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="ToolWindow" ResizeMode="NoResize"
-        >
-    <Window.Resources>
-        <Style x:Key="BaseTextBox" TargetType="TextBox">
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize">
+  <Window.Resources>
+    <Style x:Key="BaseTextBox"
+           TargetType="TextBox">
 
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="Visibility" Value="Visible" />
-            <Setter Property="FontFamily" Value="Calibri" />
-            <Setter Property="FontSize" Value="24" />
-            <Setter Property="Foreground" Value="#FF158AAE" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Background" Value="{x:Null}" />
-            <Setter Property="BorderBrush" Value="#FF158AAE" />
-            <Setter Property="BorderThickness" Value="4" />
-            <Setter Property="FontFamily" Value="Calibri" />
-        </Style>
-        <Style x:Key="VisibilityEqualsNotAutomaticPathEntry">
-            <Style.Triggers>               
-                <DataTrigger Binding="{Binding AutomaticPathEntry}" Value="True">
-                    <Setter Property="Control.Visibility" Value="Collapsed"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding AutomaticPathEntry}" Value="False">
-                    <Setter Property="Control.Visibility" Value="Visible"/>
-                </DataTrigger>
-            </Style.Triggers>
-            
-        </Style>
-        <Style x:Key="VisibilityEqualsAutomaticPathEntry">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding AutomaticPathEntry}"
-                        Value="True">
-                    <Setter Property="Control.Visibility" Value="Visible"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding AutomaticPathEntry}"
-                        Value="False">
-                    <Setter Property="Control.Visibility" Value="Collapsed"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+      <Setter Property="TextAlignment"
+              Value="Center" />
+      <Setter Property="Visibility"
+              Value="Visible" />
+      <Setter Property="FontFamily"
+              Value="Calibri" />
+      <Setter Property="FontSize"
+              Value="24" />
+      <Setter Property="Foreground"
+              Value="#FF158AAE" />
+      <Setter Property="FontWeight"
+              Value="Bold" />
+      <Setter Property="Background"
+              Value="{x:Null}" />
+      <Setter Property="BorderBrush"
+              Value="#FF158AAE" />
+      <Setter Property="BorderThickness"
+              Value="4" />
+      <Setter Property="FontFamily"
+              Value="Calibri" />
+    </Style>
+    <Style x:Key="VisibilityEqualsNotAutomaticPathEntry">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding AutomaticPathEntry}"
+                     Value="True">
+          <Setter Property="Control.Visibility"
+                  Value="Collapsed" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding AutomaticPathEntry}"
+                     Value="False">
+          <Setter Property="Control.Visibility"
+                  Value="Visible" />
+        </DataTrigger>
+      </Style.Triggers>
 
-        <Style x:Key="StyleForButtonURL" TargetType="Button">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding AutomaticPathEntry}"
-                        Value="True">
-                    <Setter Property="Content" Value="Указать URL"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding AutomaticPathEntry}"
-                        Value="False">
-                <Setter Property="Content" Value="Применить"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+    </Style>
+    <Style x:Key="VisibilityEqualsAutomaticPathEntry">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding AutomaticPathEntry}"
+                     Value="True">
+          <Setter Property="Control.Visibility"
+                  Value="Visible" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding AutomaticPathEntry}"
+                     Value="False">
+          <Setter Property="Control.Visibility"
+                  Value="Collapsed" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
 
-    </Window.Resources>
+    <Style x:Key="StyleForButtonURL"
+           TargetType="Button">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding AutomaticPathEntry}"
+                     Value="True">
+          <Setter Property="Content"
+                  Value="Указать URL" />
+          <Setter Property="Command"
+                  Value="{Binding EnableURLInputCommand}" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding AutomaticPathEntry}"
+                     Value="False">
+          <Setter Property="Content"
+                  Value="Применить" />
+          <Setter Property="Command"
+                  Value="{Binding GetURLCommand}" />
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
 
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-            <GradientStop Color="#FFCDF2FD" Offset="0"/>
-            <GradientStop Color="#FF31464B" Offset="1"/>
-        </LinearGradientBrush>
-    </Window.Background>
+  </Window.Resources>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
+  <Window.Background>
+    <LinearGradientBrush EndPoint="0.5,1"
+                         MappingMode="RelativeToBoundingBox"
+                         StartPoint="0.5,0">
+      <GradientStop Color="#FFCDF2FD"
+                    Offset="0" />
+      <GradientStop Color="#FF31464B"
+                    Offset="1" />
+    </LinearGradientBrush>
+  </Window.Background>
 
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="3*"/>
-        </Grid.RowDefinitions>
+  <Grid>
+    <Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0">
-            <StackPanel>
-                <Label
-                    Content="Имя:"
-                    HorizontalAlignment="Left"
-                    Margin="10,10,0,0"
-                    FontSize="48"
-                    FontFamily="Calibri"
-                    Foreground="#FF158AAE"
-                    FontWeight="Bold"/>
-                <TextBox 
-                    x:Name="MaterialTitle_tb"
-                    Style="{StaticResource BaseTextBox}"
-                    Margin="20,0,20,0"
-                    Text="{Binding MaterialTitle,Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}"
-                    />
-            </StackPanel>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="3*" />
+      <RowDefinition Height="5*" />
+      <RowDefinition Height="3*" />
+    </Grid.RowDefinitions>
 
-        </Grid>
-        <Grid Grid.Row="1">
-            <StackPanel>
-                <Label Content="Путь:"
-                       HorizontalAlignment="Left"
-                       Margin="10,10,0,0"
-                       FontSize="48"
-                       FontFamily="Calibri"
-                       Foreground="#FF1B6C85"
-                       FontWeight="Bold"/>
+    <Grid Grid.Row="0">
+      <StackPanel>
+        <Label Content="Имя:"
+               HorizontalAlignment="Left"
+               Margin="10,10,0,0"
+               FontSize="48"
+               FontFamily="Calibri"
+               Foreground="#FF158AAE"
+               FontWeight="Bold" />
+        <TextBox x:Name="MaterialTitle_tb"
+                 Style="{StaticResource BaseTextBox}"
+                 Margin="20,0,20,0"
+                 Text="{Binding MaterialTitle,Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}" />
+      </StackPanel>
 
-                <Label 
-                    x:Name="textBox1"
-                    HorizontalContentAlignment="Center"
-                    Margin="20,0,20,0"
-                    FontSize="24"
-                    FontFamily="Calibri"
-                    Foreground="#FF1B6C85"
-                    FontWeight="Bold"
-                    Background="{x:Null}"
-                    BorderBrush="#FF1B6C85"
-                    BorderThickness="4"
-                    Content="{Binding PathToMaterial, FallbackValue='PathToMaterial'}"
-                    Style="{StaticResource VisibilityEqualsAutomaticPathEntry}"
-                 />
-                
-                <TextBox
-                    x:Name="NewNameProject_tb"
-                     Text="{Binding PathEnteredByUser, Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}"
-                    HorizontalContentAlignment="Center"
-                    Margin="20,0,20,0"
-                    FontSize="24"
-                    FontFamily="Calibri"
-                    Foreground="#FF1B6C85"
-                    Background="{x:Null}"
-                    BorderBrush="#FF1B6C85"
-                    BorderThickness="4"
-                    FontWeight="Bold"
-                    Style="{StaticResource VisibilityEqualsNotAutomaticPathEntry}" 
-                />
-
-                <StackPanel Orientation="Horizontal"  Margin="20,20,20,0" HorizontalAlignment="Center">
-                    <StackPanel Height="90">
-                        <Button
-                        Margin="0,0,0,10"
-                        Width="170"
-                        Content="Выбрать папку"
-                        FontSize="24"
-                        FontFamily="Calibri"
-                        Foreground="#FF1A596C"
-                        FontWeight="Bold"
-                        Background="{x:Null}"
-                        BorderBrush="#FF1A596C"
-                        BorderThickness="4"
-                        
-                        Command="{Binding GetPath}" Height="40"
-                        />
-                        <Button
-                        Margin="0"
-                        Width="170"
-                        Content="Выбрать файл"
-                        FontSize="24"
-                        FontFamily="Calibri"
-                        Foreground="#FF1A596C"
-                        FontWeight="Bold"
-                        Background="{x:Null}"
-                        BorderBrush="#FF1A596C"
-                        BorderThickness="4" 
-                        
-                        Command="{Binding GetFile}" Height="40"
-                        />
-                    </StackPanel>
-                    <StackPanel Height="90" Margin="40,0,0,0">
-                        <Button
-                            Margin="0,0,0,10"
-                            Width="170"
-                            FontSize="24"
-                            FontFamily="Calibri"
-                            Foreground="#FF1A596C"
-                            FontWeight="Bold"
-                            Background="{x:Null}"
-                            BorderBrush="#FF1A596C"
-                            BorderThickness="4"
-                            
-                            Command="{Binding GetURL}" Height="40"
-                            Style="{StaticResource StyleForButtonURL}"
-                        />
-                        <Button
-                            IsEnabled="False"
-                            Margin="0"
-                            Width="170" Height="40"
-                            Content="..."
-                            FontSize="24"
-                            FontFamily="Calibri"
-                            Foreground="#FF1A596C"
-                            FontWeight="Bold"
-                            Background="{x:Null}"
-                            BorderBrush="#FF1A596C"
-                            BorderThickness="4" 
-                        />
-                    </StackPanel>
-                </StackPanel>
-            </StackPanel>
-        </Grid>
-        <Grid Grid.Row="2">
-
-            <Button
-                Margin="120,30,120,30"
-                Content="Добавить"
-                FontSize="24"
-                FontFamily="Calibri"
-                Foreground="#FF158AAE"
-                FontWeight="Bold"
-                BorderBrush="#FF1A596C"
-                BorderThickness="4"
-                Background="#33158AAE"
-                
-                Command="{Binding SetMaterialValues}"
-                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
-                           AncestorType={x:Type Window}}}"
-                />
-        </Grid>
     </Grid>
+    <Grid Grid.Row="1">
+      <StackPanel>
+        <Label Content="Путь:"
+               HorizontalAlignment="Left"
+               Margin="10,10,0,0"
+               FontSize="48"
+               FontFamily="Calibri"
+               Foreground="#FF1B6C85"
+               FontWeight="Bold" />
+
+        <Label x:Name="textBox1"
+               HorizontalContentAlignment="Center"
+               Margin="20,0,20,0"
+               FontSize="24"
+               FontFamily="Calibri"
+               Foreground="#FF1B6C85"
+               FontWeight="Bold"
+               Background="{x:Null}"
+               BorderBrush="#FF1B6C85"
+               BorderThickness="4"
+               Content="{Binding PathToMaterial, FallbackValue='PathToMaterial'}"
+               Style="{StaticResource VisibilityEqualsAutomaticPathEntry}" />
+
+        <TextBox x:Name="NewNameProject_tb"
+                 Text="{Binding PathEnteredByUser, Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}"
+                 HorizontalContentAlignment="Center"
+                 Margin="20,0,20,0"
+                 FontSize="24"
+                 FontFamily="Calibri"
+                 Foreground="#FF1B6C85"
+                 Background="{x:Null}"
+                 BorderBrush="#FF1B6C85"
+                 BorderThickness="4"
+                 FontWeight="Bold"
+                 Style="{StaticResource VisibilityEqualsNotAutomaticPathEntry}" />
+
+        <StackPanel Orientation="Horizontal"
+                    Margin="20,20,20,0"
+                    HorizontalAlignment="Center">
+          <StackPanel Height="90">
+            <Button Margin="0,0,0,10"
+                    Width="170"
+                    Content="Выбрать папку"
+                    FontSize="24"
+                    FontFamily="Calibri"
+                    Foreground="#FF1A596C"
+                    FontWeight="Bold"
+                    Background="{x:Null}"
+                    BorderBrush="#FF1A596C"
+                    BorderThickness="4"
+                    Command="{Binding GetFolderCommand}"
+                    Height="40" />
+            <Button Margin="0"
+                    Width="170"
+                    Content="Выбрать файл"
+                    FontSize="24"
+                    FontFamily="Calibri"
+                    Foreground="#FF1A596C"
+                    FontWeight="Bold"
+                    Background="{x:Null}"
+                    BorderBrush="#FF1A596C"
+                    BorderThickness="4"
+                    Command="{Binding GetFileCommand}"
+                    Height="40" />
+          </StackPanel>
+          <StackPanel Height="90"
+                      Margin="40,0,0,0">
+            <!--Command="{Binding GetURL}"-->
+              <Button Margin="0,0,0,10"
+                    Width="170"
+                    FontSize="24"
+                    FontFamily="Calibri"
+                    Foreground="#FF1A596C"
+                    FontWeight="Bold"
+                    Background="{x:Null}"
+                    BorderBrush="#FF1A596C"
+                    BorderThickness="4"
+                    
+                    Height="40"
+                    Style="{StaticResource StyleForButtonURL}" />
+            
+            <Button IsEnabled="False"
+                    Margin="0"
+                    Width="170"
+                    Height="40"
+                    Content="..."
+                    FontSize="24"
+                    FontFamily="Calibri"
+                    Foreground="#FF1A596C"
+                    FontWeight="Bold"
+                    Background="{x:Null}"
+                    BorderBrush="#FF1A596C"
+                    BorderThickness="4" />
+          </StackPanel>
+        </StackPanel>
+      </StackPanel>
+    </Grid>
+    <Grid Grid.Row="2">
+
+      <Button Margin="120,30,120,30"
+              Content="Добавить"
+              FontSize="24"
+              FontFamily="Calibri"
+              Foreground="#FF158AAE"
+              FontWeight="Bold"
+              BorderBrush="#FF1A596C"
+              BorderThickness="4"
+              Background="#33158AAE"
+              Command="{Binding FinishEditingMCommand}"
+              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}" />
+    </Grid>
+  </Grid>
 
 </Window>

@@ -3,6 +3,7 @@ using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Launcher.ViewModel {
 
@@ -29,7 +30,7 @@ namespace Launcher.ViewModel {
                     ProjectIsNotEmpty = false;
                 }
 
-                OnPropertyChanged("");
+                OnPropertyChanged(null);// (null) обновляет все свойства
             }
         }
 
@@ -80,208 +81,122 @@ namespace Launcher.ViewModel {
         #endregion
 
         #region Commands
-        private RelayCommand<object> launcherTheProject;
-        public RelayCommand<object> LauncherTheProject {
-            get {
-                if (launcherTheProject == null) {
-                    launcherTheProject = new RelayCommand<object>(execute, canExecute);
-                    void execute(object obj) {
-                        ClickTheButton(this, new ProjectEventArgs(CommandProject.Start, CurrentProject));
-                        OpenMaterials();
-                    }
-                    void OpenMaterials() {
-                        bool oneWasOpen = false;
-                        oneWasOpen = _project.OpenMarkedMaterials();
-                        foreach (var item in _project.ProjectMaterials) {
-                            if (item.Exists != true) {
-                                MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
-                            }
-
-
-                            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
-                        }
-                    }
-
-                    bool canExecute(object obj) => _project != null;
-
-                    return launcherTheProject;
-                }
-                return launcherTheProject;
-
-            }
-
+        private ICommand _launchProjectCommand;
+        public ICommand LaunchProjectCommand => _launchProjectCommand ?? ( _launchProjectCommand = new RelayCommand(LaunchProject, CanLaunchProject) );
+        private void LaunchProject(object parameter) {
+            ClickTheButton(this, new ProjectEventArgs(CommandProject.Start, CurrentProject));
+            OpenMaterials();
         }
+        private void OpenMaterials() {
+            bool oneWasOpen = false;
+            oneWasOpen = _project.OpenMarkedMaterials();
+            foreach (var item in _project.ProjectMaterials) {
+                if (item.Exists != true) {
+                    MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
+                }
 
-        
-
-
+                if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+            }
+        }
+        private bool CanLaunchProject(object parameter) {
+            return _project != null;
+        }
 
 
         #region project editing 
-        private RelayCommand<object> changeProject;
-        public RelayCommand<object> ChangeProject {
-            get {
-                if (changeProject == null) {
-                    changeProject = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
-                    }
-                    return changeProject;
-                }
-                return changeProject;
-
-            }
-
+        private ICommand _changeProjectCommand;
+        public ICommand ChangeProjectCommand => _changeProjectCommand ?? ( _changeProjectCommand = new RelayCommand(ChangeProject) );
+        private void ChangeProject(object parameter) {
+            ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
         }
 
 
-        private RelayCommand<object> renameProject;
-        public RelayCommand<object> RenameProject {
-            get {
-                if (renameProject == null) {
-                    renameProject = new RelayCommand<object>(execute, canExecute);
-                    void execute(object obj) {
-                        MessageBoxResult result = MessageBox.Show($"Время изучения проекта обнулится. Изменить имя {CurrentProject.Name} на {NewName}?.", "Rename", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.Yes) {
+        private ICommand _renameProjectCommand;
+        public ICommand RenameProjectCommand => _renameProjectCommand ?? ( _renameProjectCommand = new RelayCommand(RenameProject, CanRenameProject) );
+        private void RenameProject(object parameter) {
+            string strForMessage = $"Время изучения проекта обнулится. Изменить имя {CurrentProject.Name} на {NewName}?";
 
-                            ClickTheButton(this, new ProjectEventArgs(CommandProject.Rename, CurrentProject));
-                            OnPropertyChanged("Name");
-                        }
-                    }
-                    bool canExecute(object obj) {
-                        if (NewName == Name) {
-                            return false;
-                        }
-                        bool NameNotIsNull = ( !string.IsNullOrWhiteSpace(NewName) ) && ( !string.IsNullOrWhiteSpace(NewName) );
-
-                        return NameNotIsNull;
-                    }
-
-
-                    return renameProject;
-                }
-                return renameProject;
-
+            MessageBoxResult result = MessageBox.Show(strForMessage, "Rename", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes) {
+                ClickTheButton(this, new ProjectEventArgs(CommandProject.Rename, CurrentProject));
+                OnPropertyChanged(nameof(Name));
             }
-
+        }
+        private bool CanRenameProject(object parameter) {
+            if (NewName == Name) { return false; }
+            bool NameNotIsNull = ( !string.IsNullOrWhiteSpace(NewName) ) && ( !string.IsNullOrWhiteSpace(NewName) );
+            return NameNotIsNull;
         }
 
 
-        private RelayCommand<object> removeProject;
-        public RelayCommand<object> RemoveProject {
-            get {
-                if (removeProject == null) {
-                    removeProject = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        MessageBoxResult result = MessageBox.Show($"Вы хотите удалить {CurrentProject.Name}?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                        if (result == MessageBoxResult.Yes) {
-                            ProjectIsCurrentlyChanging = false;
-                            ClickTheButton(this, new ProjectEventArgs(CommandProject.Delete, CurrentProject));
-                            ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
-                        }
-                    }
-                    return removeProject;
-                }
-                return removeProject;
-
+        private ICommand _deleteProjectCommand;
+        public ICommand DeleteProjectCommand => _deleteProjectCommand ?? ( _deleteProjectCommand = new RelayCommand(DeleteProject) );
+        private void DeleteProject(object parameter) {
+            string message = $"Вы хотите удалить {CurrentProject.Name}?";
+            MessageBoxResult result = MessageBox.Show(message, "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes) {
+                ProjectIsCurrentlyChanging = false;
+                ClickTheButton(this, new ProjectEventArgs(CommandProject.Delete, CurrentProject));
+                ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
             }
-
         }
         #endregion
 
         #region для элементов проекта
-        private RelayCommand<object> addMaterial;
-        public RelayCommand<object> AddMaterial {
-            get {
-                if (addMaterial == null) {
-                    addMaterial = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        AddM();//получить элемент или что такое 
+        private ICommand _addMaterialCommand;
+        public ICommand AddMaterialCommand => _addMaterialCommand ?? ( _addMaterialCommand = new RelayCommand(AddMaterial) );
+        private void AddMaterial(object parameter) {
+            using (MaterialVM viewModel = new MaterialVM()) {
+                using (NewMaterialV window = new NewMaterialV(viewModel)) {
+                    var result = window.ShowDialog();
+                    if (result == true) {
+                        CurrentProject.Add(viewModel.GetMaterial());
                     }
-
-                    void AddM() {
-                        MaterialVM viewModel = new MaterialVM();
-                        using (NewMaterialV window = new NewMaterialV(viewModel)) {
-                            var result = window.ShowDialog();
-                            if (result == true) {
-
-                                CurrentProject.Add(viewModel.GetMaterial());
-                            }
-
-                        }
-                    }
-                    return addMaterial;
                 }
-                return addMaterial;
-
-            }
-
-        }
-
-
-        private RelayCommand<Material> fixMaterial;
-        public RelayCommand<Material> FixMaterial {
-            get {
-                if (fixMaterial == null) {
-                    fixMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material spoiledM) {
-                        FixM(spoiledM);
-                    }
-
-                    void FixM(Material material) {
-                        MaterialVM viewModel = new MaterialVM(material.MaterialTitle);
-                        using (FixMaterialPathV window = new FixMaterialPathV(viewModel)) {
-                            var result = window.ShowDialog();
-                            if (result == true) {
-                                Material serviceableMaterial = viewModel.GetMaterial();
-                                int indexSpoiledM = CurrentProject.ProjectMaterials.IndexOf(material);
-                                CurrentProject.SetMaterial(indexSpoiledM, serviceableMaterial);
-                            }
-
-                        }
-                    }
-                    return fixMaterial;
-                }
-                return fixMaterial;
-
-            }
-
-        }
-
-
-        private RelayCommand<Material> removeProjectMaterial;
-        public RelayCommand<Material> RemoveProjectMaterial {
-            get {
-                if (removeProjectMaterial == null) {
-                    removeProjectMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material deleteM) {
-                        CurrentProject.Remove(deleteM);
-                    }
-                    return removeProjectMaterial;
-                }
-                return removeProjectMaterial;
             }
         }
 
 
-        private RelayCommand<object> addTask;
-        public RelayCommand<object> AddTask {
-            get {
-                if (addTask == null) {
-                    addTask = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        AddProjectTask();//получить элемент или что такое 
-                    }
-
-                    void AddProjectTask() {
-                        ProjectTasks.Add(new Task(string.Empty));
-                    }
-                    return addTask;
+        private ICommand _fixMaterialCommand;
+        public ICommand FixMaterialCommand => _fixMaterialCommand ?? ( _fixMaterialCommand = new RelayCommand(FixMaterial) );
+        private void FixMaterial(object parameter) {
+            if (parameter is Material spoiledM) {
+                try {
+                    Material serviceableMaterial = GetServiceableMaterial(spoiledM.MaterialTitle);
+                    int indexSpoiledM = CurrentProject.ProjectMaterials.IndexOf(spoiledM);
+                    CurrentProject.SetMaterial(indexSpoiledM, serviceableMaterial);
                 }
-                return addTask;
-
+                catch (Exception e) {
+                    MessageBox.Show(e.Message);
+                }
             }
+        }
+        private Material GetServiceableMaterial(string materialTitle) {
+            using (MaterialVM viewModel = new MaterialVM(materialTitle)) {
+                using (FixMaterialPathV window = new FixMaterialPathV(viewModel)) {
+                    var result = window.ShowDialog();
+                    if (result == true) {
+                        return viewModel.GetMaterial();
+                    }
+                }
+            }
+            throw new Exception("Материал не удалось исправить!");
+        }
 
+
+        private ICommand _removeProjectMCommand;
+        public ICommand RemoveProjectMCommand => _removeProjectMCommand ?? ( _removeProjectMCommand = new RelayCommand(RemoveProjectMaterial) );
+        private void RemoveProjectMaterial(object material) {
+            if (material is Material deleteM) {
+                CurrentProject.Remove(deleteM);
+            }
+        }
+
+
+        private ICommand _addTaskCommand;
+        public ICommand AddTaskCommand => _addTaskCommand ?? ( _addTaskCommand = new RelayCommand(AddTask) );
+        private void AddTask(object parameter) {
+            ProjectTasks.Add(new Task(string.Empty));
         }
         #endregion
 
