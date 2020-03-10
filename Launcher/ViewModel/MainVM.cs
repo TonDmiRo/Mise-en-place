@@ -35,7 +35,7 @@ namespace Launcher.ViewModel {
             get => _currentPage;
             set {
                 _currentPage = value;
-                OnPropertyChanged("CurrentPage");
+                OnPropertyChanged();
             }
         }
 
@@ -77,7 +77,7 @@ namespace Launcher.ViewModel {
             ///может это хороший вариант?
             /// можно подписаться на tick у пользователя 
 
-            OnPropertyChanged("UsageTimeTotal");
+            OnPropertyChanged(nameof(UsageTimeTotal));
         }
         #endregion
 
@@ -162,7 +162,7 @@ namespace Launcher.ViewModel {
 
         #region Methods for receiver
         private void ChangeProject(object sender) {
-            OnPropertyChanged("ProjectIsCurrentlyChanging");
+            OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
         }
         private void StartProject() {
             //TODO: новая страница с таймером
@@ -185,7 +185,7 @@ namespace Launcher.ViewModel {
         }
         private void RemoveProject(ProjectEventArgs e) {
             _user.ProjectCollection.RemoveProject(e.Project);
-            OnPropertyChanged("ProjectsCount");
+            OnPropertyChanged(nameof(ProjectsCount));
             //MessageBox.Show($"{e.Project.Name} удален.");
         }
         #endregion
@@ -215,7 +215,7 @@ namespace Launcher.ViewModel {
                     addProject = new RelayCommand<object>(execute);
                     void execute(object obj) {
                         _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
-                        OnPropertyChanged("ProjectsCount");
+                        OnPropertyChanged(nameof(ProjectsCount));
                     }
                     return addProject;
                 }
@@ -234,7 +234,7 @@ namespace Launcher.ViewModel {
                     addUsefulMaterial = new RelayCommand<object>(execute);
                     void execute(object obj) {
                         AddUsefulM();
-                        OnPropertyChanged("UsefulMaterialsCount");
+                        OnPropertyChanged(nameof(UsefulMaterialsCount));
                     }
                     void AddUsefulM() {
                         using (MaterialVM viewModel = new MaterialVM()) {
@@ -323,7 +323,7 @@ namespace Launcher.ViewModel {
                     removeUsefulMaterial = new RelayCommand<Material>(execute);
                     void execute(Material startM) {
                         _user.UsefulMaterials.Remove(startM.MaterialTitle);
-                        OnPropertyChanged("UsefulMaterialsCount");
+                        OnPropertyChanged(nameof(UsefulMaterialsCount));
                     }
                     return removeUsefulMaterial;
                 }

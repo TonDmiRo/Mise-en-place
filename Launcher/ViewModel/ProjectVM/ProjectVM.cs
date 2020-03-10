@@ -29,7 +29,7 @@ namespace Launcher.ViewModel {
                     ProjectIsNotEmpty = false;
                 }
 
-                OnPropertyChanged("");
+                OnPropertyChanged(null);// (null) обновляет все свойства
             }
         }
 
@@ -145,7 +145,7 @@ namespace Launcher.ViewModel {
                         if (result == MessageBoxResult.Yes) {
 
                             ClickTheButton(this, new ProjectEventArgs(CommandProject.Rename, CurrentProject));
-                            OnPropertyChanged("Name");
+                            OnPropertyChanged(nameof(Name));
                         }
                     }
                     bool canExecute(object obj) {
