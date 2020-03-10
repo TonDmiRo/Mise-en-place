@@ -194,10 +194,10 @@
                   Margin="0,0,0,5"
                   Content="Переименовать проект"
                   Style="{StaticResource VisibleIfChangeProjectNameTrue}"
-                  Command="{Binding RenameProject}" />
+                  Command="{Binding RenameProjectCommand}" />
           <Button Margin="0,0,0,0"
                   Background="{x:Null}"
-                  Command="{Binding RemoveProject}">
+                  Command="{Binding DeleteProjectCommand}">
             <StackPanel Orientation="Horizontal">
               <Image Width="24"
                      Height="24"
@@ -218,7 +218,7 @@
                     Background="{x:Null}"
                     Foreground="{x:Null}"
                     BorderThickness="0"
-                    Command="{Binding ChangeProject}">
+                    Command="{Binding ChangeProjectCommand}">
         <Image Source="/Launcher;component/View/Images/edit.png"
                Stretch="Fill" />
       </ToggleButton>
@@ -253,7 +253,7 @@
                       Width="60"
                       Height="25"
                       FontSize="14"
-                      Command="{Binding LauncherTheProject}" />
+                      Command="{Binding LaunchProjectCommand}" />
             </Grid>
             <Grid Grid.Column="1">
               <Grid.RowDefinitions>
@@ -366,7 +366,7 @@
                 <DataTemplate>
                   <StackPanel Orientation="Horizontal">
                     <Button Command="{Binding ElementName=ProjectMaterials_DG,
-                               Path=DataContext.FixMaterial}"
+                               Path=DataContext.FixMaterialCommand}"
                             CommandParameter="{Binding }"
                             Width="16"
                             Height="16"
@@ -377,7 +377,7 @@
                              Stretch="Fill" />
                     </Button>
                     <Button Command="{Binding ElementName=ProjectMaterials_DG,
-                               Path=DataContext.RemoveProjectMaterial}"
+                               Path=DataContext.RemoveProjectMCommand}"
                             CommandParameter="{Binding }"
                             Width="16"
                             Height="16"
@@ -425,7 +425,7 @@
                   Background="{x:Null}"
                   BorderBrush="#FF34A3C8"
                   BorderThickness="2"
-                  Command="{Binding AddMaterial}">
+                  Command="{Binding AddMaterialCommand}">
 
             <TextBlock Text="New"
                        FontSize="16"
@@ -520,7 +520,7 @@
                   Background="{x:Null}"
                   BorderBrush="#FF34A3C8"
                   BorderThickness="2"
-                  Command="{Binding AddTask}">
+                  Command="{Binding AddTaskCommand}">
             <TextBlock Text="+"
                        FontSize="14"
                        FontWeight="Bold"
