@@ -180,7 +180,7 @@ namespace Launcher.ViewModel {
                     }
                 }
             }
-            throw new Exception("Материал не исправлен!");
+            throw new Exception("Материал не удалось исправить!");
         }
 
 
