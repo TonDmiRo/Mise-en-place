@@ -6,85 +6,82 @@
         xmlns:local="clr-namespace:Launcher.View"
         xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
         mc:Ignorable="d"
-        Title="FixMaterialPath" Height="360" Width="576">
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-            <GradientStop Color="#FFCDF2FD" Offset="0"/>
-            <GradientStop Color="#FF31464B" Offset="1"/>
-        </LinearGradientBrush>
-    </Window.Background>
+        Title="FixMaterialPath"
+        Height="360"
+        Width="576">
+  <Window.Background>
+    <LinearGradientBrush EndPoint="0.5,1"
+                         MappingMode="RelativeToBoundingBox"
+                         StartPoint="0.5,0">
+      <GradientStop Color="#FFCDF2FD"
+                    Offset="0" />
+      <GradientStop Color="#FF31464B"
+                    Offset="1" />
+    </LinearGradientBrush>
+  </Window.Background>
 
-    <Grid>
-            <StackPanel>
-            <Label 
-             Content="{Binding Path=MaterialTitle, FallbackValue='NotFound'}" ContentStringFormat="Путь к {0}:" 
-                HorizontalAlignment="Center"
-                Width="556"
-                       Margin="10,0,10,0"
-                       FontSize="48"
-                       FontFamily="Calibri"
-                       Foreground="#FF1B6C85"
-                       FontWeight="Bold"/>
-                <Label x:Name="textBox1"
-                         HorizontalContentAlignment="Center"
-                         Margin="20,0,20,0"
-                         FontSize="24"
-                         FontFamily="Calibri"
-                         Foreground="#FF1B6C85"
-                         FontWeight="Bold"
-                         Background="{x:Null}"
-                         BorderBrush="#FF1B6C85"
-                         BorderThickness="4"
-                       
-                       Content="{Binding PathToMaterial, FallbackValue='PathToMaterial'}"
-                       />
-                <StackPanel Orientation="Horizontal"  Margin="20,0,20,0" HorizontalAlignment="Center">
-                    <Button
-                        Margin="20,20,20,0"
-                        Width="170"
-                        Content="Выбрать папку"
-                        FontSize="24"
-                        FontFamily="Calibri"
-                        Foreground="#FF1A596C"
-                        FontWeight="Bold"
-                        Background="{x:Null}"
-                        BorderBrush="#FF1A596C"
-                        BorderThickness="4"
-                        
-                        Command="{Binding GetPath}"
-                        />
-                    <Button
-                        Margin="20,20,20,0"
-                        Width="170"
-                        Content="Выбрать файл"
-                        FontSize="24"
-                        FontFamily="Calibri"
-                        Foreground="#FF1A596C"
-                        FontWeight="Bold"
-                        Background="{x:Null}"
-                        BorderBrush="#FF1A596C"
-                        BorderThickness="4" 
-                        
-                        Command="{Binding GetFile}"
-                        />
-
-                </StackPanel>
-            <Button
-                Margin="120,30,120,30"
-                Height="89"
-                Content="Добавить"
+  <Grid>
+    <StackPanel>
+      <Label Content="{Binding Path=MaterialTitle, FallbackValue='NotFound'}"
+             ContentStringFormat="Путь к {0}:"
+             HorizontalAlignment="Center"
+             Width="556"
+             Margin="10,0,10,0"
+             FontSize="48"
+             FontFamily="Calibri"
+             Foreground="#FF1B6C85"
+             FontWeight="Bold" />
+      <Label x:Name="textBox1"
+             HorizontalContentAlignment="Center"
+             Margin="20,0,20,0"
+             FontSize="24"
+             FontFamily="Calibri"
+             Foreground="#FF1B6C85"
+             FontWeight="Bold"
+             Background="{x:Null}"
+             BorderBrush="#FF1B6C85"
+             BorderThickness="4"
+             Content="{Binding PathToMaterial, FallbackValue='PathToMaterial'}" />
+      <StackPanel Orientation="Horizontal"
+                  Margin="20,0,20,0"
+                  HorizontalAlignment="Center">
+        <Button Margin="20,20,20,0"
+                Width="170"
+                Content="Выбрать папку"
                 FontSize="24"
                 FontFamily="Calibri"
-                Foreground="#FF158AAE"
+                Foreground="#FF1A596C"
                 FontWeight="Bold"
+                Background="{x:Null}"
                 BorderBrush="#FF1A596C"
                 BorderThickness="4"
-                Background="#33158AAE"
-                
-                Command="{Binding SetMaterialValues}"
-                 CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
-                           AncestorType={x:Type Window}}}"
-                />
-        </StackPanel>
-    </Grid>
+                Command="{Binding GetFolderCommand}" />
+        <Button Margin="20,20,20,0"
+                Width="170"
+                Content="Выбрать файл"
+                FontSize="24"
+                FontFamily="Calibri"
+                Foreground="#FF1A596C"
+                FontWeight="Bold"
+                Background="{x:Null}"
+                BorderBrush="#FF1A596C"
+                BorderThickness="4"
+                Command="{Binding GetFileCommand}" />
+
+      </StackPanel>
+      <Button Margin="120,30,120,30"
+              Height="89"
+              Content="Добавить"
+              FontSize="24"
+              FontFamily="Calibri"
+              Foreground="#FF158AAE"
+              FontWeight="Bold"
+              BorderBrush="#FF1A596C"
+              BorderThickness="4"
+              Background="#33158AAE"
+              Command="{Binding FinishEditingMCommand}"
+              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}" />
+    </StackPanel>
+  </Grid>
 </Window>

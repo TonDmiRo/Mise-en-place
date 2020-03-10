@@ -16,11 +16,32 @@ namespace Launcher.ViewModel {
         Web
     }
     public class MaterialVM : BaseVM {
-        public MaterialVM() {
+
+
+        public Material GetMaterial() {
+            Material material = CreateMaterial();
+            return material;
         }
-        public MaterialVM(string title) {
-            MaterialTitle = title;
+        private Material CreateMaterial() {
+            Material material = null;
+            switch (MaterialType) {
+                case MaterialType.InvalidType:
+                    material = null;
+                    throw new ArgumentNullException("Вы создали пустой материал!");
+                // break;
+                case MaterialType.Local:
+                    material = new LocalMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
+                    break;
+                case MaterialType.Web:
+                    material = new WebMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+            return material;
         }
+
+        #region prop
         public bool ReadOnlyNewMaterial { get; private set; }
         public string MaterialTitle {
             get => _title;
@@ -47,7 +68,6 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged();
             }
         }
-
         public bool AutomaticPathEntry {
             get => _automaticPathEntry;
             set {
@@ -55,185 +75,120 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged();
             }
         }
-
         public MaterialType MaterialType { get; private set; }
+        #endregion
+
+        public MaterialVM() {
+        }
+        public MaterialVM(string title) {
+            MaterialTitle = title;
+        }
 
         #region Commands
-        private ICommand setMaterialValues;
-        public ICommand SetMaterialValues {
-            get {
-                if (setMaterialValues == null) {
-                    setMaterialValues = new RelayCommand(execute, canExecute);
-                    void execute(object obj) {
-                        ReadOnlyNewMaterial = true;
-                        Window window = (Window)obj;
-                        window.DialogResult = true;
-                        window.Close();
-                    }
-                    bool canExecute(object obj) {
-                        bool isPathAndNameValid = ReadyToCreate();
-                        return isPathAndNameValid;
-                    }
-                    bool ReadyToCreate() {
-                        /// Необходимость локальных переменных m_title m_path
-                        /// условие проверяется в цикле
-                        /// пользователь может изменить одно из свойств в средине проверки
-                        string m_title = MaterialTitle;
-                        string m_path = PathToMaterial;
+        private ICommand _finishEditingMCommand;
+        public ICommand FinishEditingMCommand => _finishEditingMCommand ??
+            ( _finishEditingMCommand = new RelayCommand(FinishEditingMaterial, СanСomplete) );
+        private void FinishEditingMaterial(object parameter) {
+            ReadOnlyNewMaterial = true;
+            Window window = (Window)parameter;
+            window.DialogResult = true;
+            window.Close();
+        }
+        private bool СanСomplete(object parameter) {
+            bool isPathAndTitleValid = ReadyToCreate();
+            return isPathAndTitleValid;
+        }
+        private bool ReadyToCreate() {
+            /// Необходимость локальных переменных m_title m_path
+            /// условие проверяется в цикле
+            /// пользователь может изменить одно из свойств в средине проверки
+            string m_title = MaterialTitle;
+            string m_path = PathToMaterial;
 
-                        bool titleAndPathNotIsNull = ( !string.IsNullOrWhiteSpace(m_title) ) && ( !string.IsNullOrWhiteSpace(m_path) );
-                        bool absentInvalidCharacters = ( m_path + m_title ).IndexOfAny(Path.GetInvalidPathChars()) == -1;
+            bool titleAndPathNotIsNull = ( !string.IsNullOrWhiteSpace(m_title) ) && ( !string.IsNullOrWhiteSpace(m_path) );
+            bool absentInvalidCharacters = ( m_path + m_title ).IndexOfAny(Path.GetInvalidPathChars()) == -1;
 
-                        if (titleAndPathNotIsNull && absentInvalidCharacters) {
+            if (titleAndPathNotIsNull && absentInvalidCharacters) {
 
-                            if (MaterialType == MaterialType.Local && Directory.Exists(Path.GetDirectoryName(m_path))) {
-                                return true;
-                            }
-                            if (MaterialType == MaterialType.Web) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }
-
-                    return setMaterialValues;
+                if (MaterialType == MaterialType.Local && Directory.Exists(Path.GetDirectoryName(m_path))) {
+                    return true;
                 }
-                return setMaterialValues;
-
-            }
-        }
-        public Material GetMaterial() {
-            Material material = CreateMaterial();
-            return material;
-        }
-        private Material CreateMaterial() {
-            Material material = null;
-            switch (MaterialType) {
-                case MaterialType.InvalidType:
-                    material = null;
-                    throw new ArgumentNullException("Вы создали пустой материал!");
-                // break;
-                case MaterialType.Local:
-                    material = new LocalMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
-                    break;
-                case MaterialType.Web:
-                    material = new WebMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
-                    break;
-                default:
-                    throw new InvalidOperationException();
-            }
-            return material;
-        }
-
-        private ICommand getPath;
-        public ICommand GetPath {
-            get {
-                if (getPath == null) {
-                    getPath = new RelayCommand(execute, canExecute);
-                    void execute(object obj) {
-                        PathToMaterial = SelectedPath();
-
-                    }
-                    string SelectedPath() {
-                        folderBrowserPath = new WinForms.FolderBrowserDialog();
-                        WinForms.DialogResult result = folderBrowserPath.ShowDialog();
-                        if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserPath.SelectedPath)) {
-                            MessageBox.Show(folderBrowserPath.SelectedPath);
-                            MaterialType = MaterialType.Local;
-                            return folderBrowserPath.SelectedPath;
-                        }
-                        MaterialType = MaterialType.InvalidType;
-                        return string.Empty;
-                    }
-
-                    bool canExecute(object obj) {
-                        return AutomaticPathEntry;
-                    }
-                    return getPath;
+                if (MaterialType == MaterialType.Web) {
+                    return true;
                 }
-                return getPath;
             }
-        }
-
-        private ICommand getFile;
-        public ICommand GetFile {
-            get {
-                if (getFile == null) {
-                    getFile = new RelayCommand(execute, canExecute);
-                    void execute(object obj) {
-                        PathToMaterial = SelectedFile();
-                    }
-                    string SelectedFile() {
-                        folderBrowserFile = new OpenFileDialog();
-                        if (folderBrowserFile.ShowDialog() == true) {
-                            MaterialType = MaterialType.Local;
-                            return folderBrowserFile.FileName;
-                        }
-                        MaterialType = MaterialType.InvalidType;
-                        return string.Empty;
-                    }
-                    bool canExecute(object obj) {
-                        return AutomaticPathEntry;
-                    }
-                    return getFile;
-                }
-                return getFile;
-            }
+            return false;
         }
 
 
-        private ICommand getURL;
-        public ICommand GetURL {
-            get {
-                if (getURL == null) {
-                    getURL = new RelayCommand(execute, canExecute);
-                    void execute(object obj) {
-                        SelectedURL();
-                    }
-                    void SelectedURL() {
-                        if (AutomaticPathEntry == true) {
-                            // "Указать URL"
-                            AutomaticPathEntry = false;
-                        }
-                        else {
-                            // Нажатие кнопки Применить
-                            //TODO: Сделать проверку существования сайта
-                            if (true) {
-                                PathToMaterial = PathEnteredByUser;
-                                MaterialType = MaterialType.Web;
-                                AutomaticPathEntry = true;
-                            }
-                            else {
-                                MessageBox.Show("404 - Страница не найдена");
-                            }
-                            PathEnteredByUser = String.Empty;
-                        }
-                    }
+        private ICommand _getFolderCommand;
+        public ICommand GetFolderCommand => _getFolderCommand ?? ( _getFolderCommand = new RelayCommand(ChooseFolder, CanChoose) );
+        private void ChooseFolder(object parameter) {
+            folderBrowserPath = new WinForms.FolderBrowserDialog();
+            WinForms.DialogResult result = folderBrowserPath.ShowDialog();
 
-                    bool canExecute(object obj) {
-                        bool isURLValid = ReadyToCreate();
-                        return isURLValid;
-                    }
-                    bool ReadyToCreate() {
-                        if (AutomaticPathEntry == true) {
-                            return true;
-                        }
-                        else {
-                            string m_title = PathEnteredByUser;
-                            bool URLhNotIsNull = ( !string.IsNullOrWhiteSpace(m_title) );
-                            if (URLhNotIsNull && URLhNotIsNull) {
+            if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserPath.SelectedPath)) {
+                MaterialType = MaterialType.Local;
+                PathToMaterial = folderBrowserPath.SelectedPath;
+            }
+            else {
+                MaterialType = MaterialType.InvalidType;
+                PathToMaterial = string.Empty;
+            }
+        }
 
-                                return true;
-                            }
-                            return false;
-                        }
-                    }
-                    return getURL;
-                }
-                return getURL;
+        private bool CanChoose(object parameter) {
+            return AutomaticPathEntry;
+        }
 
+        private ICommand _getFileCommand;
+        public ICommand GetFileCommand => _getFileCommand ?? ( _getFileCommand = new RelayCommand(ChooseFile, CanChoose) );
+        private void ChooseFile(object parameter) {
+            folderBrowserFile = new OpenFileDialog();
+
+            if (folderBrowserFile.ShowDialog() == true) {
+                MaterialType = MaterialType.Local;
+                PathToMaterial = folderBrowserFile.FileName;
+            }
+            else {
+                MaterialType = MaterialType.InvalidType;
+                PathToMaterial = string.Empty;
+            }
+        }
+
+
+        private ICommand _getURLCommand;
+        public ICommand GetURLCommand => _getURLCommand ?? ( _getURLCommand = new RelayCommand(EnterURL, CanEnterURL) );
+        private void EnterURL(object parameter) {
+            //Нажатие кнопки Применить
+            //TODO: Сделать проверку существования сайта
+            if (true) {
+                PathToMaterial = PathEnteredByUser;
+                MaterialType = MaterialType.Web;
+                AutomaticPathEntry = true;
+            }
+            else {
+                MessageBox.Show("404 - Страница не найдена");
             }
 
+            PathEnteredByUser = String.Empty;
+        }
+        private bool CanEnterURL(object parameter) {
+            string m_title = PathEnteredByUser;
+            if (!string.IsNullOrWhiteSpace(m_title)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+
+        private ICommand _enableURLInputCommand;
+        public ICommand EnableURLInputCommand => _enableURLInputCommand ?? ( _enableURLInputCommand = new RelayCommand(EnableURLInput) );
+        private void EnableURLInput(object parameter) {
+            // "Указать URL"
+            AutomaticPathEntry = false;
         }
         #endregion
 
@@ -246,12 +201,13 @@ namespace Launcher.ViewModel {
         private OpenFileDialog folderBrowserFile;
         private bool isDisposed = false;
         public override void Dispose() {
-            if (isDisposed)
-                return;
-            setMaterialValues = null;
-            getPath = null;
-            getFile = null;
-            getURL = null;
+            if (isDisposed) { return; }
+
+            _finishEditingMCommand = null;
+            _getFolderCommand = null;
+            _getFileCommand = null;
+            _getURLCommand = null;
+            _enableURLInputCommand = null;
             folderBrowserFile = null;
             if (folderBrowserPath != null) {
                 folderBrowserPath.Dispose();
