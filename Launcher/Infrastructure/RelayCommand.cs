@@ -2,7 +2,7 @@
 using System.Windows.Input;
 
 namespace Launcher {
-
+   
     public class RelayCommand<T> : ICommand {
         #region Fields
         private readonly Action<T> _execute = null;

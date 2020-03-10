@@ -219,13 +219,16 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<Material> fixMaterial;
-        public RelayCommand<Material> FixMaterial {
+        private RelayCommand<object> fixMaterial;
+        public RelayCommand<object> FixMaterial {
             get {
                 if (fixMaterial == null) {
-                    fixMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material spoiledM) {
-                        FixM(spoiledM);
+                    fixMaterial = new RelayCommand<object>(execute);
+                    void execute(object material) {
+                        if (material is Material spoiledM) {
+                            FixM(spoiledM);
+                        }
+                        
                     }
 
                     void FixM(Material material) {
@@ -249,13 +252,15 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<Material> removeProjectMaterial;
-        public RelayCommand<Material> RemoveProjectMaterial {
+        private RelayCommand<object> removeProjectMaterial;
+        public RelayCommand<object> RemoveProjectMaterial {
             get {
                 if (removeProjectMaterial == null) {
-                    removeProjectMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material deleteM) {
-                        CurrentProject.Remove(deleteM);
+                    removeProjectMaterial = new RelayCommand<object>(execute);
+                    void execute(object material) {
+                        if (material is Material deleteM) {
+                            CurrentProject.Remove(deleteM);
+                        }
                     }
                     return removeProjectMaterial;
                 }

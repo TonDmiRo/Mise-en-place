@@ -15,6 +15,7 @@ namespace Launcher.ViewModel {
      * TODO: заменить повторяющиеся атрибуты стилями
      * TODO: создать help
      * TODO: property("")
+     * TODO: Проверить открытие битых файлов
     */
     public class MainVM : BaseVM {
         /// <summary>
@@ -261,14 +262,15 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<Material> startUsefulMaterial;
-        public RelayCommand<Material> StartUsefulMaterial {
+        private RelayCommand<object> startUsefulMaterial;
+        public RelayCommand<object> StartUsefulMaterial {
             get {
                 if (startUsefulMaterial == null) {
-                    startUsefulMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material startM) {
+                    startUsefulMaterial = new RelayCommand<object>(execute);
+                    void execute(object startM) {
                         try {
-                            _user.UsefulMaterials.OpenUsefulMaterial(startM.MaterialTitle);
+                            if(startM is Material usefulMaterial)
+                            _user.UsefulMaterials.OpenUsefulMaterial(usefulMaterial.MaterialTitle);
                         }
                         catch (Exception e) {
                             MessageBox.Show(e.Message);
@@ -315,15 +317,17 @@ namespace Launcher.ViewModel {
 
         }
 
-
-        private RelayCommand<Material> removeUsefulMaterial;
-        public RelayCommand<Material> RemoveUsefulMaterial {
+        private RelayCommand<object> removeUsefulMaterial;
+        public RelayCommand<object> RemoveUsefulMaterial {
             get {
                 if (removeUsefulMaterial == null) {
-                    removeUsefulMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material startM) {
-                        _user.UsefulMaterials.Remove(startM.MaterialTitle);
-                        OnPropertyChanged(nameof(UsefulMaterialsCount));
+                    removeUsefulMaterial = new RelayCommand<object>(execute);
+                    void execute(object material) {
+                        if (material is Material materialToRemove) {
+                            _user.UsefulMaterials.Remove(materialToRemove.MaterialTitle);
+                            OnPropertyChanged(nameof(UsefulMaterialsCount));
+                        }
+                      
                     }
                     return removeUsefulMaterial;
                 }
