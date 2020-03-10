@@ -3,6 +3,7 @@ using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Launcher.ViewModel {
 
@@ -80,11 +81,11 @@ namespace Launcher.ViewModel {
         #endregion
 
         #region Commands
-        private RelayCommand<object> launcherTheProject;
-        public RelayCommand<object> LauncherTheProject {
+        private ICommand launcherTheProject;
+        public ICommand LauncherTheProject {
             get {
                 if (launcherTheProject == null) {
-                    launcherTheProject = new RelayCommand<object>(execute, canExecute);
+                    launcherTheProject = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         ClickTheButton(this, new ProjectEventArgs(CommandProject.Start, CurrentProject));
                         OpenMaterials();
@@ -118,11 +119,11 @@ namespace Launcher.ViewModel {
 
 
         #region project editing 
-        private RelayCommand<object> changeProject;
-        public RelayCommand<object> ChangeProject {
+        private ICommand changeProject;
+        public ICommand ChangeProject {
             get {
                 if (changeProject == null) {
-                    changeProject = new RelayCommand<object>(execute);
+                    changeProject = new RelayCommand(execute);
                     void execute(object obj) {
                         ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
                     }
@@ -135,11 +136,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> renameProject;
-        public RelayCommand<object> RenameProject {
+        private ICommand renameProject;
+        public ICommand RenameProject {
             get {
                 if (renameProject == null) {
-                    renameProject = new RelayCommand<object>(execute, canExecute);
+                    renameProject = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         MessageBoxResult result = MessageBox.Show($"Время изучения проекта обнулится. Изменить имя {CurrentProject.Name} на {NewName}?.", "Rename", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes) {
@@ -167,11 +168,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> removeProject;
-        public RelayCommand<object> RemoveProject {
+        private ICommand removeProject;
+        public ICommand RemoveProject {
             get {
                 if (removeProject == null) {
-                    removeProject = new RelayCommand<object>(execute);
+                    removeProject = new RelayCommand(execute);
                     void execute(object obj) {
                         MessageBoxResult result = MessageBox.Show($"Вы хотите удалить {CurrentProject.Name}?", "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
                         if (result == MessageBoxResult.Yes) {
@@ -190,11 +191,11 @@ namespace Launcher.ViewModel {
         #endregion
 
         #region для элементов проекта
-        private RelayCommand<object> addMaterial;
-        public RelayCommand<object> AddMaterial {
+        private ICommand addMaterial;
+        public ICommand AddMaterial {
             get {
                 if (addMaterial == null) {
-                    addMaterial = new RelayCommand<object>(execute);
+                    addMaterial = new RelayCommand(execute);
                     void execute(object obj) {
                         AddM();//получить элемент или что такое 
                     }
@@ -219,11 +220,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> fixMaterial;
-        public RelayCommand<object> FixMaterial {
+        private ICommand fixMaterial;
+        public ICommand FixMaterial {
             get {
                 if (fixMaterial == null) {
-                    fixMaterial = new RelayCommand<object>(execute);
+                    fixMaterial = new RelayCommand(execute);
                     void execute(object material) {
                         if (material is Material spoiledM) {
                             FixM(spoiledM);
@@ -252,11 +253,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> removeProjectMaterial;
-        public RelayCommand<object> RemoveProjectMaterial {
+        private ICommand removeProjectMaterial;
+        public ICommand RemoveProjectMaterial {
             get {
                 if (removeProjectMaterial == null) {
-                    removeProjectMaterial = new RelayCommand<object>(execute);
+                    removeProjectMaterial = new RelayCommand(execute);
                     void execute(object material) {
                         if (material is Material deleteM) {
                             CurrentProject.Remove(deleteM);
@@ -269,11 +270,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> addTask;
-        public RelayCommand<object> AddTask {
+        private ICommand addTask;
+        public ICommand AddTask {
             get {
                 if (addTask == null) {
-                    addTask = new RelayCommand<object>(execute);
+                    addTask = new RelayCommand(execute);
                     void execute(object obj) {
                         AddProjectTask();//получить элемент или что такое 
                     }

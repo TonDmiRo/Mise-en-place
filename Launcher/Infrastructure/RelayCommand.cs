@@ -1,66 +1,47 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Launcher {
-   
-    public class RelayCommand<T> : ICommand {
-        #region Fields
-        private readonly Action<T> _execute = null;
-        private readonly Predicate<T> _canExecute = null;
-        #endregion
+    #region Делегаты для методов WPF команд
+    public delegate void ExecuteHandler(object parameter);
+    public delegate bool CanExecuteHandler(object parameter);
+    #endregion
 
-        #region Constructors
+    #region Класс команд - RelayCommand
+    /// <summary>Класс реализующий интерфейс ICommand для создания WPF команд</summary>
+    public class RelayCommand : ICommand {
+        private readonly CanExecuteHandler _canExecute;
+        private readonly ExecuteHandler _onExecute;
+        private readonly EventHandler _requerySuggested;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="DelegateCommand{T}"/>.
-        /// </summary>
-        /// <param name="execute">Delegate to execute when Execute is called on the command.  This can be null to just hook up a CanExecute delegate.</param>
-        /// <remarks><seealso cref="CanExecute"/> will always return true.</remarks>
-        public RelayCommand(Action<T> execute)
-            : this(execute, null) {
-        }
+        /// <summary>Событие извещающее об изменении состояния команды</summary>
+        public event EventHandler CanExecuteChanged;
 
-        /// <summary>
-        /// Creates a new command.
-        /// </summary>
-        /// <param name="execute">The execution logic.</param>
-        /// <param name="canExecute">The execution status logic.</param>
-        public RelayCommand(Action<T> execute, Predicate<T> canExecute) {
-            _execute = execute ?? throw new ArgumentNullException("execute");
+        /// <summary>Конструктор команды</summary>
+        /// <param name="execute">Выполняемый метод команды</param>
+        /// <param name="canExecute">Метод разрешающий выполнение команды</param>
+        public RelayCommand(ExecuteHandler execute, CanExecuteHandler canExecute = null) {
+            _onExecute = execute;
             _canExecute = canExecute;
+
+            _requerySuggested = (o, e) => Invalidate();
+            CommandManager.RequerySuggested += _requerySuggested;
         }
 
-        #endregion
+        public void Invalidate()
+            => Application.Current.Dispatcher.BeginInvoke(new Action(() => {
+                CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+            }), null);
 
-        #region ICommand Members
+        /// <summary>Вызов разрешающего метода команды</summary>
+        /// <param name="parameter">Параметр команды</param>
+        /// <returns>True - если выполнение команды разрешено</returns>
+        public bool CanExecute(object parameter) => _canExecute == null ? true : _canExecute.Invoke(parameter);
 
-        ///<summary>
-        ///Defines the method that determines whether the command can execute in its current state.
-        ///</summary>
-        ///<param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
-        ///<returns>
-        ///true if this command can be executed; otherwise, false.
-        ///</returns>
-        public bool CanExecute(object parameter) {
-            return _canExecute == null ? true : _canExecute((T)parameter);
-        }
-
-        ///<summary>
-        ///Occurs when changes occur that affect whether or not the command should execute.
-        ///</summary>
-        public event EventHandler CanExecuteChanged {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
-
-        ///<summary>
-        ///Defines the method to be called when the command is invoked.
-        ///</summary>
-        ///<param name="parameter">Data used by the command. If the command does not require data to be passed, this object can be set to <see langword="null" />.</param>
-        public void Execute(object parameter) {
-            _execute((T)parameter);
-        }
-
-        #endregion
+        /// <summary>Вызов выполняющего метода команды</summary>
+        /// <param name="parameter">Параметр команды</param>
+        public void Execute(object parameter) => _onExecute?.Invoke(parameter);
     }
+    #endregion
 }

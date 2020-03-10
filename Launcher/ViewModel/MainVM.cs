@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Launcher.ViewModel {
@@ -194,11 +195,11 @@ namespace Launcher.ViewModel {
         #endregion
 
         #region Commands
-        private RelayCommand<object> saveUser;
-        public RelayCommand<object> SaveUser {
+        private ICommand saveUser;
+        public ICommand SaveUser {
             get {
                 if (saveUser == null) {
-                    saveUser = new RelayCommand<object>(execute);
+                    saveUser = new RelayCommand(execute);
                     void execute(object obj) {
                         _user.SaveUser();
                     }
@@ -209,11 +210,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> addProject;
-        public RelayCommand<object> AddProject {
+        private ICommand addProject;
+        public ICommand AddProject {
             get {
                 if (addProject == null) {
-                    addProject = new RelayCommand<object>(execute);
+                    addProject = new RelayCommand(execute);
                     void execute(object obj) {
                         _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
                         OnPropertyChanged(nameof(ProjectsCount));
@@ -228,11 +229,11 @@ namespace Launcher.ViewModel {
 
 
         #region for UsefulMaterial
-        private RelayCommand<object> addUsefulMaterial;
-        public RelayCommand<object> AddUsefulMaterial {
+        private ICommand addUsefulMaterial;
+        public ICommand AddUsefulMaterial {
             get {
                 if (addUsefulMaterial == null) {
-                    addUsefulMaterial = new RelayCommand<object>(execute);
+                    addUsefulMaterial = new RelayCommand(execute);
                     void execute(object obj) {
                         AddUsefulM();
                         OnPropertyChanged(nameof(UsefulMaterialsCount));
@@ -262,11 +263,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> startUsefulMaterial;
-        public RelayCommand<object> StartUsefulMaterial {
+        private ICommand startUsefulMaterial;
+        public ICommand StartUsefulMaterial {
             get {
                 if (startUsefulMaterial == null) {
-                    startUsefulMaterial = new RelayCommand<object>(execute);
+                    startUsefulMaterial = new RelayCommand(execute);
                     void execute(object startM) {
                         try {
                             if(startM is Material usefulMaterial)
@@ -282,11 +283,11 @@ namespace Launcher.ViewModel {
             }
         }
 
-        private RelayCommand<object> launcherUsefulMaterials;
-        public RelayCommand<object> LauncherUsefulMaterials {
+        private ICommand launcherUsefulMaterials;
+        public ICommand LauncherUsefulMaterials {
             get {
                 if (launcherUsefulMaterials == null) {
-                    launcherUsefulMaterials = new RelayCommand<object>(execute, canExecute);
+                    launcherUsefulMaterials = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
 
                         OpenUsefulMaterials();
@@ -317,11 +318,11 @@ namespace Launcher.ViewModel {
 
         }
 
-        private RelayCommand<object> removeUsefulMaterial;
-        public RelayCommand<object> RemoveUsefulMaterial {
+        private ICommand removeUsefulMaterial;
+        public ICommand RemoveUsefulMaterial {
             get {
                 if (removeUsefulMaterial == null) {
-                    removeUsefulMaterial = new RelayCommand<object>(execute);
+                    removeUsefulMaterial = new RelayCommand(execute);
                     void execute(object material) {
                         if (material is Material materialToRemove) {
                             _user.UsefulMaterials.Remove(materialToRemove.MaterialTitle);

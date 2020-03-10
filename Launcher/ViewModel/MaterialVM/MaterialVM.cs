@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Windows;
+using System.Windows.Input;
 using WinForms = System.Windows.Forms;
 
 namespace Launcher.ViewModel {
@@ -58,11 +59,11 @@ namespace Launcher.ViewModel {
         public MaterialType MaterialType { get; private set; }
 
         #region Commands
-        private RelayCommand<object> setMaterialValues;
-        public RelayCommand<object> SetMaterialValues {
+        private ICommand setMaterialValues;
+        public ICommand SetMaterialValues {
             get {
                 if (setMaterialValues == null) {
-                    setMaterialValues = new RelayCommand<object>(execute, canExecute);
+                    setMaterialValues = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         ReadOnlyNewMaterial = true;
                         Window window = (Window)obj;
@@ -124,11 +125,11 @@ namespace Launcher.ViewModel {
             return material;
         }
 
-        private RelayCommand<object> getPath;
-        public RelayCommand<object> GetPath {
+        private ICommand getPath;
+        public ICommand GetPath {
             get {
                 if (getPath == null) {
-                    getPath = new RelayCommand<object>(execute, canExecute);
+                    getPath = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         PathToMaterial = SelectedPath();
 
@@ -154,11 +155,11 @@ namespace Launcher.ViewModel {
             }
         }
 
-        private RelayCommand<object> getFile;
-        public RelayCommand<object> GetFile {
+        private ICommand getFile;
+        public ICommand GetFile {
             get {
                 if (getFile == null) {
-                    getFile = new RelayCommand<object>(execute, canExecute);
+                    getFile = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         PathToMaterial = SelectedFile();
                     }
@@ -181,11 +182,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> getURL;
-        public RelayCommand<object> GetURL {
+        private ICommand getURL;
+        public ICommand GetURL {
             get {
                 if (getURL == null) {
-                    getURL = new RelayCommand<object>(execute, canExecute);
+                    getURL = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         SelectedURL();
                     }

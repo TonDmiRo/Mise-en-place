@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Configuration;
+using System.Windows.Input;
 
 namespace Launcher.ViewModel {
     internal class LoginVM : BaseVM {
@@ -17,11 +18,11 @@ namespace Launcher.ViewModel {
             _usernames = GetListUsername();
         }
 
-        private RelayCommand<object> startupLauncher;
-        public RelayCommand<object> StartupLauncher {
+        private ICommand startupLauncher;
+        public ICommand StartupLauncher {
             get {
                 if (startupLauncher == null) {
-                    startupLauncher = new RelayCommand<object>(execute);
+                    startupLauncher = new RelayCommand(execute);
                     void execute(object obj) {
                         if (_usernames.Contains(Username)) {
                             if (StartupMainWindow()) {
@@ -67,11 +68,11 @@ namespace Launcher.ViewModel {
         }
 
 
-        private RelayCommand<object> createUserCommand;
-        public RelayCommand<object> CreateUserCommand {
+        private ICommand createUserCommand;
+        public ICommand CreateUserCommand {
             get {
                 if (createUserCommand == null) {
-                    createUserCommand = new RelayCommand<object>(execute, canExecute);
+                    createUserCommand = new RelayCommand(execute, canExecute);
                     void execute(object obj) {
                         CreateUser();
                         MessageBox.Show("Пользователь создан. Нажмите войти.");
