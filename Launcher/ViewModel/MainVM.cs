@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace Launcher.ViewModel {
@@ -15,6 +16,7 @@ namespace Launcher.ViewModel {
      * TODO: заменить повторяющиеся атрибуты стилями
      * TODO: создать help
      * TODO: property("")
+     * TODO: Проверить открытие битых файлов
     */
     public class MainVM : BaseVM {
         /// <summary>
@@ -35,13 +37,13 @@ namespace Launcher.ViewModel {
             get => _currentPage;
             set {
                 _currentPage = value;
-                OnPropertyChanged("CurrentPage");
+                OnPropertyChanged();
             }
         }
 
 #if EditMainV 
         public MainVM() {
-            // Конструктор без параметров используется только для работы с MainV
+            // Конструктор без параметров используется только для редактирования MainV
             // TODO: Убрать комментарий <Window.DataContext>
             Administrator admin;
             NewUserBuilder newUserBuilder = new NewUserBuilder("Test");
@@ -77,7 +79,7 @@ namespace Launcher.ViewModel {
             ///может это хороший вариант?
             /// можно подписаться на tick у пользователя 
 
-            OnPropertyChanged("UsageTimeTotal");
+            OnPropertyChanged(nameof(UsageTimeTotal));
         }
         #endregion
 
@@ -162,7 +164,7 @@ namespace Launcher.ViewModel {
 
         #region Methods for receiver
         private void ChangeProject(object sender) {
-            OnPropertyChanged("ProjectIsCurrentlyChanging");
+            OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
         }
         private void StartProject() {
             //TODO: новая страница с таймером
@@ -185,7 +187,7 @@ namespace Launcher.ViewModel {
         }
         private void RemoveProject(ProjectEventArgs e) {
             _user.ProjectCollection.RemoveProject(e.Project);
-            OnPropertyChanged("ProjectsCount");
+            OnPropertyChanged(nameof(ProjectsCount));
             //MessageBox.Show($"{e.Project.Name} удален.");
         }
         #endregion
@@ -193,145 +195,77 @@ namespace Launcher.ViewModel {
         #endregion
 
         #region Commands
-        private RelayCommand<object> saveUser;
-        public RelayCommand<object> SaveUser {
-            get {
-                if (saveUser == null) {
-                    saveUser = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        _user.SaveUser();
-                    }
-                    return saveUser;
-                }
-                return saveUser;
-            }
+        private ICommand _saveUserCommand;
+        public ICommand SaveUserCommand => _saveUserCommand ?? ( _saveUserCommand = new RelayCommand(SaveUser) );
+        private void SaveUser(object parameter) {
+            _user.SaveUser();
         }
 
-
-        private RelayCommand<object> addProject;
-        public RelayCommand<object> AddProject {
-            get {
-                if (addProject == null) {
-                    addProject = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
-                        OnPropertyChanged("ProjectsCount");
-                    }
-                    return addProject;
-                }
-                return addProject;
-
-            }
-
+        private ICommand _addProjectCommand;
+        public ICommand AddProjectCommand => _addProjectCommand ?? ( _addProjectCommand = new RelayCommand(AddProject) );
+        private void AddProject(object parameter) {
+            _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
+            OnPropertyChanged(nameof(ProjectsCount));
         }
 
 
         #region for UsefulMaterial
-        private RelayCommand<object> addUsefulMaterial;
-        public RelayCommand<object> AddUsefulMaterial {
-            get {
-                if (addUsefulMaterial == null) {
-                    addUsefulMaterial = new RelayCommand<object>(execute);
-                    void execute(object obj) {
-                        AddUsefulM();
-                        OnPropertyChanged("UsefulMaterialsCount");
-                    }
-                    void AddUsefulM() {
-                        using (MaterialVM viewModel = new MaterialVM()) {
-                            using (NewMaterialV window = new NewMaterialV(viewModel)) {
-                                var result = window.ShowDialog();
-                                if (result == true) {
-                                    try {
-                                        _user.UsefulMaterials.Add(viewModel.GetMaterial());
-                                    }
-                                    catch (Exception e) {
-                                        MessageBox.Show(e.Message);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    return addUsefulMaterial;
-                }
-                return addUsefulMaterial;
-
-            }
-
-        }
-
-
-        private RelayCommand<Material> startUsefulMaterial;
-        public RelayCommand<Material> StartUsefulMaterial {
-            get {
-                if (startUsefulMaterial == null) {
-                    startUsefulMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material startM) {
+        private ICommand _addUsefulMCommand;
+        public ICommand AddUsefulMCommand => _addUsefulMCommand ?? ( _addUsefulMCommand = new RelayCommand(AddUsefulMaterial) );
+        private void AddUsefulMaterial(object parameter) {
+            using (MaterialVM viewModel = new MaterialVM()) {
+                using (NewMaterialV window = new NewMaterialV(viewModel)) {
+                    var result = window.ShowDialog();
+                    if (result == true) {
                         try {
-                            _user.UsefulMaterials.OpenUsefulMaterial(startM.MaterialTitle);
+                            _user.UsefulMaterials.Add(viewModel.GetMaterial());
                         }
                         catch (Exception e) {
                             MessageBox.Show(e.Message);
                         }
                     }
-                    return startUsefulMaterial;
                 }
-                return startUsefulMaterial;
+            }
+
+            OnPropertyChanged(nameof(UsefulMaterialsCount));
+        }
+
+        private ICommand _startUsefulMCommand;
+        public ICommand StartUsefulMCommand => _startUsefulMCommand ?? ( _startUsefulMCommand = new RelayCommand(StartUsefulMaterial) );
+        private void StartUsefulMaterial(object startM) {
+            try {
+                if (startM is Material usefulMaterial)
+                    _user.UsefulMaterials.OpenUsefulMaterial(usefulMaterial.MaterialTitle);
+            }
+            catch (Exception e) {
+                MessageBox.Show(e.Message);
             }
         }
 
-        private RelayCommand<object> launcherUsefulMaterials;
-        public RelayCommand<object> LauncherUsefulMaterials {
-            get {
-                if (launcherUsefulMaterials == null) {
-                    launcherUsefulMaterials = new RelayCommand<object>(execute, canExecute);
-                    void execute(object obj) {
-
-                        OpenUsefulMaterials();
-                    }
-                    void OpenUsefulMaterials() {
-                        bool oneWasOpen = false;
-                        oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
-                        //TODO: проверить если несколько ошибок
-                        foreach (var item in _user.UsefulMaterials.Values) {
-                            if (item.Exists != true) {
-                                MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
-                            }
-                        }
-
-
-
-
-                        if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
-                    }
-
-                    bool canExecute(object obj) => UsefulMaterialsCount > 0;
-
-                    return launcherUsefulMaterials;
+        private ICommand _launchUMaterialsCommand;
+        public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
+        private void LaunchUsefulMaterials(object parameter) {
+            bool oneWasOpen = false;
+            oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
+            //TODO: проверить если несколько ошибок
+            foreach (var item in _user.UsefulMaterials.Values) {
+                if (item.Exists != true) {
+                    MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
                 }
-                return launcherUsefulMaterials;
-
             }
 
+            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
         }
 
-
-        private RelayCommand<Material> removeUsefulMaterial;
-        public RelayCommand<Material> RemoveUsefulMaterial {
-            get {
-                if (removeUsefulMaterial == null) {
-                    removeUsefulMaterial = new RelayCommand<Material>(execute);
-                    void execute(Material startM) {
-                        _user.UsefulMaterials.Remove(startM.MaterialTitle);
-                        OnPropertyChanged("UsefulMaterialsCount");
-                    }
-                    return removeUsefulMaterial;
-                }
-                return removeUsefulMaterial;
+        private ICommand _removeUsefulMCommand;
+        public ICommand RemoveUsefulMCommand => _removeUsefulMCommand ?? ( _removeUsefulMCommand = new RelayCommand(RemoveUsefulMaterial) );
+        private void RemoveUsefulMaterial(object material) {
+            if (material is Material materialToRemove) {
+                _user.UsefulMaterials.Remove(materialToRemove.MaterialTitle);
+                OnPropertyChanged(nameof(UsefulMaterialsCount));
             }
         }
         #endregion
-
         #endregion
     }
 }

@@ -10,7 +10,6 @@ namespace Launcher {
         //private const int standartHeight = 640;
         //private bool standartSize = true;
         public MainV(MainVM viewModel) {
-           
             InitializeComponent();
             DataContext = viewModel;
         }

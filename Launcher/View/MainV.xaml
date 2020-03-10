@@ -127,7 +127,7 @@
                 </ListBox>
                 <Button x:Name="AddProject"
                         Style="{StaticResource AddButtonStyle}"
-                        Command="{Binding AddProject}" />
+                        Command="{Binding AddProjectCommand}" />
               </StackPanel >
             </Expander.Content>
           </Expander>
@@ -164,7 +164,7 @@
                                   Foreground="{x:Null}"
                                   Background="{x:Null}"
                                   Command="{Binding ElementName=UsefulMaterials_list,
-                                                        Path=DataContext.StartUsefulMaterial}"
+                                                        Path=DataContext.StartUsefulMCommand}"
                                   CommandParameter="{Binding }">
                             <Image Source="/Launcher;component/View/Images/play.png"
                                    Stretch="Fill" />
@@ -184,7 +184,7 @@
                                 Foreground="{x:Null}"
                                 Background="{x:Null}"
                                 Command="{Binding ElementName=UsefulMaterials_list,
-                                                    Path=DataContext.RemoveUsefulMaterial}"
+                                                    Path=DataContext.RemoveUsefulMCommand}"
                                 CommandParameter="{Binding }"
                                 VerticalAlignment="Top">
                           <Image Source="/Launcher;component/View/Images/delete.png"
@@ -218,7 +218,7 @@
                           Height="23"
                           Margin="0,0,5,0"
                           FontSize="14"
-                          Command="{Binding LauncherUsefulMaterials}"
+                          Command="{Binding LaunchUMaterialsCommand}"
                           VerticalAlignment="Bottom">
                     <StackPanel Orientation="Horizontal"
                                 Margin="0,0,0,0">
@@ -229,7 +229,7 @@
                   </Button>
                   <Button x:Name="AddUsefulMaterial"
                           Style="{StaticResource AddButtonStyle}"
-                          Command="{Binding AddUsefulMaterial}" />
+                          Command="{Binding AddUsefulMCommand}" />
                 </StackPanel>
 
               </StackPanel>
