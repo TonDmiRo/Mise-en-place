@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel;
-using System.IO;
 using System.Runtime.CompilerServices;
 
 namespace Launcher.Model {
@@ -36,9 +36,17 @@ namespace Launcher.Model {
         }
         #endregion
         public void OpenMaterial() {
+            CheckMaterial();
             StartMaterial();
         }
         protected abstract void StartMaterial();
+        protected virtual void CheckMaterial() {
+            if (string.IsNullOrWhiteSpace(PathToMaterial)) {
+                BlockMaterial();
+                throw new Exception("Путь не может быть пустым!");
+            }
+        }
+       
         public void BlockMaterial() {
             OpensAtLaunch = false;
             Exists = false;

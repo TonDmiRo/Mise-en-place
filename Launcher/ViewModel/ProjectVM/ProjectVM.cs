@@ -2,6 +2,7 @@
 using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 
@@ -88,16 +89,27 @@ namespace Launcher.ViewModel {
             OpenMaterials();
         }
         private void OpenMaterials() {
+            VerifyExistence();
+
             bool oneWasOpen = false;
             oneWasOpen = _project.OpenMarkedMaterials();
+            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+        }
+
+        private void VerifyExistence() {
+            StringBuilder damagedMaterials = new StringBuilder();
             foreach (var item in _project.ProjectMaterials) {
                 if (item.Exists != true) {
-                    MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
+                    item.BlockMaterial();
+                    damagedMaterials.AppendLine(item.MaterialTitle);
                 }
-
-                if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+            }
+            if (damagedMaterials.Length > 0) {
+                MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
             }
         }
+
+
         private bool CanLaunchProject(object parameter) {
             return _project != null;
         }

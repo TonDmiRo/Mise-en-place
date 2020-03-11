@@ -39,7 +39,7 @@
     <Style TargetType="{x:Type ListView}"
            BasedOn="{StaticResource baseStyle}" />
     <!--#endregion-->
-    
+
     <Style TargetType="DataGrid">
       <Setter Property="AutoGenerateColumns"
               Value="False" />
@@ -131,6 +131,7 @@
         </DataTrigger>
       </Style.Triggers>
     </Style>
+
 
   </Page.Resources>
   <Grid IsEnabled="{Binding ProjectIsNotEmpty}">
@@ -335,6 +336,7 @@
 
         <DataGrid Grid.Row="1"
                   x:Name="ProjectMaterials_DG"
+                  SelectionMode="Single"
                   ItemsSource="{Binding ProjectMaterials}"
                   HorizontalScrollBarVisibility="Hidden">
           <DataGrid.ItemsPanel>
@@ -410,6 +412,23 @@
               </Style.Triggers>
             </Style>
           </DataGrid.RowStyle>
+
+          <DataGrid.CellStyle>
+            <Style TargetType="{x:Type DataGridCell}">
+              <Style.Triggers>
+
+                <Trigger Property="IsSelected"
+                         Value="true">
+                  <Setter Property="Background"
+                          Value="Transparent" />
+                  <Setter Property="Foreground"
+                          Value="Black" />
+                  <Setter Property="BorderThickness"
+                          Value="0" />
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </DataGrid.CellStyle>
         </DataGrid>
 
         <StackPanel Grid.Row="2"
@@ -472,9 +491,6 @@
                   ItemsSource="{Binding ProjectTasks}">
 
           <DataGrid.Columns>
-
-
-
             <DataGridCheckBoxColumn Binding="{Binding TaskStatus}"
                                     Width="30"
                                     SortDirection="Ascending"
@@ -507,7 +523,21 @@
             </DataGridTemplateColumn>
           </DataGrid.Columns>
 
-
+          <DataGrid.CellStyle>
+            <Style TargetType="{x:Type DataGridCell}">
+              <Style.Triggers>
+                <Trigger Property="IsSelected"
+                         Value="true">
+                  <Setter Property="Background"
+                          Value="Transparent" />
+                  <Setter Property="Foreground"
+                          Value="Black" />
+                  <Setter Property="BorderThickness"
+                          Value="0" />
+                </Trigger>
+              </Style.Triggers>
+            </Style>
+          </DataGrid.CellStyle>
         </DataGrid>
 
         <StackPanel Grid.Row="2"
