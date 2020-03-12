@@ -3,6 +3,7 @@ using Launcher.Model;
 using Launcher.View;
 using System;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -245,16 +246,21 @@ namespace Launcher.ViewModel {
         private ICommand _launchUMaterialsCommand;
         public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
         private void LaunchUsefulMaterials(object parameter) {
-            bool oneWasOpen = false;
-            oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
-            //TODO: проверить если несколько ошибок
+            VerifyExistence();
+            bool oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
+            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+        }
+        private void VerifyExistence() {
+            StringBuilder damagedMaterials = new StringBuilder();
             foreach (var item in _user.UsefulMaterials.Values) {
                 if (item.Exists != true) {
-                    MessageBox.Show($"Путь к материалу:{item.MaterialTitle} поврежден!");
+                    item.BlockMaterial();
+                    damagedMaterials.AppendLine(item.MaterialTitle);
                 }
             }
-
-            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+            if (damagedMaterials.Length > 0) {
+                MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
+            }
         }
 
         private ICommand _removeUsefulMCommand;
