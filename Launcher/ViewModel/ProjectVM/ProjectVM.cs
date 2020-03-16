@@ -30,8 +30,7 @@ namespace Launcher.ViewModel {
                     _project = _emptyСourse;
                     ProjectIsNotEmpty = false;
                 }
-
-                OnPropertyChanged(null);// (null) обновляет все свойства
+                OnAllPropertyChanged();
             }
         }
 
@@ -90,9 +89,7 @@ namespace Launcher.ViewModel {
         }
         private void OpenMaterials() {
             VerifyExistence();
-
-            bool oneWasOpen = false;
-            oneWasOpen = _project.OpenMarkedMaterials();
+            bool oneWasOpen = _project.OpenMarkedMaterials();
             if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
         }
 
@@ -108,8 +105,6 @@ namespace Launcher.ViewModel {
                 MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
             }
         }
-
-
         private bool CanLaunchProject(object parameter) {
             return _project != null;
         }

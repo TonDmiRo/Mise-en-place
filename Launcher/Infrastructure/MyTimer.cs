@@ -3,7 +3,7 @@ using System.Timers;
 
 namespace Launcher {
     internal class MyTimer {
-        
+        //TODO: check the need
         private readonly Timer _timer;
         public MyTimer(double interval, ElapsedEventHandler elapsed, bool autoReset = true) {
             _timer = new Timer(interval) {
