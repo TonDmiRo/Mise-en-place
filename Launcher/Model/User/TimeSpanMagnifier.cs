@@ -11,6 +11,7 @@ namespace Launcher.Model {
             set {
                 if (( 100 <= value ) && ( value < System.Int32.MaxValue )) {
                     _millisecondsForTimer = value;
+                    if (_timer != null) { _timer.Interval = value; }
                 }
                 else {
                     throw new ArgumentOutOfRangeException(
