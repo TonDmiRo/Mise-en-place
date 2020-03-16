@@ -1,0 +1,84 @@
+﻿<Window x:Class="Launcher.View.DoingV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Launcher.View"
+        xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
+        mc:Ignorable="d"
+        Title="DoingV"
+        Height="300"
+        Width="286">
+ <!--
+  <Window.DataContext>
+    <viewmodel:DoingVM />
+  </Window.DataContext>
+  -->
+  <Window.Resources>
+    <Style x:Key="RadioButtonStyle"
+           TargetType="RadioButton">
+      <Setter Property="Width"
+              Value="44" />
+
+      <Setter Property="HorizontalAlignment"
+              Value="Center" />
+      <Setter Property="VerticalAlignment"
+              Value="Center" />
+    </Style>
+
+  </Window.Resources>
+  <Grid>
+    <StackPanel Margin="0,50,0,0">
+      <StackPanel Margin="60,0,60,0"
+                  Height="20"
+                  Orientation="Horizontal"
+                  VerticalAlignment="Bottom">
+        <RadioButton Content="25m"
+                     Style="{StaticResource RadioButtonStyle}"
+                     IsChecked="{Binding CreateUserCommand}" />
+
+        <RadioButton Content="50m"
+                     Style="{StaticResource RadioButtonStyle}"
+                     IsChecked="{Binding CreateUserCommand}" />
+
+        <RadioButton Content="relax"
+                     Style="{StaticResource RadioButtonStyle}"
+                     IsChecked="{Binding CreateUserCommand}" />
+      </StackPanel>
+
+      <Label Width="238"
+             Height="70"
+             Margin="20,10,0,0"
+             HorizontalAlignment="Left"
+             FontSize="42"
+             Content="{Binding ElapsedTime}"
+             VerticalContentAlignment="Center"
+             HorizontalContentAlignment="Center"
+             VerticalAlignment="Top" />
+
+      <DockPanel Margin="10,50,10,0">
+        <Button DockPanel.Dock="Left"
+                Content="Пропустить"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Width="75"
+                BorderBrush="{x:Null}"
+                Background="{x:Null}"
+                Command="{Binding CreateUserCommand}" />
+
+        <Button DockPanel.Dock="Right"
+                Content="Done"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Width="75"
+                Command="{Binding SignInLauncher}"
+                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}"
+                Background="#FF75B662"
+                FontWeight="Bold" />
+      </DockPanel>
+
+    </StackPanel>
+
+  </Grid>
+</Window>
