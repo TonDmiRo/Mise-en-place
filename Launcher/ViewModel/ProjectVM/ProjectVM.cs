@@ -30,8 +30,7 @@ namespace Launcher.ViewModel {
                     _project = _emptyСourse;
                     ProjectIsNotEmpty = false;
                 }
-
-                OnPropertyChanged(null);// (null) обновляет все свойства
+                OnAllPropertyChanged();
             }
         }
 
