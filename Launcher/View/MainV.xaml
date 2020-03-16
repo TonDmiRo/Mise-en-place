@@ -245,9 +245,9 @@
                     FlowDirection="LeftToRight"
                     HorizontalAlignment="Left">
           <Button x:Name="button1"
-                  Content="1"
-                  Width="30"
-                  Command="{Binding SaveUser}" />
+                  Content="Save"
+                  Width="60"
+                  Command="{Binding SaveUserCommand}" />
           <Button x:Name="button2"
                   Content="2"
                   Width="30" />
@@ -259,9 +259,6 @@
                   Width="30" />
           <Button x:Name="button5"
                   Content="5"
-                  Width="30" />
-          <Button x:Name="button6"
-                  Content="6"
                   Width="30" />
         </StackPanel>
 
