@@ -82,44 +82,44 @@ namespace Launcher.ViewModel {
 
         #region Commands
         private ICommand _launchProjectCommand;
-        public ICommand LaunchProjectCommand => _launchProjectCommand ?? ( _launchProjectCommand = new RelayCommand(LaunchProject, CanLaunchProject) );
-        private void LaunchProject(object parameter) {
-            ClickTheButton(this, new ProjectEventArgs(CommandProject.Start, CurrentProject));
-           // OpenMaterials();
-        }
-        private void OpenMaterials() {
-            //VerifyExistence();
-            bool oneWasOpen = _project.OpenMarkedMaterials();
-            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
-        }
-
-        //private void VerifyExistence() {
-        //    StringBuilder damagedMaterials = new StringBuilder();
-        //    foreach (var item in _project.ProjectMaterials) {
-        //        if (item.Exists != true) {
-        //            item.BlockMaterial();
-        //            damagedMaterials.AppendLine(item.MaterialTitle);
-        //        }
-        //    }
-        //    if (damagedMaterials.Length > 0) {
-        //        MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
-        //    }
-        //}
-        private bool CanLaunchProject(object parameter) {
-            return _project != null;
-        }
-
+        public ICommand LaunchProjectCommand => _launchProjectCommand ?? ( _launchProjectCommand = new RelayCommand(LaunchProject) );
 
         #region project editing 
         private ICommand _changeProjectCommand;
         public ICommand ChangeProjectCommand => _changeProjectCommand ?? ( _changeProjectCommand = new RelayCommand(ChangeProject) );
-        private void ChangeProject(object parameter) {
-            ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
-        }
-
-
+       
         private ICommand _renameProjectCommand;
         public ICommand RenameProjectCommand => _renameProjectCommand ?? ( _renameProjectCommand = new RelayCommand(RenameProject, CanRenameProject) );
+        private bool CanRenameProject(object parameter) {
+            if (NewName == Name) { return false; }
+            bool NameNotIsNull = ( !string.IsNullOrWhiteSpace(NewName) ) && ( !string.IsNullOrWhiteSpace(NewName) );
+            return NameNotIsNull;
+        }
+
+        private ICommand _deleteProjectCommand;
+        public ICommand DeleteProjectCommand => _deleteProjectCommand ?? ( _deleteProjectCommand = new RelayCommand(DeleteProject) );
+        #endregion
+
+        #region для элементов проекта
+        private ICommand _addMaterialCommand;
+        public ICommand AddMaterialCommand => _addMaterialCommand ?? ( _addMaterialCommand = new RelayCommand(AddMaterial) );
+
+        private ICommand _fixMaterialCommand;
+        public ICommand FixMaterialCommand => _fixMaterialCommand ?? ( _fixMaterialCommand = new RelayCommand(FixMaterial) );
+
+        private ICommand _removeProjectMCommand;
+        public ICommand RemoveProjectMCommand => _removeProjectMCommand ?? ( _removeProjectMCommand = new RelayCommand(RemoveProjectMaterial) );
+
+
+        private ICommand _addTaskCommand;
+        public ICommand AddTaskCommand => _addTaskCommand ?? ( _addTaskCommand = new RelayCommand(AddTask) );
+        #endregion
+        #endregion
+
+        #region Methods
+        private void LaunchProject(object parameter) {
+            ClickTheButton(this, new ProjectEventArgs(CommandProject.Start, CurrentProject));
+        }
         private void RenameProject(object parameter) {
             string strForMessage = $"Время изучения проекта обнулится. Изменить имя {CurrentProject.Name} на {NewName}?";
 
@@ -129,15 +129,9 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged(nameof(Name));
             }
         }
-        private bool CanRenameProject(object parameter) {
-            if (NewName == Name) { return false; }
-            bool NameNotIsNull = ( !string.IsNullOrWhiteSpace(NewName) ) && ( !string.IsNullOrWhiteSpace(NewName) );
-            return NameNotIsNull;
+        private void ChangeProject(object parameter) {
+            ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
         }
-
-
-        private ICommand _deleteProjectCommand;
-        public ICommand DeleteProjectCommand => _deleteProjectCommand ?? ( _deleteProjectCommand = new RelayCommand(DeleteProject) );
         private void DeleteProject(object parameter) {
             string message = $"Вы хотите удалить {CurrentProject.Name}?";
             MessageBoxResult result = MessageBox.Show(message, "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
@@ -147,11 +141,8 @@ namespace Launcher.ViewModel {
                 ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
             }
         }
-        #endregion
 
-        #region для элементов проекта
-        private ICommand _addMaterialCommand;
-        public ICommand AddMaterialCommand => _addMaterialCommand ?? ( _addMaterialCommand = new RelayCommand(AddMaterial) );
+
         private void AddMaterial(object parameter) {
             using (MaterialVM viewModel = new MaterialVM()) {
                 using (NewMaterialV window = new NewMaterialV(viewModel)) {
@@ -162,10 +153,6 @@ namespace Launcher.ViewModel {
                 }
             }
         }
-
-
-        private ICommand _fixMaterialCommand;
-        public ICommand FixMaterialCommand => _fixMaterialCommand ?? ( _fixMaterialCommand = new RelayCommand(FixMaterial) );
         private void FixMaterial(object parameter) {
             if (parameter is Material spoiledM) {
                 try {
@@ -189,24 +176,15 @@ namespace Launcher.ViewModel {
             }
             throw new Exception("Материал не удалось исправить!");
         }
-
-
-        private ICommand _removeProjectMCommand;
-        public ICommand RemoveProjectMCommand => _removeProjectMCommand ?? ( _removeProjectMCommand = new RelayCommand(RemoveProjectMaterial) );
         private void RemoveProjectMaterial(object material) {
             if (material is Material deleteM) {
                 CurrentProject.Remove(deleteM);
             }
         }
 
-
-        private ICommand _addTaskCommand;
-        public ICommand AddTaskCommand => _addTaskCommand ?? ( _addTaskCommand = new RelayCommand(AddTask) );
         private void AddTask(object parameter) {
             ProjectTasks.Add(new Task(string.Empty));
         }
-        #endregion
-
         #endregion
 
         #region private

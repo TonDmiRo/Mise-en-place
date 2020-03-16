@@ -144,9 +144,6 @@ namespace Launcher.ViewModel {
         }
 
         #region Methods for receiver
-        private void ChangeProject(object sender) {
-            OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
-        }
         private void StartProject(ProjectEventArgs e) {
             //TODO: новая страница с таймером
             ///Должен открываться таймер для этого проекта
@@ -175,15 +172,15 @@ namespace Launcher.ViewModel {
             //addTimeProject
 
         }
-
         public bool HideMyProperty { get; set; }//для основного окна
+       
         private void RenameProject(object sender, ProjectEventArgs e) {
+            //TODO: Исправить
             if (sender is ProjectVM projectVM) {
                 bool s = projectVM == _projectVM;
                 e.Project.RenameProject(projectVM.NewName); // == CurrentProject
 
             }
-
             ///работает не правильно
             ///команда должна отрабатываться здесь 
             ///для этого необходимо ещё передовать строку
@@ -194,6 +191,10 @@ namespace Launcher.ViewModel {
             _user.ProjectCollection.RemoveProject(e.Project);
             OnPropertyChanged(nameof(ProjectsCount));
             //MessageBox.Show($"{e.Project.Name} удален.");
+        }
+
+        private void ChangeProject(object sender) {
+            OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
         }
         #endregion
 
