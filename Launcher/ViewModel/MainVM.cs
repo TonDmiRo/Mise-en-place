@@ -42,7 +42,7 @@ namespace Launcher.ViewModel {
             }
         }
 
-#if EditMainV 
+#if EditMainV
         public MainVM() {
             // Конструктор без параметров используется только для редактирования MainV
             // TODO: Убрать комментарий <Window.DataContext>
@@ -147,7 +147,7 @@ namespace Launcher.ViewModel {
         private void Receiver(object sender, ProjectEventArgs e) {
             switch (e.Command) {
                 case CommandProject.Start:
-                    StartProject();
+                    StartProject(e);
                     break;
                 case CommandProject.Rename:
                     RenameProject(sender, e);
@@ -167,12 +167,36 @@ namespace Launcher.ViewModel {
         private void ChangeProject(object sender) {
             OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
         }
-        private void StartProject() {
+        private void StartProject(ProjectEventArgs e) {
             //TODO: новая страница с таймером
             ///Должен открываться таймер для этого проекта
             ///и уже там кнопка старта
-            MessageBox.Show($"Открытие таймера для проекта: {SelectedProject.Name}.");
+
+            CheckExistenceOfMaterials(e.Project.ProjectMaterials);
+            bool oneWasOpen = e.Project.OpenMarkedMaterials();
+            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+
+            HideMyProperty = true;
+
+            using (DoingVM viewModel = new DoingVM()) {
+                using (DoingV doingV = new DoingV(viewModel)) {
+                    HideMyProperty = true;
+                    doingV.ShowDialog();
+                    if (viewModel.ElapsedTime == e.Project.TimeSpentOnProject) {
+                        Console.WriteLine("Потратил < 25 минут");
+                    }
+                    else {
+                        //e.Project.TimeSpentOnProject = viewModel.ElapsedTime;
+                    }
+                }
+            }
+
+
+            //addTimeProject
+
         }
+
+        public bool HideMyProperty { get; set; }//для основного окна
         private void RenameProject(object sender, ProjectEventArgs e) {
             if (sender is ProjectVM projectVM) {
                 bool s = projectVM == _projectVM;
@@ -246,13 +270,13 @@ namespace Launcher.ViewModel {
         private ICommand _launchUMaterialsCommand;
         public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
         private void LaunchUsefulMaterials(object parameter) {
-            VerifyExistence();
+            CheckExistenceOfMaterials(UsefulMaterialValues);
             bool oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
             if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
         }
-        private void VerifyExistence() {
+        private void CheckExistenceOfMaterials(ReadOnlyObservableCollection<Material> materials) {
             StringBuilder damagedMaterials = new StringBuilder();
-            foreach (var item in _user.UsefulMaterials.Values) {
+            foreach (var item in materials) {
                 if (item.Exists != true) {
                     item.BlockMaterial();
                     damagedMaterials.AppendLine(item.MaterialTitle);
