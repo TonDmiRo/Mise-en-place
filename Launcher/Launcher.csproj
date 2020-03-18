@@ -63,15 +63,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastructure\Interfaces\ISerializer.cs" />
-    <Compile Include="Infrastructure\MyTimer.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Model\Materials\SpecificCreators\LocalMaterialCreator.cs" />
     <Compile Include="Model\Materials\SpecificCreators\WebMaterialCreator.cs" />
     <Compile Include="Model\Materials\SpecificMaterials\WebMaterial.cs" />
-    <Compile Include="Model\User\Collection\ISaveCollection.cs" />
+    <Compile Include="Infrastructure\Interfaces\ISaveCollection.cs" />
     <Compile Include="Infrastructure\Serializers\DefaultSerializer.cs" />
     <Compile Include="Model\Materials\SpecificMaterials\LocalMaterial.cs" />
     <Compile Include="Model\User\Collection\ProjectCollection.cs" />
+    <Compile Include="ViewModel\DoingVM.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
     <Compile Include="ViewModel\ProjectVM\CommandProject.cs" />
     <Compile Include="ViewModel\ProjectVM\RemoveProject.cs" />
@@ -85,14 +85,18 @@
     <Compile Include="Model\User\BuilderForUser\Administrator.cs" />
     <Compile Include="Model\User\BuilderForUser\JsonUserBuilder.cs" />
     <Compile Include="Model\User\BuilderForUser\NewUserBuilder.cs" />
-    <Compile Include="Model\User\TimeSpanMagnifier.cs" />
+    <Compile Include="Infrastructure\TimeSpanMagnifier.cs" />
     <Compile Include="Model\User\User.cs" />
-    <Compile Include="View\CleanWindow.xaml.cs">
-      <DependentUpon>CleanWindow.xaml</DependentUpon>
+    <Compile Include="View\DoingV.xaml.cs">
+      <DependentUpon>DoingV.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\LoginV.xaml.cs">
       <DependentUpon>LoginV.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\DoingV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\LoginV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -135,10 +139,6 @@
       <DependentUpon>MainV.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\CleanWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

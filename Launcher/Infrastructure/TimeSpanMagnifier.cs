@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Timers;
 
-namespace Launcher.Model {
-    internal class TimeSpanMagnifier {
+namespace Launcher {
+    internal class TimeSpanMagnifier :IDisposable{
         /// <summary>
         /// Значение по умолчанию 60000.0
         /// </summary>
@@ -11,6 +11,7 @@ namespace Launcher.Model {
             set {
                 if (( 100 <= value ) && ( value < System.Int32.MaxValue )) {
                     _millisecondsForTimer = value;
+                    if (_timer != null) { _timer.Interval = value; }
                 }
                 else {
                     throw new ArgumentOutOfRangeException(
@@ -67,10 +68,17 @@ namespace Launcher.Model {
         private void TimeHasElapsed(object source, ElapsedEventArgs e) {
             IncreasedTimeSpan += TimeSpan.FromMilliseconds(MillisecondsForTimer);
         }
+
         private TimeSpan _increasedTimeSpan;
 
         private Timer _timer;
         private double _millisecondsForTimer;
+
+        public void Dispose() {
+            TimeSpanHasChanged = null;
+            _timer.Close();
+            _timer.Dispose();
+        }
     }
 
     /// <summary>

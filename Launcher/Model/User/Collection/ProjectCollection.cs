@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.ObjectModel;
 
 namespace Launcher.Model {
     public class ProjectCollection : ISaveCollection {
-
         public ProjectCollection() {
             serializer = new DefaultSerializer();
 
@@ -16,7 +16,7 @@ namespace Launcher.Model {
         public bool RemoveProject(Project item) {
             return _projects.Remove(item);
         }
-
+        
         public readonly ReadOnlyObservableCollection<Project> Projects;
 
         private readonly ObservableCollection<Project> _projects;
@@ -33,7 +33,6 @@ namespace Launcher.Model {
             SerializeCollection(collectionOwner);
         }
         private ISerializer serializer;
-       
         #endregion
     }
 }

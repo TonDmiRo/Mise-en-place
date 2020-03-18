@@ -42,7 +42,7 @@ namespace Launcher.ViewModel {
             }
         }
 
-#if EditMainV 
+#if EditMainV
         public MainVM() {
             // Конструктор без параметров используется только для редактирования MainV
             // TODO: Убрать комментарий <Window.DataContext>
@@ -116,27 +116,6 @@ namespace Launcher.ViewModel {
         public int UsefulMaterialsCount => UsefulMaterialValues.Count;
         #endregion
 
-        #region private
-        private readonly User _user;
-        private ProjectVM _projectVM;
-        private Page _currentPage;
-
-        private void InitializeProjectPage() {
-            _projectVM = new ProjectVM(Receiver);
-            CurrentPage = new ProjectV(_projectVM);
-        }
-        private void InitializeUserSettingsPage() {
-            // TODO: страница настройки
-            /*
-             * сохраняем ProjectV 
-             * открываем настройки
-             * блокируем List
-             * сохраняем изменения
-             * возвращаем ProjectV
-             */
-        }
-        #endregion
-
         #region  Receiver
         /*
          * Заменить на паттерн Command
@@ -147,7 +126,7 @@ namespace Launcher.ViewModel {
         private void Receiver(object sender, ProjectEventArgs e) {
             switch (e.Command) {
                 case CommandProject.Start:
-                    StartProject();
+                    StartProject(e);
                     break;
                 case CommandProject.Rename:
                     RenameProject(sender, e);
@@ -164,22 +143,47 @@ namespace Launcher.ViewModel {
         }
 
         #region Methods for receiver
-        private void ChangeProject(object sender) {
-            OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
+        private void StartProject(ProjectEventArgs e) {
+            CheckExistenceOfMaterials(e.Project.ProjectMaterials);
+
+            bool oneWasOpen = e.Project.OpenMarkedMaterials();
+            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+            
+            TimeSpan time = OpenDoningV();
+            if (time.TotalMinutes > 25) {
+                e.Project.IncreaseTimeSpentOnProjectTime(time);
+            }
+            else {
+                MessageBox.Show("Работали над проектом < 25 минут. Постарайтесь не отвлекаться!");
+            }
         }
-        private void StartProject() {
-            //TODO: новая страница с таймером
-            ///Должен открываться таймер для этого проекта
-            ///и уже там кнопка старта
-            MessageBox.Show($"Открытие таймера для проекта: {SelectedProject.Name}.");
+
+        private TimeSpan OpenDoningV() {
+            using (DoingVM viewModel = new DoingVM()) {
+                using (DoingV doingV = new DoingV(viewModel)) {
+                    //TODO: не работает
+                    MainVIsVisible = false;
+                    doingV.ShowDialog();
+                    MainVIsVisible = true;
+                    return viewModel.ElapsedTime;
+                }
+            }
         }
+        public bool MainVIsVisible {
+            get => _mainVIsVisible;
+            set {
+                _mainVIsVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void RenameProject(object sender, ProjectEventArgs e) {
+            //TODO: Исправить
             if (sender is ProjectVM projectVM) {
                 bool s = projectVM == _projectVM;
                 e.Project.RenameProject(projectVM.NewName); // == CurrentProject
 
             }
-
             ///работает не правильно
             ///команда должна отрабатываться здесь 
             ///для этого необходимо ещё передовать строку
@@ -191,6 +195,10 @@ namespace Launcher.ViewModel {
             OnPropertyChanged(nameof(ProjectsCount));
             //MessageBox.Show($"{e.Project.Name} удален.");
         }
+
+        private void ChangeProject(object sender) {
+            OnPropertyChanged(nameof(ProjectIsCurrentlyChanging));
+        }
         #endregion
 
         #endregion
@@ -198,21 +206,35 @@ namespace Launcher.ViewModel {
         #region Commands
         private ICommand _saveUserCommand;
         public ICommand SaveUserCommand => _saveUserCommand ?? ( _saveUserCommand = new RelayCommand(SaveUser) );
+
+
+        private ICommand _addProjectCommand;
+        public ICommand AddProjectCommand => _addProjectCommand ?? ( _addProjectCommand = new RelayCommand(AddProject) );
+
+
+        private ICommand _addUsefulMCommand;
+        public ICommand AddUsefulMCommand => _addUsefulMCommand ?? ( _addUsefulMCommand = new RelayCommand(AddUsefulMaterial) );
+
+        private ICommand _startUsefulMCommand;
+        public ICommand StartUsefulMCommand => _startUsefulMCommand ?? ( _startUsefulMCommand = new RelayCommand(StartUsefulMaterial) );
+
+        private ICommand _launchUMaterialsCommand;
+        public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
+
+        private ICommand _removeUsefulMCommand;
+        public ICommand RemoveUsefulMCommand => _removeUsefulMCommand ?? ( _removeUsefulMCommand = new RelayCommand(RemoveUsefulMaterial) );
+        #endregion
+
+        #region Methods
         private void SaveUser(object parameter) {
             _user.SaveUser();
         }
 
-        private ICommand _addProjectCommand;
-        public ICommand AddProjectCommand => _addProjectCommand ?? ( _addProjectCommand = new RelayCommand(AddProject) );
         private void AddProject(object parameter) {
             _user.ProjectCollection.AddProject(new Project("NewProject", "Задать цель"));
             OnPropertyChanged(nameof(ProjectsCount));
         }
 
-
-        #region for UsefulMaterial
-        private ICommand _addUsefulMCommand;
-        public ICommand AddUsefulMCommand => _addUsefulMCommand ?? ( _addUsefulMCommand = new RelayCommand(AddUsefulMaterial) );
         private void AddUsefulMaterial(object parameter) {
             using (MaterialVM viewModel = new MaterialVM()) {
                 using (NewMaterialV window = new NewMaterialV(viewModel)) {
@@ -230,9 +252,6 @@ namespace Launcher.ViewModel {
 
             OnPropertyChanged(nameof(UsefulMaterialsCount));
         }
-
-        private ICommand _startUsefulMCommand;
-        public ICommand StartUsefulMCommand => _startUsefulMCommand ?? ( _startUsefulMCommand = new RelayCommand(StartUsefulMaterial) );
         private void StartUsefulMaterial(object startM) {
             try {
                 if (startM is Material usefulMaterial)
@@ -242,17 +261,14 @@ namespace Launcher.ViewModel {
                 MessageBox.Show(e.Message);
             }
         }
-
-        private ICommand _launchUMaterialsCommand;
-        public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
         private void LaunchUsefulMaterials(object parameter) {
-            VerifyExistence();
+            CheckExistenceOfMaterials(UsefulMaterialValues);
             bool oneWasOpen = _user.UsefulMaterials.OpenMarkedUsefulMaterials();
             if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
         }
-        private void VerifyExistence() {
+        private void CheckExistenceOfMaterials(ReadOnlyObservableCollection<Material> materials) {
             StringBuilder damagedMaterials = new StringBuilder();
-            foreach (var item in _user.UsefulMaterials.Values) {
+            foreach (var item in materials) {
                 if (item.Exists != true) {
                     item.BlockMaterial();
                     damagedMaterials.AppendLine(item.MaterialTitle);
@@ -262,9 +278,6 @@ namespace Launcher.ViewModel {
                 MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
             }
         }
-
-        private ICommand _removeUsefulMCommand;
-        public ICommand RemoveUsefulMCommand => _removeUsefulMCommand ?? ( _removeUsefulMCommand = new RelayCommand(RemoveUsefulMaterial) );
         private void RemoveUsefulMaterial(object material) {
             if (material is Material materialToRemove) {
                 _user.UsefulMaterials.Remove(materialToRemove.MaterialTitle);
@@ -272,6 +285,27 @@ namespace Launcher.ViewModel {
             }
         }
         #endregion
+
+        #region private
+        private readonly User _user;
+        private ProjectVM _projectVM;
+        private Page _currentPage;
+        private bool _mainVIsVisible = true;
+
+        private void InitializeProjectPage() {
+            _projectVM = new ProjectVM(Receiver);
+            CurrentPage = new ProjectV(_projectVM);
+        }
+        private void InitializeUserSettingsPage() {
+            // TODO: страница настройки
+            /*
+             * сохраняем ProjectV 
+             * открываем настройки
+             * блокируем List
+             * сохраняем изменения
+             * возвращаем ProjectV
+             */
+        }
         #endregion
     }
 }
