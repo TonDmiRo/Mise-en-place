@@ -63,12 +63,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastructure\Interfaces\ISerializer.cs" />
-    <Compile Include="Infrastructure\MyTimer.cs" />
     <Compile Include="Infrastructure\RelayCommand.cs" />
     <Compile Include="Model\Materials\SpecificCreators\LocalMaterialCreator.cs" />
     <Compile Include="Model\Materials\SpecificCreators\WebMaterialCreator.cs" />
     <Compile Include="Model\Materials\SpecificMaterials\WebMaterial.cs" />
-    <Compile Include="Model\User\Collection\ISaveCollection.cs" />
+    <Compile Include="Infrastructure\Interfaces\ISaveCollection.cs" />
     <Compile Include="Infrastructure\Serializers\DefaultSerializer.cs" />
     <Compile Include="Model\Materials\SpecificMaterials\LocalMaterial.cs" />
     <Compile Include="Model\User\Collection\ProjectCollection.cs" />
