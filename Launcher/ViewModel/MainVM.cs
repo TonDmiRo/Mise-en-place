@@ -115,7 +115,6 @@ namespace Launcher.ViewModel {
         public ReadOnlyObservableCollection<Material> UsefulMaterialValues => _user.UsefulMaterials.Values;
         public int UsefulMaterialsCount => UsefulMaterialValues.Count;
         #endregion
-       
 
         #region  Receiver
         /*
@@ -145,35 +144,39 @@ namespace Launcher.ViewModel {
 
         #region Methods for receiver
         private void StartProject(ProjectEventArgs e) {
-            //TODO: новая страница с таймером
-            ///Должен открываться таймер для этого проекта
-            ///и уже там кнопка старта
-
             CheckExistenceOfMaterials(e.Project.ProjectMaterials);
+
             bool oneWasOpen = e.Project.OpenMarkedMaterials();
             if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+            
+            TimeSpan time = OpenDoningV();
+            if (time.TotalMinutes > 25) {
+                e.Project.IncreaseTimeSpentOnProjectTime(time);
+            }
+            else {
+                MessageBox.Show("Работали над проектом < 25 минут. Постарайтесь не отвлекаться!");
+            }
+        }
 
-            HideMyProperty = true;
-
+        private TimeSpan OpenDoningV() {
             using (DoingVM viewModel = new DoingVM()) {
                 using (DoingV doingV = new DoingV(viewModel)) {
-                    HideMyProperty = true;
+                    //TODO: не работает
+                    MainVIsVisible = false;
                     doingV.ShowDialog();
-                    if (viewModel.ElapsedTime == e.Project.TimeSpentOnProject) {
-                        Console.WriteLine("Потратил < 25 минут");
-                    }
-                    else {
-                        //e.Project.TimeSpentOnProject = viewModel.ElapsedTime;
-                    }
+                    MainVIsVisible = true;
+                    return viewModel.ElapsedTime;
                 }
             }
-
-
-            //addTimeProject
-
         }
-        public bool HideMyProperty { get; set; }//для основного окна
-       
+        public bool MainVIsVisible {
+            get => _mainVIsVisible;
+            set {
+                _mainVIsVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void RenameProject(object sender, ProjectEventArgs e) {
             //TODO: Исправить
             if (sender is ProjectVM projectVM) {
@@ -207,7 +210,7 @@ namespace Launcher.ViewModel {
 
         private ICommand _addProjectCommand;
         public ICommand AddProjectCommand => _addProjectCommand ?? ( _addProjectCommand = new RelayCommand(AddProject) );
-       
+
 
         private ICommand _addUsefulMCommand;
         public ICommand AddUsefulMCommand => _addUsefulMCommand ?? ( _addUsefulMCommand = new RelayCommand(AddUsefulMaterial) );
@@ -217,7 +220,7 @@ namespace Launcher.ViewModel {
 
         private ICommand _launchUMaterialsCommand;
         public ICommand LaunchUMaterialsCommand => _launchUMaterialsCommand ?? ( _launchUMaterialsCommand = new RelayCommand(LaunchUsefulMaterials, (object obj) => UsefulMaterialsCount > 0) );
-       
+
         private ICommand _removeUsefulMCommand;
         public ICommand RemoveUsefulMCommand => _removeUsefulMCommand ?? ( _removeUsefulMCommand = new RelayCommand(RemoveUsefulMaterial) );
         #endregion
@@ -287,6 +290,7 @@ namespace Launcher.ViewModel {
         private readonly User _user;
         private ProjectVM _projectVM;
         private Page _currentPage;
+        private bool _mainVIsVisible = true;
 
         private void InitializeProjectPage() {
             _projectVM = new ProjectVM(Receiver);
