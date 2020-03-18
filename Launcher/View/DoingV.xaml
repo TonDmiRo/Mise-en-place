@@ -8,12 +8,15 @@
         mc:Ignorable="d"
         Title="DoingV"
         Height="300"
-        Width="286">
- <!--
+        Width="286"
+        MinHeight="300"
+        MinWidth="286"
+        ResizeMode="CanMinimize">
+
   <Window.DataContext>
     <viewmodel:DoingVM />
   </Window.DataContext>
-  -->
+
   <Window.Resources>
     <Style x:Key="RadioButtonStyle"
            TargetType="RadioButton">
@@ -28,57 +31,69 @@
 
   </Window.Resources>
   <Grid>
-    <StackPanel Margin="0,50,0,0">
-      <StackPanel Margin="60,0,60,0"
-                  Height="20"
-                  Orientation="Horizontal"
-                  VerticalAlignment="Bottom">
-        <RadioButton Content="25m"
-                     Style="{StaticResource RadioButtonStyle}"
-                     IsChecked="{Binding CreateUserCommand}" />
+    <Grid.RowDefinitions>
+      <RowDefinition Height="1*" />
+      <RowDefinition Height="6*" />
+      <RowDefinition Height="1*" />
+    </Grid.RowDefinitions>
 
-        <RadioButton Content="50m"
-                     Style="{StaticResource RadioButtonStyle}"
-                     IsChecked="{Binding CreateUserCommand}" />
+    <StackPanel Grid.Row="0"
+                IsEnabled="False"
+                Orientation="Horizontal"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center">
+      <RadioButton Content="25m"
+                   Style="{StaticResource RadioButtonStyle}"
+                   IsChecked="{Binding TwentyFiveMinutesPassed}" />
 
-        <RadioButton Content="relax"
-                     Style="{StaticResource RadioButtonStyle}"
-                     IsChecked="{Binding CreateUserCommand}" />
-      </StackPanel>
+      <RadioButton Content="50m"
+                   Style="{StaticResource RadioButtonStyle}"
+                   IsChecked="{Binding FiftyMinutesPassed}" />
 
-      <Label Width="238"
-             Height="70"
-             Margin="20,10,0,0"
-             HorizontalAlignment="Left"
-             FontSize="42"
-             Content="{Binding ElapsedTime}"
+      <RadioButton Content="relax"
+                   Style="{StaticResource RadioButtonStyle}"
+                   IsChecked="{Binding TimeToRelax}" />
+    </StackPanel>
+    
+    <StackPanel Grid.Row="1"
+                
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="0,0,0,20">
+      <Label FontSize="48"
+             Content="{Binding ElapsedTime, UpdateSourceTrigger=PropertyChanged}"
              VerticalContentAlignment="Center"
              HorizontalContentAlignment="Center"
              VerticalAlignment="Top" />
-
-      <DockPanel Margin="10,50,10,0">
-        <Button DockPanel.Dock="Left"
-                Content="Пропустить"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Width="75"
-                BorderBrush="{x:Null}"
-                Background="{x:Null}"
-                Command="{Binding CreateUserCommand}" />
-
-        <Button DockPanel.Dock="Right"
-                Content="Done"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Width="75"
-                Command="{Binding SignInLauncher}"
-                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
-                           AncestorType={x:Type Window}}}"
-                Background="#FF75B662"
-                FontWeight="Bold" />
-      </DockPanel>
-
     </StackPanel>
+    
+    <Grid Grid.Row="2"
+          VerticalAlignment="Bottom">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
 
+      <Button Grid.Column="0"
+              Height="34"
+              Content="Пропустить"
+              BorderBrush="{x:Null}"
+              Background="{x:Null}"
+              Command="{Binding SkipTaskCommand}"
+              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}"
+              FontSize="14" />
+
+      <Button Grid.Column="1"
+              Height="34"
+              Content="Done"
+              Command="{Binding CompleteTaskCommand}"
+              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}"
+              Background="#FF75B662"
+              FontWeight="Bold"
+              FontSize="14" />
+    </Grid>
+    
   </Grid>
 </Window>
