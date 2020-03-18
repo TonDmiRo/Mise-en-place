@@ -2,7 +2,7 @@
 using System.Timers;
 
 namespace Launcher.Model {
-    internal class TimeSpanMagnifier {
+    internal class TimeSpanMagnifier :IDisposable{
         /// <summary>
         /// Значение по умолчанию 60000.0
         /// </summary>
@@ -68,10 +68,17 @@ namespace Launcher.Model {
         private void TimeHasElapsed(object source, ElapsedEventArgs e) {
             IncreasedTimeSpan += TimeSpan.FromMilliseconds(MillisecondsForTimer);
         }
+
         private TimeSpan _increasedTimeSpan;
 
         private Timer _timer;
         private double _millisecondsForTimer;
+
+        public void Dispose() {
+            TimeSpanHasChanged = null;
+            _timer.Close();
+            _timer.Dispose();
+        }
     }
 
     /// <summary>
