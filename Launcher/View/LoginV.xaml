@@ -13,46 +13,49 @@
         Width="286">
 
   <Grid>
-    <StackPanel Margin="0,50,0,0">
-      <Label Height="50"
-             Content="Вход"
-             FontSize="24"
-             HorizontalContentAlignment="Center"
-             VerticalContentAlignment="Center" />
+    <Grid.RowDefinitions>
+      <RowDefinition Height="7*" />
+      <RowDefinition Height="1*" />
+    </Grid.RowDefinitions>
 
-      <TextBox Width="238"
-               Margin="20,10,0,0"
+    <StackPanel  Grid.Row="0"
+                 VerticalAlignment="Center">
+      <Label Content="Вход"
+             FontSize="36"
+             HorizontalContentAlignment="Center"
+             VerticalContentAlignment="Center"
+             VerticalAlignment="Bottom" />
+
+      <TextBox Margin="10"
                MaxLength="28"
-               HorizontalAlignment="Left"
                Height="50"
                TextWrapping="NoWrap"
                Text="{Binding Username,Mode=TwoWay,UpdateSourceTrigger = PropertyChanged}"
                FontSize="16"
                TextAlignment="Left"
-               VerticalContentAlignment="Center"
-               VerticalAlignment="Top" />
-
-      <DockPanel Margin="10,50,10,0">
-        <Button DockPanel.Dock="Left"
-                Content="Создать"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Width="75"
-                BorderBrush="{x:Null}"
-                Background="{x:Null}"
-                Command="{Binding CreateUserCommand}" />
-
-        <Button DockPanel.Dock="Right"
-                Content="Войти"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Top"
-                Width="75"
-                Command="{Binding SignInLauncher}"
-                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
-                           AncestorType={x:Type Window}}}" />
-      </DockPanel>
-
+               VerticalContentAlignment="Center" />
     </StackPanel>
+    
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <Button Grid.Column="0"
+              Content="Создать"
+              BorderBrush="{x:Null}"
+              Background="{x:Null}"
+              Command="{Binding CreateUserCommand}"
+              FontSize="14" />
+
+      <Button Grid.Column="1"
+              Content="Войти"
+              Command="{Binding SignInLauncher}"
+              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, 
+                           AncestorType={x:Type Window}}}"
+              FontSize="18" />
+    </Grid>
 
   </Grid>
 </Window>

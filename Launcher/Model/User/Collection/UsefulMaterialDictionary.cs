@@ -1,8 +1,6 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 
 namespace Launcher.Model {
     public class UsefulMaterialDictionary : ISaveCollection {
@@ -59,7 +57,7 @@ namespace Launcher.Model {
             }
             return false;
         }
-        
+
         public bool OpenMarkedUsefulMaterials() {
             if (CheckForMarked()) {
                 foreach (var item in _usefulMaterials.Values) {
@@ -69,7 +67,7 @@ namespace Launcher.Model {
                         }
                         catch (Exception) {
                             item.BlockMaterial();
-                        } 
+                        }
                     }
                 }
 
@@ -111,7 +109,7 @@ namespace Launcher.Model {
         public void SerializeCollection(string collectionOwner, ISerializer serializer) {
             SetSerializer(serializer);
             SerializeCollection(collectionOwner);
-         //   serializer.Serialize(collectionOwner + "'s_usefulMaterials", UsefulMaterials);
+            //   serializer.Serialize(collectionOwner + "'s_usefulMaterials", UsefulMaterials);
         }
         #endregion
 

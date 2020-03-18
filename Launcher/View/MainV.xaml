@@ -13,18 +13,32 @@
         WindowStartupLocation="CenterScreen"
         MinWidth="768"
         MinHeight="640"
-        WindowStyle="ToolWindow"
-        ResizeMode="NoResize">
-
+        ResizeMode="CanMinimize">
   <!--
   <Window.DataContext>
     <viewmodel:MainVM />
   </Window.DataContext>
 -->
+  <Window.Style>
+    <Style TargetType="Window">
+      <Style.Triggers>
+        <DataTrigger Binding="{Binding MainVIsVisible,UpdateSourceTrigger=PropertyChanged}"
+                     Value="True">
+          <Setter Property="Visibility"
+                  Value="Visible" />
+        </DataTrigger>
+        <DataTrigger Binding="{Binding MainVIsVisible,UpdateSourceTrigger=PropertyChanged}"
+                     Value="False">
+          <Setter Property="Visibility"
+                  Value="Hidden" />
+          <!-- use hide instead of collapsed if you would like to open again this instance of window after close. -->
+        </DataTrigger>
+      </Style.Triggers>
+    </Style>
+  </Window.Style>
 
   <Window.Resources>
     <local:TimeSpanToTimeConverter x:Key="myTimeConverter" />
-
     <!--#region baseStyle-->
     <Style TargetType="{x:Type Control}"
            x:Key="baseStyle">
@@ -42,7 +56,6 @@
            BasedOn="{StaticResource baseStyle}" />
     <!--#endregion-->
 
-
     <Style x:Key="AddButtonStyle"
            TargetType="Button"
            BasedOn="{StaticResource baseStyle}">
@@ -56,7 +69,6 @@
       <Setter Property="VerticalAlignment"
               Value="Bottom" />
     </Style>
-
   </Window.Resources>
 
   <Grid>
@@ -245,9 +257,9 @@
                     FlowDirection="LeftToRight"
                     HorizontalAlignment="Left">
           <Button x:Name="button1"
-                  Content="1"
-                  Width="30"
-                  Command="{Binding SaveUser}" />
+                  Content="Save"
+                  Width="60"
+                  Command="{Binding SaveUserCommand}" />
           <Button x:Name="button2"
                   Content="2"
                   Width="30" />
@@ -259,9 +271,6 @@
                   Width="30" />
           <Button x:Name="button5"
                   Content="5"
-                  Width="30" />
-          <Button x:Name="button6"
-                  Content="6"
                   Width="30" />
         </StackPanel>
 

@@ -58,6 +58,7 @@ namespace Launcher.Model {
         #endregion
 
         #region INotifyPropertyChanged
+        //TODO: delete
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "") {
             string sfad = propertyName;
@@ -67,28 +68,5 @@ namespace Launcher.Model {
             }
         }
         #endregion
-
-        public void Method() {
-            /// Метод для подсчета полезного времени (КПВ коэффицент полезного времени)
-            /// пройтись по всем проектам получив сумму
-            /// КПВ = AllTheTimeOfUse/TimeSpentOnProjects;
-
-            TimeSpan TimeSpentOnProjects = TimeSpan.Zero;
-            Project ToFirst;
-            TimeSpan timeProject = TimeSpan.Zero;
-            foreach (var item in ProjectCollection.Projects) {
-                TimeSpentOnProjects += item.TimeSpentOnProject;
-
-                TimeSpan time = DateTime.Now - item.NextLesson();
-
-                if (time > timeProject) {
-                    /// с помощью флага определяется самый забытый проект
-                    /// можно использовать для оповещеня
-                    /// В первую очередь заняться ToFirst!!!
-                    timeProject = time;
-                    ToFirst = item;
-                }
-            }
-        }
     }
 }

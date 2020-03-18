@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Launcher.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +15,17 @@ using System.Windows.Shapes;
 
 namespace Launcher.View {
     /// <summary>
-    /// Логика взаимодействия для Window1.xaml
+    /// Interaction logic for DoingV.xaml
     /// </summary>
-    public partial class CleanWindow : Window {
-        public CleanWindow() {
+    public partial class DoingV : Window,IDisposable {
+       
+        public DoingV(DoingVM vm) {
+            DataContext = vm;
             InitializeComponent();
+        }
+
+        public void Dispose() {
+            DataContext = null;
         }
     }
 }
