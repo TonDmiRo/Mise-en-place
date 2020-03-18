@@ -18,6 +18,7 @@ namespace Launcher.Model {
             ProjectTasks = new ObservableCollection<Task>();
         }
         public Project(string name, string goal) : this() {
+            RepeatInterval = 3;
             Name = name;
             Goal = goal;
         }
@@ -37,12 +38,20 @@ namespace Launcher.Model {
         #region Time
         [JsonProperty("TimeSpentOnProject")]
         public TimeSpan TimeSpentOnProject { get; private set; }
+        [JsonProperty("RepeatInterval")]
         public int RepeatInterval { get; set; }
         public DateTime NextLesson() { return _lastStartTime.Add(TimeSpan.FromDays(RepeatInterval)); }
-        [JsonProperty("lastStartTime")]
-        private DateTime _lastStartTime = DateTime.Now;
-        private string _name;
+        public void IncreaseTimeSpentOnProjectTime(TimeSpan time) {
+            if (time < TimeSpan.FromHours(2)) {
+                TimeSpentOnProject += time;
+            }
+            else {
+                TimeSpentOnProject += TimeSpan.FromHours(1);
+            }
+            _lastStartTime = DateTime.Now;
+        }
         #endregion
+
         public void RenameProject(string Name) {
             this.Name = Name;
             TimeSpentOnProject = TimeSpan.Zero;
@@ -64,7 +73,6 @@ namespace Launcher.Model {
         }
         public bool OpenMarkedMaterials() {
             if (CheckForMarked()) {
-              
                 foreach (var item in _projectMaterials) {
                     if (item.OpensAtLaunch) {
                         try {
@@ -101,6 +109,12 @@ namespace Launcher.Model {
 
         #endregion
 
+        #region private
+        [JsonProperty("lastStartTime")]
+        private DateTime _lastStartTime = DateTime.Now;
+        private string _name;
+        #endregion
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "") {
@@ -110,7 +124,7 @@ namespace Launcher.Model {
             }
         }
 
-       
+
         #endregion
     }
 }
