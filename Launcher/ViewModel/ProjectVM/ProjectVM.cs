@@ -63,7 +63,7 @@ namespace Launcher.ViewModel {
 
         public string TimeSpentOnProject {
             get {
-                double hours = CurrentProject.TimeSpentOnProject.TotalHours;
+                int hours = (int)CurrentProject.TimeSpentOnProject.TotalHours;
                 var formatted = string.Format("{0}h ", hours);
                 return formatted;
             }
@@ -87,7 +87,7 @@ namespace Launcher.ViewModel {
         #region project editing 
         private ICommand _changeProjectCommand;
         public ICommand ChangeProjectCommand => _changeProjectCommand ?? ( _changeProjectCommand = new RelayCommand(ChangeProject) );
-       
+        
         private ICommand _renameProjectCommand;
         public ICommand RenameProjectCommand => _renameProjectCommand ?? ( _renameProjectCommand = new RelayCommand(RenameProject, CanRenameProject) );
         private bool CanRenameProject(object parameter) {
