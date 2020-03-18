@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Timers;
 
-namespace Launcher.Model {
+namespace Launcher {
     internal class TimeSpanMagnifier :IDisposable{
         /// <summary>
         /// Значение по умолчанию 60000.0

@@ -86,7 +86,7 @@
     <Compile Include="Model\User\BuilderForUser\Administrator.cs" />
     <Compile Include="Model\User\BuilderForUser\JsonUserBuilder.cs" />
     <Compile Include="Model\User\BuilderForUser\NewUserBuilder.cs" />
-    <Compile Include="Model\User\TimeSpanMagnifier.cs" />
+    <Compile Include="Infrastructure\TimeSpanMagnifier.cs" />
     <Compile Include="Model\User\User.cs" />
     <Compile Include="View\DoingV.xaml.cs">
       <DependentUpon>DoingV.xaml</DependentUpon>
