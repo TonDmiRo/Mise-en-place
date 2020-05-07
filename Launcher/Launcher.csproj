@@ -70,17 +70,24 @@
     <Compile Include="Infrastructure\Interfaces\ISaveCollection.cs" />
     <Compile Include="Infrastructure\Serializers\DefaultSerializer.cs" />
     <Compile Include="Model\Materials\SpecificMaterials\LocalMaterial.cs" />
-    <Compile Include="Model\User\Collection\ProjectCollection.cs" />
+    <Compile Include="Model\Project\ProjectMaterials.cs" />
+    <Compile Include="Model\User\Collection\UserProjects.cs" />
     <Compile Include="ViewModel\DoingVM.cs" />
     <Compile Include="ViewModel\LoginVM.cs" />
+    <Compile Include="ViewModel\MainVM\MainVM.cs" />
+    <Compile Include="ViewModel\MainVM\MainVMNavigation.cs" />
+    <Compile Include="ViewModel\MainVM\INavigationPage.cs" />
+    <Compile Include="ViewModel\Pages\NavPageBaseClass.cs" />
+    <Compile Include="ViewModel\Pages\ProjectMaterialsPageForNav.cs" />
+    <Compile Include="ViewModel\Pages\ProjectTasksPageForNav.cs" />
     <Compile Include="ViewModel\ProjectVM\CommandProject.cs" />
+    <Compile Include="ViewModel\ProjectVM\ProjectEditorVM.cs" />
     <Compile Include="ViewModel\ProjectVM\RemoveProject.cs" />
     <Compile Include="ViewModel\ProjectVM\ProjectReceiver.cs" />
     <Compile Include="View\Converter\TimeSpanToTimeConverter.cs" />
     <Compile Include="Model\Project\Project.cs" />
     <Compile Include="Model\Materials\MaterialCreator.cs" />
     <Compile Include="Model\Materials\Material.cs" />
-    <Compile Include="Model\User\Collection\UsefulMaterialDictionary.cs" />
     <Compile Include="Model\Project\Task.cs" />
     <Compile Include="Model\User\BuilderForUser\Administrator.cs" />
     <Compile Include="Model\User\BuilderForUser\JsonUserBuilder.cs" />
@@ -101,6 +108,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\MainV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Materials\FixMaterialPathV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -109,11 +120,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Pages\ProjectMaterialsUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Pages\ProjectTasksUC.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ProjectV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\MainV.xaml">
+    <Page Include="View\Archive\Archive_MainV.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -124,19 +143,27 @@
     <Compile Include="Model\User\BuilderForUser\UserBuilder.cs" />
     <Compile Include="ViewModel\MaterialVM\MaterialVM.cs" />
     <Compile Include="ViewModel\ProjectVM\ProjectVM.cs" />
-    <Compile Include="ViewModel\MainVM.cs" />
     <Compile Include="ViewModel\BaseVM.cs" />
+    <Compile Include="View\MainV.xaml.cs">
+      <DependentUpon>MainV.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Materials\FixMaterialPathV.xaml.cs">
       <DependentUpon>FixMaterialPathV.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Materials\NewMaterialV.xaml.cs">
       <DependentUpon>NewMaterialV.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Pages\ProjectMaterialsUC.xaml.cs">
+      <DependentUpon>ProjectMaterialsUC.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Pages\ProjectTasksUC.xaml.cs">
+      <DependentUpon>ProjectTasksUC.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProjectV.xaml.cs">
       <DependentUpon>ProjectV.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\MainV.xaml.cs">
-      <DependentUpon>MainV.xaml</DependentUpon>
+    <Compile Include="View\Archive\Archive_MainV.xaml.cs">
+      <DependentUpon>Archive_MainV.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -158,6 +185,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -165,7 +193,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="View\Images\edit.png" />

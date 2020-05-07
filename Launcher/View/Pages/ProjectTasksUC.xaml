@@ -1,0 +1,139 @@
+﻿<UserControl x:Class="Launcher.View.Pages.ProjectTasksUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Launcher.View.Pages"
+             xmlns:viewmodel="clr-namespace:Launcher.ViewModel.Pages"
+             Background="White"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance viewmodel:ProjectTasksPageForNav, IsDesignTimeCreatable=True}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+
+  <UserControl.Resources>
+    <Style TargetType="DataGrid">
+      <Setter Property="SelectionMode"
+              Value="Single" />
+      <Setter Property="AutoGenerateColumns"
+              Value="False" />
+      <Setter Property="CanUserResizeColumns"
+              Value="False" />
+      <Setter Property="VerticalGridLinesBrush"
+              Value="{x:Null}" />
+      <Setter Property="BorderBrush"
+              Value="{x:Null}" />
+      <Setter Property="FontSize"
+              Value="14" />
+      <Setter Property="VerticalAlignment"
+              Value="Top" />
+    </Style>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="30" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="20" />
+    </Grid.RowDefinitions>
+
+
+    <Grid Grid.Row="0"
+          Margin="10,0,10,0">
+      <TextBlock Text="Tasks:"
+                 FontSize="18"
+                 FontWeight="Bold" />
+
+      <ToggleButton Name="ChangeTasksTB"
+                    Width="24"
+                    Height="24"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Click="ToChangeTasks_Click"
+                    Background="{x:Null}"
+                    Foreground="{x:Null}"
+                    BorderThickness="0">
+        <Image Source="/Launcher;component/View/Images/edit.png"
+               Stretch="Fill" />
+      </ToggleButton>
+    </Grid>
+
+    <DataGrid Grid.Row="1"
+              Name="Task_DG"
+              ItemsSource="{Binding Project.ProjectTasks}"
+              VerticalScrollBarVisibility="Visible"
+              HorizontalScrollBarVisibility="Disabled"
+              >
+
+      <DataGrid.Columns>
+        <DataGridCheckBoxColumn Header="Статус"
+                                Binding="{Binding TaskStatus}"
+                                Width="auto"
+                                SortDirection="Ascending"
+                                CanUserResize="False" />
+
+        <DataGridTextColumn Header="Имя"
+                            x:Name="NameTask_colum"
+                            IsReadOnly="True"
+                            Binding="{Binding TaskName}"
+                            Width="*" />
+        <DataGridTextColumn Header="Дата создания"
+                            IsReadOnly="True"
+                            Binding="{Binding DateOfCreation,StringFormat=\{0:dd.MM.yy\}}"
+                            Width="auto" />
+        <DataGridTemplateColumn x:Name="deleteTask_column"
+                                Width="auto"
+                                Visibility="Hidden">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Button Command="Delete"
+                      Width="16"
+                      Height="16"
+                      BorderBrush="{x:Null}"
+                      Foreground="{x:Null}"
+                      Background="Transparent">
+                <Image Source="/Launcher;component/View/Images/delete.png"
+                       Stretch="Fill" />
+              </Button>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+
+      <DataGrid.CellStyle>
+        <Style TargetType="{x:Type DataGridCell}">
+          <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="true">
+              <Setter Property="Background"
+                      Value="Aquamarine" />
+              <Setter Property="Foreground"
+                      Value="Black" />
+              <Setter Property="BorderThickness"
+                      Value="0" />
+            </Trigger>
+          </Style.Triggers>
+        </Style>
+      </DataGrid.CellStyle>
+    </DataGrid>
+
+    <StackPanel Grid.Row="2"
+                Name="panelForAddTasks"
+                Visibility="Hidden"
+                HorizontalAlignment="Center"
+                Orientation="Horizontal">
+      <Button Width="40"
+              Height="20"
+              BorderBrush="#FF34A3C8"
+              BorderThickness="2"
+              Command="{Binding AddTaskCommand}">
+        <TextBlock Text="+"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+      </Button>
+    </StackPanel>
+
+  </Grid>
+</UserControl>

@@ -1,5 +1,6 @@
 ﻿using Launcher.Model;
 using Launcher.Model.BuilderForUser;
+using Launcher.View;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,9 +13,6 @@ namespace Launcher.ViewModel {
         public string Username { get; set; }
         public LoginVM() {
             pathToUsers = ConfigurationManager.AppSettings["FilesPath"];
-            afterUsernameForProjects = ConfigurationManager.AppSettings["ProjectsJson"];
-            afterUsernameForUsefulM = ConfigurationManager.AppSettings["UsefulMaterialsJson"];
-
             _usernames = GetListUsername();
         }
 
@@ -42,7 +40,22 @@ namespace Launcher.ViewModel {
             Administrator admin;
             UserBuilder builder = new JsonUserBuilder(Username);
             admin = new Administrator(builder);
-            admin.Construct();
+           
+            while (true) {
+                try {
+                    admin.Construct();
+                    break;
+                }
+                catch (FileNotFoundException e) {
+                    MessageBoxResult result = MessageBox.Show(e.Message + "\n Продолжить?", "Файлы не найдены!", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.No) {
+                        throw new Exception("Не удалось загрузить пользователя.");
+                    }
+                }
+            }
+
+
+
             User user = builder.GetUser();
             return user;
         }
@@ -80,37 +93,14 @@ namespace Launcher.ViewModel {
 
 
         private List<string> GetListUsername() {
-            //TODO: создать модель для проверки файлов
             List<string> usernames = new List<string>();
             if (CheckDirectory()) {
                 DirectoryInfo Users = new DirectoryInfo(pathToUsers);
-                FileInfo[] usersFiles = Users.GetFiles();
-                foreach (var file in usersFiles) {
-                    string fileName = file.Name;
-
-                    bool fileOwnedByUser = false;
-                    string username = String.Empty;
-                    int indexOfSubstring = fileName.IndexOf(afterUsernameForProjects);
-                    if (indexOfSubstring > 0) {
-                        fileOwnedByUser = true;
-                        username = fileName.Remove(indexOfSubstring);
+                DirectoryInfo[] userDirectories = Users.GetDirectories();
+                foreach (var dir in userDirectories) {
+                    if (( dir.Name != String.Empty ) && ( !usernames.Contains(dir.Name) )) {
+                        usernames.Add(dir.Name);
                     }
-                    else {
-                        indexOfSubstring = fileName.IndexOf(afterUsernameForUsefulM);
-                        if (indexOfSubstring > 0) {
-                            fileOwnedByUser = true;
-                            username = fileName.Remove(indexOfSubstring);
-                        }
-                    }
-
-                    if (fileOwnedByUser == false) {
-                        username = Path.GetFileNameWithoutExtension(fileName);
-                    }
-
-                    if (( username != String.Empty ) && ( !usernames.Contains(username) )) {
-                        usernames.Add(username);
-                    }
-
                 }
             }
             return usernames;
@@ -126,9 +116,6 @@ namespace Launcher.ViewModel {
         }
 
         private readonly string pathToUsers;
-        private readonly string afterUsernameForProjects;
-        private readonly string afterUsernameForUsefulM;
-
         private readonly List<string> _usernames;
     }
 }

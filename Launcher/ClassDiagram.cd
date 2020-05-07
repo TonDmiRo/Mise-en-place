@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Launcher.Model.Material" Collapsed="true">
+    <Position X="17" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQCAACAIAAIAAAAgAAABAAAAgAAIAEAgIA=</HashCode>
+      <FileName>Model\Materials\Material.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Launcher.Model.Project">
+    <Position X="8.25" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AUIAIAAAAAEAAAAAYAAQQIQAgCAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Model\Project\Project.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Materials" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ProjectTasks" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Launcher.Model.SpecificMaterials.LocalMaterial" Collapsed="true">
+    <Position X="18.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\Materials\SpecificMaterials\LocalMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Launcher.Model.SpecificMaterials.WebMaterial" Collapsed="true">
+    <Position X="16" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Model\Materials\SpecificMaterials\WebMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Launcher.Model.Task" Collapsed="true">
+    <Position X="12.25" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAABAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Project\Task.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Launcher.Model.ProjectMaterials">
+    <Position X="12.25" Y="2.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAEARAAAAEAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Model\Project\ProjectMaterials.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_projectMaterials" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="System.Collections.ObjectModel.ReadOnlyObservableCollection&lt;T&gt;" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Launcher.Model.User">
+    <Position X="0.5" Y="1.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAACAAgAQCAQIAAAQAQAgACAEAAAAAAAUAAAAAA=</HashCode>
+      <FileName>Model\User\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProjectCollection" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Launcher.Model.ProjectCollection">
+    <Position X="4" Y="1.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAICAACAAAgAAAAAAIAAAAAAABAQA=</HashCode>
+      <FileName>Model\User\Collection\ProjectCollection.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_projects" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

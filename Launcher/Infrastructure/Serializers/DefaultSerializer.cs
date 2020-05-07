@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.IO;
 
 namespace Launcher {
     public class DefaultSerializer : ISerializer {
+        public void Serialize(string objectPath, object value) {
+            CheckPath(objectPath);
 
-        public void Serialize(string FileName, object value) {
-            string path = GetPath(FileName);
-
-            using (FileStream fs = new FileStream(path, FileMode.OpenOrCreate))
+            using (FileStream fs = new FileStream(objectPath, FileMode.OpenOrCreate))
             using (StreamWriter file = new StreamWriter(fs)) {
                 JsonSerializer serializer = new JsonSerializer {
                     Formatting = Formatting.Indented,
@@ -16,11 +16,18 @@ namespace Launcher {
                 serializer.Serialize(file, value);
             }
         }
-        public T Deserialize<T>(string FileName) {
+        /// <summary>
+        /// Оставляю проверку на тебя
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="objectPath">Например Users//username//Projects//ProjectName.json</param>
+        /// <returns></returns>
+        public T Deserialize<T>(string objectPath) {
             T obj;
-            string path = GetPath(FileName);
+            CheckPath(objectPath);
+            ChekFile(objectPath);
 
-            using (FileStream fs = new FileStream(path, FileMode.Open))
+            using (FileStream fs = new FileStream(objectPath, FileMode.Open))
             using (StreamReader file = new StreamReader(fs)) {
                 JsonSerializer serializer = new JsonSerializer {
                     Formatting = Formatting.Indented,
@@ -31,11 +38,12 @@ namespace Launcher {
             }
             return obj;
         }
-        public object Deserialize(string FileName) {
+        public object Deserialize(string objectPath) {
             object obj;
-            string path = GetPath(FileName);
+            CheckPath(objectPath);
+            ChekFile(objectPath);
 
-            using (FileStream fs = new FileStream(path, FileMode.Open))
+            using (FileStream fs = new FileStream(objectPath, FileMode.Open))
             using (StreamReader file = new StreamReader(fs)) {
                 string json = file.ReadToEnd();
                 obj = JsonConvert.DeserializeObject(json, new JsonSerializerSettings {
@@ -46,13 +54,18 @@ namespace Launcher {
             }
         }
 
-        public string GetPath(string fileName) {
-            if (!Directory.Exists("Users")) {
-                Directory.CreateDirectory("Users");
-            }
-
-            string path = Path.Combine("Users", ( Path.ChangeExtension(fileName, "json")));
-            return path;
+        private void ChekFile(string objectPath) {
+            string dir = Path.GetDirectoryName(objectPath);
+            string[] filePaths = Directory.GetFiles(dir);
+            if (filePaths.Length == 0) { throw new FileNotFoundException("Поместите ваши файлы по этому адресу: " + objectPath); }
         }
+
+        public void CheckPath(string objectPath) {
+            // Проверка для записи
+            string dir = Path.GetDirectoryName(objectPath);
+            if (!Directory.Exists(dir)) { Directory.CreateDirectory(dir); }
+        }
+
+
     }
 }

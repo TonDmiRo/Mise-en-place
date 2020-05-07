@@ -1,8 +1,9 @@
 ﻿namespace Launcher {
     public interface ISerializer {
-        void Serialize(string FileName, object value);
-        T Deserialize<T>(string FileName);
-        object Deserialize(string FileName);
-        string GetPath(string FileName);
+        //FileName => relative path
+        void Serialize(string objectPath, object value);
+        T Deserialize<T>(string objectPath);
+        object Deserialize(string objectPath);
+        void CheckPath(string objectPath);
     }
 }
