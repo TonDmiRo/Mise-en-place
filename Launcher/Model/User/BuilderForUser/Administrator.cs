@@ -6,8 +6,8 @@
         }
         public void Construct() {
             builder.SetUserInformation();
+            builder.PrepareCustomFiles();
             builder.SetProjects();
-            builder.SetMaterials();
         }
     }
 }

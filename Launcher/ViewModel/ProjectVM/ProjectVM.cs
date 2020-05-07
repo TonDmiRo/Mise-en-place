@@ -11,8 +11,8 @@ namespace Launcher.ViewModel {
     public class ProjectVM : BaseVM {
         private event EventHandler<ProjectEventArgs> ClickTheButton;
         public ProjectVM(EventHandler<ProjectEventArgs> Receiver) {
-            _emptyСourse = new Project("Nonexistent project", "Choose a project");
-            CurrentProject = _emptyСourse;
+            _emptyProject = Project.EmptyProject;
+            CurrentProject = _emptyProject;
             ClickTheButton += Receiver;
         }
         public Project CurrentProject {
@@ -20,14 +20,14 @@ namespace Launcher.ViewModel {
             get => _project;
             set {
                 /// При изменении проекта необходимо оповещать о незавершенном изменении
-                if (ProjectIsCurrentlyChanging) { throw new InvalidOperationException($"Завершите изменение проекта: {CurrentProject.Name}!"); }
+                if (ProjectIsCurrentlyChanging) { throw new InvalidOperationException($"Завершите изменение проекта: {CurrentProject.ProjectName}!"); }
 
-                if (value != null && value != _emptyСourse) {
+                if (value != null && value != _emptyProject) {
                     _project = value;
                     ProjectIsNotEmpty = true;
                 }
                 else {
-                    _project = _emptyСourse;
+                    _project = _emptyProject;
                     ProjectIsNotEmpty = false;
                 }
                 OnAllPropertyChanged();
@@ -47,7 +47,7 @@ namespace Launcher.ViewModel {
         public bool ProjectIsNotEmpty { get; set; }
 
         #region public
-        public string Name { get => CurrentProject.Name; }
+        public string Name { get => CurrentProject.ProjectName; }
         public string NewName {
             get => _newName;
             set {
@@ -56,8 +56,8 @@ namespace Launcher.ViewModel {
             }
         }
         public string Goal {
-            get => CurrentProject.Goal;
-            set => CurrentProject.Goal = value;
+            get => CurrentProject.ProjectGoal;
+            set => CurrentProject.ProjectGoal = value;
         }
 
 
@@ -76,7 +76,7 @@ namespace Launcher.ViewModel {
             }
         }
 
-        public ReadOnlyObservableCollection<Material> ProjectMaterials => CurrentProject.ProjectMaterials;
+        public ReadOnlyObservableCollection<Material> ProjectMaterials => CurrentProject.Materials;
         public ObservableCollection<Task> ProjectTasks => CurrentProject.ProjectTasks;
         #endregion
 
@@ -121,7 +121,7 @@ namespace Launcher.ViewModel {
             ClickTheButton(this, new ProjectEventArgs(CommandProject.Start, CurrentProject));
         }
         private void RenameProject(object parameter) {
-            string strForMessage = $"Время изучения проекта обнулится. Изменить имя {CurrentProject.Name} на {NewName}?";
+            string strForMessage = $"Время изучения проекта обнулится. Изменить имя {CurrentProject.ProjectName} на {NewName}?";
 
             MessageBoxResult result = MessageBox.Show(strForMessage, "Rename", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes) {
@@ -133,7 +133,7 @@ namespace Launcher.ViewModel {
             ClickTheButton(this, new ProjectEventArgs(CommandProject.Change, CurrentProject));
         }
         private void DeleteProject(object parameter) {
-            string message = $"Вы хотите удалить {CurrentProject.Name}?";
+            string message = $"Вы хотите удалить {CurrentProject.ProjectName}?";
             MessageBoxResult result = MessageBox.Show(message, "Delete", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.Yes) {
                 ProjectIsCurrentlyChanging = false;
@@ -148,7 +148,7 @@ namespace Launcher.ViewModel {
                 using (NewMaterialV window = new NewMaterialV(viewModel)) {
                     var result = window.ShowDialog();
                     if (result == true) {
-                        CurrentProject.Add(viewModel.GetMaterial());
+                        CurrentProject.Materials.Add(viewModel.GetMaterial());
                     }
                 }
             }
@@ -157,8 +157,8 @@ namespace Launcher.ViewModel {
             if (parameter is Material spoiledM) {
                 try {
                     Material serviceableMaterial = GetServiceableMaterial(spoiledM.MaterialTitle);
-                    int indexSpoiledM = CurrentProject.ProjectMaterials.IndexOf(spoiledM);
-                    CurrentProject.SetMaterial(indexSpoiledM, serviceableMaterial);
+                    int indexSpoiledM = CurrentProject.Materials.IndexOf(spoiledM);
+                    CurrentProject.Materials.SetMaterial(indexSpoiledM, serviceableMaterial);
                 }
                 catch (Exception e) {
                     MessageBox.Show(e.Message);
@@ -178,7 +178,7 @@ namespace Launcher.ViewModel {
         }
         private void RemoveProjectMaterial(object material) {
             if (material is Material deleteM) {
-                CurrentProject.Remove(deleteM);
+                CurrentProject.Materials.Remove(deleteM);
             }
         }
 
@@ -191,7 +191,7 @@ namespace Launcher.ViewModel {
         private Project _project;
         private string _newName;
         private bool _projectIsCurrentlyChanging;
-        private readonly Project _emptyСourse;
+        private readonly Project _emptyProject;
         #endregion
     }
 

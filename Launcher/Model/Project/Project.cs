@@ -3,28 +3,27 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 
 namespace Launcher.Model {
     [JsonObject(MemberSerialization.OptIn)]
     public class Project : INotifyPropertyChanged {
         #region ctor
-        public Project() {
-            Name = "NotFound";
-            RepeatInterval = 0;
+        protected Project() {
+            RepeatInterval = 3;
             TimeSpentOnProject = new TimeSpan(0, 0, 0, 0);
 
-            _projectMaterials = new ObservableCollection<Material>();
-            ProjectMaterials = new ReadOnlyObservableCollection<Material>(_projectMaterials);
             ProjectTasks = new ObservableCollection<Task>();
+            _projectMaterials = new ObservableCollection<Material>();
+            Materials = new ProjectMaterials(_projectMaterials);
         }
-        public Project(string name, string goal) : this() {
-            RepeatInterval = 3;
-            Name = name;
-            Goal = goal;
+        public Project(string name) : this() {
+            ProjectName = name;
         }
         #endregion
-        [JsonProperty("NameProject")]
-        public string Name {
+
+        [JsonProperty]
+        public string ProjectName {
             get => _name;
             private set {
                 _name = value;
@@ -32,11 +31,14 @@ namespace Launcher.Model {
             }
         }
 
-        [JsonProperty("GoalProject")]
-        public string Goal { get; set; }
+
+        public string ProjectGoal {
+            get { if (String.IsNullOrWhiteSpace(_projectGoal)) { _projectGoal = "Укажите цель проекта"; } return _projectGoal; }
+            set => _projectGoal = value;
+        }
 
         #region Time
-        [JsonProperty("TimeSpentOnProject")]
+        [JsonProperty]
         public TimeSpan TimeSpentOnProject { get; private set; }
         [JsonProperty("RepeatInterval")]
         public int RepeatInterval { get; set; }
@@ -52,68 +54,42 @@ namespace Launcher.Model {
         }
         #endregion
 
-        public void RenameProject(string Name) {
-            this.Name = Name;
-            TimeSpentOnProject = TimeSpan.Zero;
-            _lastStartTime = DateTime.Now;
-        }
-
-
         #region Collections
 
-        #region Materials
-        public void Add(Material item) {
-            _projectMaterials.Add(item);
-        }
-        public bool Remove(Material item) {
-            return _projectMaterials.Remove(item);
-        }
-        public void SetMaterial(int indexSpoiledM, Material serviceableM) {
-            _projectMaterials[indexSpoiledM] = serviceableM;
-        }
-        public bool OpenMarkedMaterials() {
-            if (CheckForMarked()) {
-                foreach (var item in _projectMaterials) {
-                    if (item.OpensAtLaunch) {
-                        try {
-                            item.OpenMaterial();
-                        }
-                        catch (Exception) {
-                            item.BlockMaterial();
-                        }
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-        private bool CheckForMarked() {
-            bool containsOneMarkedM = false;
-            foreach (var item in _projectMaterials) {
-                containsOneMarkedM = containsOneMarkedM | item.OpensAtLaunch;
-                if (containsOneMarkedM) { break; }
-            }
-            return containsOneMarkedM;
-        }
 
-
-        public readonly ReadOnlyObservableCollection<Material> ProjectMaterials;
+        public ProjectMaterials Materials { get; private set; }
         [JsonProperty("ProjectMaterials")]
         private readonly ObservableCollection<Material> _projectMaterials;
-        #endregion
 
-        #region Collection Task
+
+        [OnDeserialized]
+        private void SetTimeSpanMagnifier(StreamingContext context) {
+            Materials = new ProjectMaterials(_projectMaterials);
+        }
+
         [JsonProperty("ProjectTasks")]
-        public readonly ObservableCollection<Task> ProjectTasks;
-        #endregion
-
+        public ObservableCollection<Task> ProjectTasks { get; }
         #endregion
 
         #region private
         [JsonProperty("lastStartTime")]
         private DateTime _lastStartTime = DateTime.Now;
         private string _name;
+        private static Project s_emptyProject;
+        [JsonProperty("ProjectGoal")]
+        private string _projectGoal;
         #endregion
+
+        public static Project EmptyProject {
+            get {
+                return s_emptyProject ?? (
+                    s_emptyProject = new Project() {
+                        ProjectName = "",
+                        ProjectGoal = "Select an existing project!",
+                    } );
+
+            }
+        }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -123,8 +99,30 @@ namespace Launcher.Model {
                 handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-
-
         #endregion
+        /* // IEquatable<Project>
+        
+        public bool Equals(Project other) {
+            // https://ru.stackoverflow.com/questions/841939/%d0%97%d0%b0%d1%87%d0%b5%d0%bc-%d0%bc%d1%8b-%d1%80%d0%b5%d0%b0%d0%bb%d0%b8%d0%b7%d0%be%d0%b2%d1%8b%d0%b2%d0%b0%d0%b5%d0%bc-iequatablet-%d0%b5%d1%81%d0%bb%d0%b8-equals-%d0%b5%d1%81%d1%82%d1%8c-%d0%b2-object?answertab=oldest#tab-top
+
+
+            if (this == other)
+                return true;
+            if (other == null)
+                return false;
+            if (ProjectName != other.ProjectName)
+                return false;
+            return true;
+        }
+        public override bool Equals(object other) => Equals(other as Project);
+        public override int GetHashCode() {
+            unchecked {
+                // https://stackoverflow.com/a/263416/4340086
+                int hash = 2166136261;
+                hash = ( 16777619 * hash ) ^ ( ProjectName?.GetHashCode() ?? 0 );
+                return hash;
+            }
+        }
+        */
     }
 }
