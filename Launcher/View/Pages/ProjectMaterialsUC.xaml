@@ -20,34 +20,40 @@
               Value="Disabled" />
       <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
               Value="Visible" />
-
     </Style>
-
+    
     <!--#region DataTemplate ListBoxItem-->
+    <DataTemplate x:Key="MyCheckBox">
+      <StackPanel HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+        <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
+                  ToolTip="Открыть при запуске проекта"
+                  HorizontalAlignment="Center">
+          <CheckBox.LayoutTransform>
+            <ScaleTransform ScaleX="2"
+                            ScaleY="2" />
+          </CheckBox.LayoutTransform>
+        </CheckBox>
+        <Button Content="open"
+                Command="{Binding DataContext.OpenMaterialCommand,ElementName=ListMaterials}"
+                CommandParameter="{Binding }"
+                FontSize="8"
+                Padding="4,0,4,0"
+                Margin="0"
+                ToolTip="Открыть."
+                HorizontalAlignment="Center" />
+      </StackPanel>
+    </DataTemplate>
+
+
     <DataTemplate x:Key="MaterialTemplate">
       <Grid Margin="10">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="40" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-          <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTip="Открыть при запуске проекта"
-                    HorizontalAlignment="Center">
-            <CheckBox.LayoutTransform>
-              <ScaleTransform ScaleX="2"
-                              ScaleY="2" />
-            </CheckBox.LayoutTransform>
-          </CheckBox>
-          <Button Content="open"
-                  FontSize="8"
-                  Padding="4,0,4,0"
-                  Margin="0"
-                  ToolTip="Открыть."
-                  HorizontalAlignment="Center" />
-        </StackPanel>
+        <ContentPresenter Grid.Column="0"
+                          ContentTemplate="{StaticResource MyCheckBox}" />
 
         <Grid Grid.Column="1"
               Margin="10">
@@ -62,34 +68,16 @@
           <ColumnDefinition Width="40" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-          <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTip="Открыть при запуске проекта"
-                    HorizontalAlignment="Center">
-            <CheckBox.LayoutTransform>
-              <ScaleTransform ScaleX="2"
-                              ScaleY="2" />
-            </CheckBox.LayoutTransform>
-          </CheckBox>
-          <Button Content="open"
-                  FontSize="8"
-                  Padding="4,0,4,0"
-                  Margin="0"
-                  ToolTip="Открыть."
-                  HorizontalAlignment="Center" />
-        </StackPanel>
+        <ContentPresenter Grid.Column="0"
+                          ContentTemplate="{StaticResource MyCheckBox}" />
 
         <Grid Grid.Column="1">
-
-
           <StackPanel Margin="10">
             <TextBlock Text="{Binding Path=MaterialTitle}"
                        FontSize="18"
                        FontWeight="Medium" />
             <TextBox Padding="2"
-                     Text="{Binding NewMaterialTitle}"
+                     Text="{Binding DataContext.NewMaterialTitle,ElementName=ListMaterials}"
                      FontSize="18" />
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
