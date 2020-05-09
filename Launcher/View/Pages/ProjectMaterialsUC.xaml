@@ -21,7 +21,7 @@
       <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
               Value="Visible" />
     </Style>
-    
+
     <!--#region DataTemplate ListBoxItem-->
     <DataTemplate x:Key="MyCheckBox">
       <StackPanel HorizontalAlignment="Left"
@@ -40,7 +40,7 @@
                 FontSize="8"
                 Padding="4,0,4,0"
                 Margin="0"
-                ToolTip="Открыть."
+                ToolTip="Открыть"
                 HorizontalAlignment="Center" />
       </StackPanel>
     </DataTemplate>
@@ -147,17 +147,58 @@
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="30" />
+      <RowDefinition Height="auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="20" />
     </Grid.RowDefinitions>
     <Grid Grid.Row="0"
-          Margin="10,0,10,0">
+          Margin="10,0,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="auto" />
+        <ColumnDefinition Width="auto" />
+      </Grid.ColumnDefinitions>
+
       <TextBlock Text="Materials:"
+                 Grid.Column="0"
                  FontSize="18"
                  FontWeight="Bold" />
+      <Button Grid.Column="1"
+              Margin="0,0,5,0"
+              Width="24"
+              Height="24"
+              BorderBrush="#FF34A3C8"
+              BorderThickness="2"
+              Command="{Binding AddMaterialCommand}">
+        <TextBlock Text="+"
+                   FontSize="12"
+                   FontWeight="Bold"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        <Button.ToolTip>
+          <TextBlock FontSize="18"
+                     Text="Добавить новый материал" />
+        </Button.ToolTip>
 
+        <Button.Style>
+          <Style TargetType="Button">
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
+                           Value="True">
+                <Setter Property="Visibility"
+                        Value="Visible" />
+              </DataTrigger>
+              <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
+                           Value="False">
+                <Setter Property="Visibility"
+                        Value="Collapsed" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Button.Style>
+      </Button>
       <ToggleButton Name="ChangeMaterialsTB"
+                    Grid.Column="2"
                     Width="24"
                     Height="24"
                     HorizontalAlignment="Right"
@@ -169,49 +210,25 @@
                Stretch="Fill" />
       </ToggleButton>
     </Grid>
+    
     <Grid  Grid.Row="1">
       <ListBox x:Name="ListMaterials"
+               Grid.Row="1"
                ItemsSource="{Binding Project.Materials, UpdateSourceTrigger=PropertyChanged}"
                SelectedItem="{Binding SelectedMaterial,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                Style="{StaticResource ListMaterialsStyle}"
                ItemContainerStyle="{StaticResource ContainerStyle}">
+
+        <ListBox.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Копировать"></MenuItem>
+            <MenuItem Header="Вставить"></MenuItem>
+            <MenuItem Header="Вырезать"></MenuItem>
+            <MenuItem Header="Удалить"></MenuItem>
+          </ContextMenu>
+        </ListBox.ContextMenu>
       </ListBox>
     </Grid>
-
-
-    <StackPanel Grid.Row="2"
-                Name="panelForAddTasks"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal">
-      <Button Width="40"
-              Height="20"
-              BorderBrush="#FF34A3C8"
-              BorderThickness="2"
-              Command="{Binding AddTaskCommand}">
-        <TextBlock Text="+"
-                   FontSize="14"
-                   FontWeight="Bold"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
-      </Button>
-
-      <StackPanel.Style>
-        <Style TargetType="StackPanel">
-          <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
-                         Value="True">
-              <Setter Property="Visibility"
-                      Value="Visible" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
-                         Value="False">
-              <Setter Property="Visibility"
-                      Value="Collapsed" />
-            </DataTrigger>
-          </Style.Triggers>
-        </Style>
-      </StackPanel.Style>
-    </StackPanel>
+   
   </Grid>
 </UserControl>

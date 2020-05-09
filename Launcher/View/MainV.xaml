@@ -8,10 +8,10 @@
         xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
         xmlns:viewmodelUC="clr-namespace:Launcher.ViewModel.Pages"
         Title="Main"
-        MinWidth="380"
+        MinWidth="300"
         MinHeight="500"
         Height="500"
-        Width="750"
+        Width="800"
         WindowStartupLocation="CenterScreen"
         d:DataContext="{d:DesignInstance viewmodel:MainVM, IsDesignTimeCreatable=True}"
         mc:Ignorable="d">
@@ -19,7 +19,7 @@
     <Style x:Key="StartButton"
            TargetType="Button">
       <Setter Property="Margin"
-              Value="10,5,0,0" />
+              Value="10,0,0,0" />
       <Setter Property="Padding"
               Value="10,0,10,0" />
       <Setter Property="Content"
@@ -124,7 +124,9 @@
   <Grid x:Name="MainBody"
         Grid.Row="0">
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="3*" />
+      <ColumnDefinition Width="3*"
+                        MaxWidth="640"
+                        MinWidth="250" />
       <ColumnDefinition Width="auto" />
       <ColumnDefinition Width="7*" />
     </Grid.ColumnDefinitions>
@@ -132,67 +134,45 @@
     <Grid x:Name="ProjectsSidebar"
           Grid.Column="0">
       <Grid.RowDefinitions>
-        <RowDefinition Height="50" />
+        <RowDefinition Height="40" />
         <RowDefinition Height="*" />
         <RowDefinition Height="50" />
       </Grid.RowDefinitions>
-
       <Grid x:Name="SearchLine"
             Grid.Row="0">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="auto" />
-
+          <ColumnDefinition Width="auto " />
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0"
+
+        <TextBox Text="Поиск..."
+                 Grid.Column="0"
                  Margin="8"
-                 FontSize="18"
+                 FontSize="16"
                  TextAlignment="Left"
                  VerticalContentAlignment="Center" />
-        <Button Grid.Column="1"
-                Content="Найти"
-                Margin="10"
-                Padding="6" />
+
+        <ToolBar  Grid.Column="1"
+                  ToolBarTray.IsLocked="True">
+
+          <Button Content="Открыть редактор проектов"
+                  ToolBar.OverflowMode="Always"
+                  FontSize="14"
+                  Command="{Binding OpenPprojectEditorCommand}" />
+
+          <Button Content="Добавить новый проект"
+                  ToolBar.OverflowMode="Always"
+                  FontSize="14"
+                  Command="{Binding AddProjectCommand}" />
+        </ToolBar>
       </Grid>
 
-      <Grid Grid.Row="1">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="20" />
-          <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0"
-                    Height="18"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-          <Button Name="ChangeProjects"
-                  Command="{Binding OpenPprojectEditorCommand}"
-                  Margin="0,0,2,0"
-                  Background="{x:Null}"
-                  Foreground="{x:Null}"
-                  BorderThickness="1">
-            <Image Source="/Launcher;component/View/Images/edit.png"
-                   Stretch="Fill" />
-          </Button>
-          <Button x:Name="AddProject"
-                  Padding="5,0,5,0"
-                  Content="+"
-                  HorizontalContentAlignment="Center"
-                  VerticalContentAlignment="Center"
-                  Command="{Binding AddProjectCommand}">
-            <Button.ToolTip>
-              <TextBlock FontSize="24"
-                         Text="Добавить новый проект" />
-            </Button.ToolTip>
-          </Button>
-        </StackPanel>
-
-        <ListBox x:Name="ListProjects"
-                 Grid.Row="1"
-                 ItemsSource="{Binding Projects,UpdateSourceTrigger=PropertyChanged}"
-                 SelectedItem="{Binding SelectedProject,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                 Style="{StaticResource ListProjectsStyle}">
-        </ListBox>
-      </Grid>
+      <ListBox x:Name="ListProjects"
+               Grid.Row="1"
+               ItemsSource="{Binding Projects,UpdateSourceTrigger=PropertyChanged}"
+               SelectedItem="{Binding SelectedProject,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+               Style="{StaticResource ListProjectsStyle}">
+      </ListBox>
 
       <Grid x:Name="UserPanel"
             Grid.Row="2">
@@ -219,45 +199,33 @@
 
     <Grid x:Name="GridProject"
           Grid.Column="2"
-          MinWidth="260"
+          MinWidth="250"
           Visibility="Visible">
       <Grid>
         <Grid.RowDefinitions>
-          <RowDefinition Height="auto" />
+          <RowDefinition Height="60" />
           <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid x:Name="ProjectHeader"
-              Grid.Row="0">
+              Grid.Row="0"
+              Margin="10,0,0,0">
           <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
           </Grid.RowDefinitions>
-          
           <StackPanel Grid.Row="0"
-                      Margin="10,0,0,0"
-                      Orientation="Horizontal"
-                      VerticalAlignment="Center">
-            <TextBlock FontSize="26"
+                      Orientation="Horizontal">
+            <TextBlock FontSize="22"
                        FontFamily="Calibri"
-                       VerticalAlignment="Center"
                        Text="{Binding ElementName=ListProjects, Path=SelectedItem.ProjectName, FallbackValue='NotFound'}" />
             <Button Style="{StaticResource StartButton}" />
           </StackPanel>
 
-          <WrapPanel Grid.Row="1"
-                     Margin="10"
-                     ItemWidth="120">
-            <WrapPanel.Resources>
-              <Style TargetType="{x:Type Button}">
-                <Setter Property="Margin"
-                        Value="0,0,5,4" />
-                <Setter Property="Padding"
-                        Value="10,0,10,0" />
-                <Setter Property="FontSize"
-                        Value="14" />
-              </Style>
-            </WrapPanel.Resources>
+          <ToolBar Grid.Row="1"
+                   ToolBarTray.IsLocked="True"
+                   FontSize="18"
+                   Background="White">
 
             <Button Command="{Binding SwitchPageCommand}"
                     CommandParameter="{x:Static viewmodel:PageNumEnum.First}">
@@ -272,6 +240,7 @@
             </Button>
 
             <Button Content="Заметки" />
+
             <Button Command="{Binding DeleteProjectCommand}">
               <StackPanel Orientation="Horizontal">
                 <Image Width="12"
@@ -282,8 +251,7 @@
                            Margin="5,0,0,0" />
               </StackPanel>
             </Button>
-
-          </WrapPanel>
+          </ToolBar>
         </Grid>
 
         <Grid x:Name="ProjectPages"
