@@ -153,7 +153,8 @@
                  VerticalContentAlignment="Center" />
 
         <ToolBar  Grid.Column="1"
-                  ToolBarTray.IsLocked="True">
+                  ToolBarTray.IsLocked="True"
+                  Background="{x:Null}">
 
           <Button Content="Открыть редактор проектов"
                   ToolBar.OverflowMode="Always"
@@ -225,7 +226,7 @@
           <ToolBar Grid.Row="1"
                    ToolBarTray.IsLocked="True"
                    FontSize="18"
-                   Background="White">
+                   Background="{x:Null}">
 
             <Button Command="{Binding SwitchPageCommand}"
                     CommandParameter="{x:Static viewmodel:PageNumEnum.First}">
@@ -240,7 +241,8 @@
             </Button>
 
             <Button Content="Заметки" />
-
+            
+            <Separator />
             <Button Command="{Binding DeleteProjectCommand}">
               <StackPanel Orientation="Horizontal">
                 <Image Width="12"
