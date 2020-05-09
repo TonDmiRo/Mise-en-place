@@ -9,15 +9,9 @@
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance viewmodel:ProjectMaterialsPageForNav, IsDesignTimeCreatable=True}"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="400">
 
   <UserControl.Resources>
-    <DataTemplate x:Key="ListMaterialsTemplate">
-      <StackPanel  Margin="10">
-        <TextBlock Text="{Binding Path=MaterialTitle}" />
-      </StackPanel>
-    </DataTemplate>
-
     <Style x:Key="ListMaterialsStyle"
            TargetType="ListBox">
       <Setter Property="Padding"
@@ -26,38 +20,44 @@
               Value="Disabled" />
       <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
               Value="Visible" />
-
     </Style>
 
     <!--#region DataTemplate ListBoxItem-->
+    <DataTemplate x:Key="MyCheckBox">
+      <StackPanel HorizontalAlignment="Left"
+                  VerticalAlignment="Top">
+        <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
+                  ToolTip="Открыть при запуске проекта"
+                  HorizontalAlignment="Center">
+          <CheckBox.LayoutTransform>
+            <ScaleTransform ScaleX="2"
+                            ScaleY="2" />
+          </CheckBox.LayoutTransform>
+        </CheckBox>
+        <Button Content="open"
+                Command="{Binding DataContext.OpenMaterialCommand,ElementName=ListMaterials}"
+                CommandParameter="{Binding }"
+                FontSize="8"
+                Padding="4,0,4,0"
+                Margin="0"
+                ToolTip="Открыть"
+                HorizontalAlignment="Center" />
+      </StackPanel>
+    </DataTemplate>
+
+
     <DataTemplate x:Key="MaterialTemplate">
       <Grid Margin="10">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="40" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-          <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTip="Открыть при запуске проекта"
-                    HorizontalAlignment="Center">
-            <CheckBox.LayoutTransform>
-              <ScaleTransform ScaleX="2"
-                              ScaleY="2" />
-            </CheckBox.LayoutTransform>
-          </CheckBox>
-          <Button Content="open"
-                  FontSize="8"
-                  Padding="4,0,4,0"
-                  Margin="0"
-                  ToolTip="Открыть."
-                  HorizontalAlignment="Center" />
-        </StackPanel>
+        <ContentPresenter Grid.Column="0"
+                          ContentTemplate="{StaticResource MyCheckBox}" />
 
-        <Grid Grid.Column="1">
-          <TextBlock Margin="10"
-                     Text="{Binding Path=MaterialTitle}"
+        <Grid Grid.Column="1"
+              Margin="10">
+          <TextBlock Text="{Binding Path=MaterialTitle}"
                      FontSize="18" />
         </Grid>
       </Grid>
@@ -68,71 +68,54 @@
           <ColumnDefinition Width="40" />
           <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-          <CheckBox IsChecked="{Binding OpensAtLaunch, UpdateSourceTrigger=PropertyChanged}"
-                    ToolTip="Открыть при запуске проекта"
-                    HorizontalAlignment="Center">
-            <CheckBox.LayoutTransform>
-              <ScaleTransform ScaleX="2"
-                              ScaleY="2" />
-            </CheckBox.LayoutTransform>
-          </CheckBox>
-          <Button Content="open"
-                  FontSize="8"
-                  Padding="4,0,4,0"
-                  Margin="0"
-                  ToolTip="Открыть."
-                  HorizontalAlignment="Center" />
-        </StackPanel>
+        <ContentPresenter Grid.Column="0"
+                          ContentTemplate="{StaticResource MyCheckBox}" />
 
         <Grid Grid.Column="1">
-          <StackPanel>
-
-            <TextBlock Margin="10"
-                       Text="{Binding Path=MaterialTitle}"
-                       FontSize="18" />
-            <TextBox Margin="10,0,10,10"
-                     Text="{Binding NewMaterialTitle}"
+          <StackPanel Margin="10">
+            <TextBlock Text="{Binding Path=MaterialTitle}"
+                       FontSize="18"
+                       FontWeight="Medium" />
+            <TextBox Padding="2"
+                     Text="{Binding DataContext.NewMaterialTitle,ElementName=ListMaterials}"
                      FontSize="18" />
             <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Margin="10,0,10,0">
-              <Button Margin="10,0,0,0"
-                      Padding="10,0,10,0"
+                        HorizontalAlignment="Left"
+                        Margin="0,5,0,0">
+              <Button Padding="10,5,10,5"
                       Content="Rename"
                       FontSize="14" />
             </StackPanel>
 
-            <TextBlock Margin="10,10,10,10"
-                       Text="{Binding PathToMaterial,UpdateSourceTrigger = PropertyChanged}"
+            <TextBlock Text="{Binding PathToMaterial,UpdateSourceTrigger = PropertyChanged}"
+                       Margin="20,10,0,0"
                        TextWrapping="Wrap"
                        FontSize="18" />
             <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Margin="10,0,10,0">
-              <Button Margin="10,0,0,0"
-                      Padding="10,0,10,0"
-                      Content="Folder"
-                      FontSize="14" />
-              <Button Margin="10,0,0,0"
-                      Padding="10,0,10,0"
-                      Content="File"
-                      FontSize="14" />
-              <Button Margin="10,0,0,0"
-                      Padding="10,0,10,0"
-                      Content="Web"
-                      FontSize="14" />
+                        Margin="20,5,0,0"
+                        HorizontalAlignment="Left">
+              <Button Content="Folder" />
+              <Button  Content="File" />
+              <Button Content="Web" />
+              <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                  <Setter Property="Margin"
+                          Value="0,0,10,0" />
+                  <Setter Property="Padding"
+                          Value="10,0,10,0" />
+                  <Setter Property="FontSize"
+                          Value="14" />
+                </Style>
+              </StackPanel.Resources>
+
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Right"
-                        Margin="0,20,10,0">
-              <Button Content="Delete material"
-                      Padding="5"
-                      FontSize="16" />
-            </StackPanel>
+            <Button Content="Delete material"
+                    Command="{Binding DataContext.RemoveSelectedMaterialCommand,ElementName=ListMaterials}"
+                    HorizontalAlignment="Left"
+                    Margin="0,20,0,0"
+                    Padding="5"
+                    FontSize="16" />
           </StackPanel>
         </Grid>
       </Grid>
@@ -164,17 +147,58 @@
 
   <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="30" />
+      <RowDefinition Height="auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Height="20" />
     </Grid.RowDefinitions>
     <Grid Grid.Row="0"
-          Margin="10,0,10,0">
+          Margin="10,0,0,0">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="auto" />
+        <ColumnDefinition Width="auto" />
+      </Grid.ColumnDefinitions>
+
       <TextBlock Text="Materials:"
+                 Grid.Column="0"
                  FontSize="18"
                  FontWeight="Bold" />
+      <Button Grid.Column="1"
+              Margin="0,0,5,0"
+              Width="24"
+              Height="24"
+              BorderBrush="#FF34A3C8"
+              BorderThickness="2"
+              Command="{Binding AddMaterialCommand}">
+        <TextBlock Text="+"
+                   FontSize="12"
+                   FontWeight="Bold"
+                   TextAlignment="Center"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center" />
+        <Button.ToolTip>
+          <TextBlock FontSize="18"
+                     Text="Добавить новый материал" />
+        </Button.ToolTip>
 
+        <Button.Style>
+          <Style TargetType="Button">
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
+                           Value="True">
+                <Setter Property="Visibility"
+                        Value="Visible" />
+              </DataTrigger>
+              <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
+                           Value="False">
+                <Setter Property="Visibility"
+                        Value="Collapsed" />
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Button.Style>
+      </Button>
       <ToggleButton Name="ChangeMaterialsTB"
+                    Grid.Column="2"
                     Width="24"
                     Height="24"
                     HorizontalAlignment="Right"
@@ -186,48 +210,25 @@
                Stretch="Fill" />
       </ToggleButton>
     </Grid>
+    
     <Grid  Grid.Row="1">
-      <ListBox ItemsSource="{Binding Project.Materials, UpdateSourceTrigger=PropertyChanged}"
+      <ListBox x:Name="ListMaterials"
+               Grid.Row="1"
+               ItemsSource="{Binding Project.Materials, UpdateSourceTrigger=PropertyChanged}"
                SelectedItem="{Binding SelectedMaterial,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                Style="{StaticResource ListMaterialsStyle}"
                ItemContainerStyle="{StaticResource ContainerStyle}">
+
+        <ListBox.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Копировать"></MenuItem>
+            <MenuItem Header="Вставить"></MenuItem>
+            <MenuItem Header="Вырезать"></MenuItem>
+            <MenuItem Header="Удалить"></MenuItem>
+          </ContextMenu>
+        </ListBox.ContextMenu>
       </ListBox>
     </Grid>
-
-
-    <StackPanel Grid.Row="2"
-                Name="panelForAddTasks"
-                HorizontalAlignment="Center"
-                Orientation="Horizontal">
-      <Button Width="40"
-              Height="20"
-              BorderBrush="#FF34A3C8"
-              BorderThickness="2"
-              Command="{Binding AddTaskCommand}">
-        <TextBlock Text="+"
-                   FontSize="14"
-                   FontWeight="Bold"
-                   TextAlignment="Center"
-                   HorizontalAlignment="Center"
-                   VerticalAlignment="Center" />
-      </Button>
-
-      <StackPanel.Style>
-        <Style TargetType="StackPanel">
-          <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
-                         Value="True">
-              <Setter Property="Visibility"
-                      Value="Visible" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=ChangeMaterialsTB,Path=IsChecked}"
-                         Value="False">
-              <Setter Property="Visibility"
-                      Value="Collapsed" />
-            </DataTrigger>
-          </Style.Triggers>
-        </Style>
-      </StackPanel.Style>
-    </StackPanel>
+   
   </Grid>
 </UserControl>

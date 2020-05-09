@@ -34,11 +34,9 @@ namespace Launcher.View.Pages
 
             if (EditingEnabled) {
                 Task_DG.Columns[indexDeleteTask].Visibility = Visibility.Visible;
-                panelForAddTasks.Visibility = Visibility.Visible;
             }
             else {
                 Task_DG.Columns[indexDeleteTask].Visibility = Visibility.Hidden;
-                panelForAddTasks.Visibility = Visibility.Hidden;
             }
             Task_DG.Columns[indexNameTask].IsReadOnly = !Task_DG.Columns[indexNameTask].IsReadOnly;
         }

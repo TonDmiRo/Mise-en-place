@@ -1,8 +1,21 @@
 ﻿using Launcher.Model;
 using System;
+using System.Windows.Input;
 
 namespace Launcher.ViewModel.Pages {
     internal class ProjectTasksPageForNav : BasePageVM {
+
+
+
+        #region Commands
+        private ICommand _addTaskCommand;
+        public ICommand AddTaskCommand => _addTaskCommand ?? ( _addTaskCommand = new RelayCommand(AddTask) );
+        private void AddTask(object parameter) {
+            Project.ProjectTasks.Add(new Task(string.Empty));
+        }
+        #endregion
+
+
         /// <summary>Безпараметрический конструктор</summary>
         public ProjectTasksPageForNav() {
             Project = Project.EmptyProject;
