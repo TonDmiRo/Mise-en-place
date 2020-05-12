@@ -27,12 +27,15 @@
     </Style>
 
     <!--#region ListProjects-->
-    <DataTemplate x:Key="ListProjectsTemplate">
+    <!--TODO: ListProjectsTemplate изменить имена-->
+      <DataTemplate x:Key="ListProjectsTemplate">
       <StackPanel  Margin="10">
         <WrapPanel Orientation="Horizontal">
           <TextBlock FontSize="26"
                      Text="{Binding Path=ProjectName}" />
-          <Button Style="{StaticResource StartButton}" />
+          <Button Style="{StaticResource StartButton}"
+                  Command="{Binding ElementName=ListProjects, Path=DataContext.LaunchProjectCommand}"
+                  CommandParameter="{Binding }" />
         </WrapPanel>
 
         <StackPanel>
@@ -69,7 +72,9 @@
         <WrapPanel Orientation="Horizontal">
           <TextBlock FontSize="18"
                      Text="{Binding Path=ProjectName}" />
-          <Button Style="{StaticResource StartButton}" />
+          <Button Style="{StaticResource StartButton}"
+                  Command="{Binding ElementName=ListProjects, Path=DataContext.LaunchProjectCommand}"
+                  CommandParameter="{Binding }" />
         </WrapPanel>
 
         <StackPanel>
@@ -220,7 +225,10 @@
             <TextBlock FontSize="22"
                        FontFamily="Calibri"
                        Text="{Binding ElementName=ListProjects, Path=SelectedItem.ProjectName, FallbackValue='NotFound'}" />
-            <Button Style="{StaticResource StartButton}" />
+            <Button Style="{StaticResource StartButton}"
+                    Command="{Binding LaunchProjectCommand}"
+                    CommandParameter="{Binding SelectedProject}"
+                    />
           </StackPanel>
 
           <ToolBar Grid.Row="1"

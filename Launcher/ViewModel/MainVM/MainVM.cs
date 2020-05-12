@@ -1,6 +1,6 @@
 ﻿using Launcher.Model;
 using Launcher.Model.BuilderForUser;
-using Launcher.ViewModel.Pages;
+using Launcher.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -61,9 +61,46 @@ namespace Launcher.ViewModel {
 
 
         // Команды для проекта:
+
+        private ICommand _launchProjectCommand;
+        public ICommand LaunchProjectCommand => _launchProjectCommand ?? ( _launchProjectCommand = new RelayCommand(LaunchProject) );
+        private void LaunchProject(object parameter) {
+            if (parameter is Project project) {
+                if (!project.Materials.MarkedMaterialsExist()) { MessageBox.Show("Материалы не выбраны!"); }
+
+                try { _user.StartWorkingOnProject(project); }
+                catch (Exception e) { MessageBox.Show(e.Message); }
+
+                IList<string> list = project.Materials.GetTitleOfDamagedMaterials();
+                if (list.Count != 0) {
+                    // TODO: Test
+                    StringBuilder damagedMaterials = new StringBuilder();
+                    foreach (string item in list) {
+                        damagedMaterials.AppendLine(item);
+                    }
+                    MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
+                }
+
+                TimeSpan workTime = OpenDoningV();
+                if (workTime.TotalMinutes < 25) { MessageBox.Show("Работали над проектом < 25 минут. Постарайтесь не отвлекаться!"); }
+
+                _user.StopWorkingOnProject(workTime);
+            }
+        }
+        private TimeSpan OpenDoningV() {
+            using (DoingVM viewModel = new DoingVM()) {
+                using (DoingV doingV = new DoingV(viewModel)) {
+                    //TODO: не работает
+                    doingV.ShowDialog();
+                    return viewModel.ElapsedTime;
+                }
+            }
+        }
+
         private ICommand _openPprojectEditorCommand;
         public ICommand OpenPprojectEditorCommand => _openPprojectEditorCommand ?? ( _openPprojectEditorCommand = new RelayCommand(OpenPprojectEditor) );
         private void OpenPprojectEditor(object parameter) {
+            /// TODO:
             /// Открыть новое окно для редактирования 
             /// передаем коллекцию проектов
             /// в этом окне как в примере с авто редактируем не изменяемые значения
@@ -86,6 +123,8 @@ namespace Launcher.ViewModel {
                 Projects.Remove(SelectedProject);
             }
         }
+
+
         #endregion
 
         /// <summary>
