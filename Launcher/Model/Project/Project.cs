@@ -56,6 +56,9 @@ namespace Launcher.Model {
 
         #region Collections
 
+        public void ProvideMaterials() {
+            Materials.OpenMarkedMaterials();
+        }
 
         public ProjectMaterials Materials { get; private set; }
         [JsonProperty("ProjectMaterials")]
