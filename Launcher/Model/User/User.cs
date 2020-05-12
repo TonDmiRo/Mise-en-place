@@ -51,6 +51,57 @@ namespace Launcher.Model {
         private readonly List<string> _listProjects;
 
         #region Magnifier
+        /// <summary>
+        /// Выполняемый проект.
+        /// Если его нет пользователь свободен.
+        /// </summary>
+        public Project ProjectInProgress { get; private set; }
+        private DateTime _iterationStartTime;
+
+        /// <summary>
+        /// Инициирует начало работы над проектом.
+        /// Пользователь может работать только над одним проектом за итерацию.
+        /// Для завершения работы используйте StopWorkingOnProject.
+        /// </summary>
+        /// <param name="project">Проект для текущей итерации.</param>
+        public void StartWorkingOnProject(Project project) {
+
+            if (ProjectInProgress == null) {
+                project.ProvideMaterials();
+                // Назначить выполняемый проект
+                ProjectInProgress = project;
+                // Зафиксировать время старта для проверки
+                _iterationStartTime = DateTime.Now;
+            }
+            else {
+                throw new Exception($"Пользователь работает над {ProjectInProgress.ProjectName}");
+            }
+        }
+        public void StopWorkingOnProject(TimeSpan workTime) {
+            // работа начинается с 25 минут
+            if (workTime >= TimeSpan.FromMinutes(25)) {
+                // Определить время работы над проектом
+                TimeSpan internalWorkTime = ( DateTime.Now - _iterationStartTime );
+                // Переданное время работы должно быть меньше
+                if (workTime < internalWorkTime) {
+                    if (workTime.TotalMinutes < 90) { AddTimeSpentOnProject(workTime); }
+                    // минуты после 90 считаем не эффективными
+                    // если одна итерация была больше 90 минут срезаем до 1:20
+                    else { AddTimeSpentOnProject(TimeSpan.FromMinutes(80)); }
+                }
+            }
+            // освобождаем объект блокировки
+            ProjectInProgress = null;
+        }
+        private void AddTimeSpentOnProject(TimeSpan time) {
+            ProductiveTime += time;
+            OnPropertyChanged(nameof(ProductiveTime));
+            // TODO: решить как обновить время проекта
+            // ProjectInProgress.TimeSpentOnProject += workTime;
+        }
+
+
+
         private TimeSpanMagnifier magnifierForUsageTimeTotal;
         private void ChangedUsageTimeTotal(object sender, TimeSpanHasChangedEventArgs e) {
             TotalUsageTime = e.IncreasedTimeSpan;
@@ -74,7 +125,7 @@ namespace Launcher.Model {
         }
         private void SerializeUser() {
             UpdateListProjects();
-            string userPath = Path.Combine(System.Configuration.ConfigurationManager.AppSettings["FilesPath"], Name, Path.ChangeExtension(Name,"json"));
+            string userPath = Path.Combine(System.Configuration.ConfigurationManager.AppSettings["FilesPath"], Name, Path.ChangeExtension(Name, "json"));
             UserSerializer.Serialize(userPath, this);
         }
         private void UpdateListProjects() {

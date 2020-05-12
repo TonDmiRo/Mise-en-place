@@ -39,8 +39,8 @@ namespace Launcher.ViewModel {
         private void StartProject(ProjectEventArgs e) {
             CheckExistenceOfMaterials(e.Project.Materials);
 
-            bool oneWasOpen = e.Project.Materials.OpenMarkedMaterials();
-            if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
+           // bool oneWasOpen = e.Project.Materials.OpenMarkedMaterials();
+            //if (!oneWasOpen) { MessageBox.Show("Материалы не выбраны!"); }
 
             TimeSpan time = OpenDoningV();
             if (time.TotalMinutes > 25) {

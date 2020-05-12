@@ -34,6 +34,8 @@ namespace Launcher.Model {
                 OnPropertyChanged();
             }
         }
+
+        // TODO: если Exists false необходимо зафиксировать причину. string причина?
         #endregion
         public void OpenMaterial() {
             CheckMaterial();
