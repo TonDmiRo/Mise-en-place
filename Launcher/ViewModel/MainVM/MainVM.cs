@@ -68,26 +68,28 @@ namespace Launcher.ViewModel {
             if (parameter is Project project) {
                 if (!project.Materials.MarkedMaterialsExist()) { MessageBox.Show("Материалы не выбраны!"); }
 
-                try { _user.StartWorkingOnProject(project); }
-                catch (Exception e) { MessageBox.Show(e.Message); }
-
-                IList<string> list = project.Materials.GetTitleOfDamagedMaterials();
-                if (list.Count != 0) {
-                    // TODO: Test
-                    StringBuilder damagedMaterials = new StringBuilder();
-                    foreach (string item in list) {
-                        damagedMaterials.AppendLine(item);
+                try {
+                    _user.StartWorkingOnProject(project);
+                    IList<string> list = project.Materials.GetTitleOfDamagedMaterials();
+                    if (list.Count != 0) {
+                        // TODO: Test
+                        StringBuilder damagedMaterials = new StringBuilder();
+                        foreach (string item in list) {
+                            damagedMaterials.AppendLine(item);
+                        }
+                        MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
                     }
-                    MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
+
+                    TimeSpan workTime = OpenDoningV();
+                    if (workTime.TotalMinutes < 25) { MessageBox.Show("Работали над проектом < 25 минут. Постарайтесь не отвлекаться!"); }
+
+                    _user.StopWorkingOnProject(workTime);
                 }
-
-                TimeSpan workTime = OpenDoningV();
-                if (workTime.TotalMinutes < 25) { MessageBox.Show("Работали над проектом < 25 минут. Постарайтесь не отвлекаться!"); }
-
-                _user.StopWorkingOnProject(workTime);
+                catch (Exception e) { MessageBox.Show(e.Message); }
             }
         }
         private TimeSpan OpenDoningV() {
+            // Content
             using (DoingVM viewModel = new DoingVM()) {
                 using (DoingV doingV = new DoingV(viewModel)) {
                     //TODO: не работает

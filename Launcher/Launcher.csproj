@@ -77,14 +77,15 @@
     <Compile Include="ViewModel\MainVM\MainVM.cs" />
     <Compile Include="ViewModel\MainVM\MainVMNavigation.cs" />
     <Compile Include="ViewModel\MainVM\INavigationPage.cs" />
-    <Compile Include="ViewModel\Pages\NavPageBaseClass.cs" />
-    <Compile Include="ViewModel\Pages\ProjectMaterialsPageForNav.cs" />
-    <Compile Include="ViewModel\Pages\ProjectTasksPageForNav.cs" />
-    <Compile Include="ViewModel\ProjectVM\CommandProject.cs" />
+    <Compile Include="ViewModel\BaseClasses\BasePageVM.cs" />
+    <Compile Include="ViewModel\ProjectVM\Pages\ProjectBasePageVM.cs" />
+    <Compile Include="ViewModel\ProjectVM\Pages\ProjectMaterialsPageVM.cs" />
+    <Compile Include="ViewModel\ProjectVM\Pages\ProjectTasksPageVM.cs" />
+    <Compile Include="ViewModel\ProjectVM\archive\CommandProject.cs" />
     <Compile Include="ViewModel\ProjectVM\ProjectEditorVM.cs" />
-    <Compile Include="ViewModel\ProjectVM\RemoveProject.cs" />
-    <Compile Include="ViewModel\ProjectVM\ProjectReceiver.cs" />
-    <Compile Include="View\Converter\TimeSpanToTimeConverter.cs" />
+    <Compile Include="ViewModel\ProjectVM\archive\RemoveProject.cs" />
+    <Compile Include="ViewModel\ProjectVM\archive\ProjectReceiver.cs" />
+    <Compile Include="View\Archive\Converter\TimeSpanToTimeConverter.cs" />
     <Compile Include="Model\Project\Project.cs" />
     <Compile Include="Model\Materials\MaterialCreator.cs" />
     <Compile Include="Model\Materials\Material.cs" />
@@ -112,11 +113,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Materials\FixMaterialPathV.xaml">
+    <Page Include="View\Archive\Materials\FixMaterialPathV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Materials\NewMaterialV.xaml">
+    <Page Include="View\Archive\Materials\NewMaterialV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,7 +129,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ProjectV.xaml">
+    <Page Include="View\Archive\ProjectV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -141,16 +142,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Model\User\BuilderForUser\UserBuilder.cs" />
-    <Compile Include="ViewModel\MaterialVM\MaterialVM.cs" />
-    <Compile Include="ViewModel\ProjectVM\ProjectVM.cs" />
-    <Compile Include="ViewModel\BaseVM.cs" />
+    <Compile Include="ViewModel\ProjectVM\archive\MaterialVM\MaterialVM.cs" />
+    <Compile Include="ViewModel\ProjectVM\archive\ProjectVM.cs" />
+    <Compile Include="ViewModel\BaseClasses\BaseVM.cs" />
     <Compile Include="View\MainV.xaml.cs">
       <DependentUpon>MainV.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Materials\FixMaterialPathV.xaml.cs">
+    <Compile Include="View\Archive\Materials\FixMaterialPathV.xaml.cs">
       <DependentUpon>FixMaterialPathV.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Materials\NewMaterialV.xaml.cs">
+    <Compile Include="View\Archive\Materials\NewMaterialV.xaml.cs">
       <DependentUpon>NewMaterialV.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Pages\ProjectMaterialsUC.xaml.cs">
@@ -159,7 +160,7 @@
     <Compile Include="View\Pages\ProjectTasksUC.xaml.cs">
       <DependentUpon>ProjectTasksUC.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ProjectV.xaml.cs">
+    <Compile Include="View\Archive\ProjectV.xaml.cs">
       <DependentUpon>ProjectV.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Archive\Archive_MainV.xaml.cs">

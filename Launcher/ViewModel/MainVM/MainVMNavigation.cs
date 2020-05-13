@@ -19,16 +19,18 @@ namespace Launcher.ViewModel {
 
     public sealed partial class MainVM : BaseVM {
         private void InitializePages() {
-            dictPages.Add(PageNumEnum.First, new ProjectTasksPageForNav(OnGoPage, CanGoPage));
-            dictPages.Add(PageNumEnum.Second, new ProjectMaterialsPageForNav(OnGoPage, CanGoPage));
+            dictPages.Add(PageNumEnum.First, new ProjectTasksPageVM(OnGoPage, CanGoPage));
+            dictPages.Add(PageNumEnum.Second, new ProjectMaterialsPageVM(OnGoPage, CanGoPage));
 
             Content = dictPages[PageNumEnum.Second];
         }
         /// <summary>Обновляет модель vm страницы</summary>
         /// <param name="porject">SelectedProject</param>
         private void RefreshPageValues(Project porject) {
-            BasePageVM vm = (BasePageVM)Content;
-            vm.Project = porject;
+            if (Content is ProjectBasePageVM basePageVM) {
+                //ProjectBasePageVM vm = (ProjectBasePageVM)Content;
+                basePageVM.Project = porject;
+            }
         }
       
 
