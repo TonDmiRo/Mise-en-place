@@ -117,7 +117,7 @@
         <DataTrigger Binding="{Binding ElementName=ProjectContent, Path=Visibility}"
                      Value="Collapsed">
           <Setter Property="ListBox.ItemTemplate"
-                  Value="{StaticResource BriefInfoAboutProject}" />
+                  Value="{StaticResource FullInfoAboutProject}" />
         </DataTrigger>
       </Style.Triggers>
     </Style>
