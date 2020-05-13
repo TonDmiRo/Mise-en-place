@@ -8,44 +8,59 @@ namespace Launcher.View {
     /// </summary>
     public partial class MainV : Window {
         private readonly GridLength GridLengthForSidebar;
-        private readonly GridLength GridLengthForOnlyListProjects;
+        private readonly GridLength GridLengthForProjectContent;
 
-        private readonly GridLength GridLengthForGridProject;
         public MainV() {
             InitializeComponent();
-
-
             GridLengthForSidebar = new GridLength(3, GridUnitType.Star);
-            GridLengthForOnlyListProjects = new GridLength(1, GridUnitType.Star);
-
-            GridLengthForGridProject = new GridLength(7, GridUnitType.Star);
+            GridLengthForProjectContent = new GridLength(7, GridUnitType.Star);
 
             this.SizeChanged += OnWindowSizeChanged;
         }
         public MainV(MainVM main) : this() {
             DataContext = main;
         }
-
+        private bool widthReachedMinSize; // интервал всего 140 
         private void OnWindowSizeChanged(object sender, SizeChangedEventArgs e) {
-
             if (e.NewSize.Width > 640) {
-                GridProject.Visibility = Visibility.Visible;
-                
-                MainBody.ColumnDefinitions[0].Width = GridLengthForSidebar;
-                MainBody.ColumnDefinitions[2].Width = GridLengthForGridProject;
-
-                //todo изменить стиль
+                if (widthReachedMinSize) {
+                    ShowAllGrid();
+                    ColForProjectsSidebar.Width = GridLengthForSidebar;
+                    ColForProjectContent.Width = GridLengthForProjectContent;
+                    widthReachedMinSize = false;
+                }
             }
             else {
-                GridProject.Visibility = Visibility.Collapsed;
-
-                MainBody.ColumnDefinitions[0].Width = GridLengthForOnlyListProjects;
-                MainBody.ColumnDefinitions[2].Width = GridLength.Auto;
-
-                //todo вернуть стиль
+                widthReachedMinSize = true;
+                if (ListProjects.SelectedItem == null) {
+                    ShowOnlyOneGrid(ProjectsSidebar);
+                    ShowOnlyOneColumn(ColForProjectsSidebar);
+                }
+                else {
+                    ShowOnlyOneGrid(ProjectContent);
+                    ShowOnlyOneColumn(ColForProjectContent);
+                }
             }
+        }
 
 
+        private void ShowOnlyOneColumn(ColumnDefinition column) {
+            column.Width = new GridLength(1, GridUnitType.Star);
+
+            foreach (var item in MainGrid.ColumnDefinitions) {
+                if (item != column) { item.Width = GridLength.Auto; }
+            }
+        }
+        private void ShowOnlyOneGrid(Grid grid) {
+            grid.Visibility = Visibility.Visible;
+            foreach (UIElement item in MainGrid.Children) {
+                if (item != grid) { item.Visibility = Visibility.Collapsed; }
+            }
+        }
+        private void ShowAllGrid() {
+            foreach (UIElement item in MainGrid.Children) {
+                item.Visibility = Visibility.Visible;
+            }
         }
     }
 }

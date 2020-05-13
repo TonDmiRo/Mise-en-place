@@ -8,8 +8,8 @@
         xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
         xmlns:viewmodelUC="clr-namespace:Launcher.ViewModel.Pages"
         Title="Main"
-        MinWidth="300"
-        MinHeight="500"
+        MinWidth="500"
+        MinHeight="350"
         Height="500"
         Width="800"
         WindowStartupLocation="CenterScreen"
@@ -25,10 +25,23 @@
       <Setter Property="Content"
               Value="Start" />
     </Style>
+    <Style x:Key="SplitterStyle"
+           TargetType="GridSplitter">
 
-    <!--#region ListProjects-->
-    <!--TODO: ListProjectsTemplate изменить имена-->
-      <DataTemplate x:Key="ListProjectsTemplate">
+      <Setter Property="ShowsPreview"
+              Value="False" />
+      <Setter Property="Width"
+              Value="5" />
+      <Setter Property="HorizontalAlignment"
+              Value="Center" />
+      <Setter Property="VerticalAlignment"
+              Value="Stretch" />
+
+    </Style>
+
+
+    <!--#region DataTemplate для ListProjects-->
+    <DataTemplate x:Key="FullInfoAboutProject">
       <StackPanel  Margin="10">
         <WrapPanel Orientation="Horizontal">
           <TextBlock FontSize="26"
@@ -64,10 +77,9 @@
           </StackPanel>
         </StackPanel>
       </StackPanel>
-
     </DataTemplate>
 
-    <DataTemplate x:Key="OnlyListProjectsTemplate">
+    <DataTemplate x:Key="BriefInfoAboutProject">
       <StackPanel  Margin="10">
         <WrapPanel Orientation="Horizontal">
           <TextBlock FontSize="18"
@@ -82,9 +94,8 @@
                      FontSize="14" />
         </StackPanel>
       </StackPanel>
-
     </DataTemplate>
-
+    <!--#endregion-->
     <Style x:Key="ListProjectsStyle"
            TargetType="ListBox">
       <Setter Property="Padding"
@@ -97,57 +108,47 @@
               Value="Stretch" />
 
       <Style.Triggers>
-        <DataTrigger Binding="{Binding ElementName=GridProject, Path=Visibility}"
+        <DataTrigger Binding="{Binding ElementName=ProjectContent, Path=Visibility}"
                      Value="Visible">
           <Setter Property="ListBox.ItemTemplate"
-                  Value="{StaticResource OnlyListProjectsTemplate}" />
+                  Value="{StaticResource BriefInfoAboutProject}" />
         </DataTrigger>
 
-        <DataTrigger Binding="{Binding ElementName=GridProject, Path=Visibility}"
+        <DataTrigger Binding="{Binding ElementName=ProjectContent, Path=Visibility}"
                      Value="Collapsed">
           <Setter Property="ListBox.ItemTemplate"
-                  Value="{StaticResource ListProjectsTemplate}" />
+                  Value="{StaticResource BriefInfoAboutProject}" />
         </DataTrigger>
       </Style.Triggers>
     </Style>
-    <!--#endregion-->
-
-    <Style x:Key="SplitterStyle"
-           TargetType="GridSplitter">
-
-      <Setter Property="ShowsPreview"
-              Value="False" />
-      <Setter Property="Width"
-              Value="5" />
-      <Setter Property="HorizontalAlignment"
-              Value="Center" />
-      <Setter Property="VerticalAlignment"
-              Value="Stretch" />
-
-    </Style>
   </Window.Resources>
-  <Grid x:Name="MainBody"
-        Grid.Row="0">
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="3*"
-                        MaxWidth="640"
-                        MinWidth="250" />
-      <ColumnDefinition Width="auto" />
-      <ColumnDefinition Width="7*" />
-    </Grid.ColumnDefinitions>
 
+  <Grid x:Name="MainGrid"
+        ShowGridLines="True">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition x:Name="ColForProjectsSidebar"
+                        Width="3*"
+                        MaxWidth="640" />
+      <ColumnDefinition Width="auto" />
+      <ColumnDefinition x:Name="ColForProjectContent"
+                        Width="7*" />
+    </Grid.ColumnDefinitions>
+   
     <Grid x:Name="ProjectsSidebar"
+          MinWidth="230"
           Grid.Column="0">
       <Grid.RowDefinitions>
         <RowDefinition Height="40" />
         <RowDefinition Height="*" />
-        <RowDefinition Height="50" />
+        <RowDefinition  Height="40" />
       </Grid.RowDefinitions>
+      
       <Grid x:Name="SearchLine"
             Grid.Row="0">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="*" />
           <ColumnDefinition Width="auto " />
+
         </Grid.ColumnDefinitions>
 
         <TextBox Text="Поиск..."
@@ -172,14 +173,14 @@
                   Command="{Binding AddProjectCommand}" />
         </ToolBar>
       </Grid>
-
+      
       <ListBox x:Name="ListProjects"
                Grid.Row="1"
                ItemsSource="{Binding Projects,UpdateSourceTrigger=PropertyChanged}"
                SelectedItem="{Binding SelectedProject,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                Style="{StaticResource ListProjectsStyle}">
       </ListBox>
-
+      
       <Grid x:Name="UserPanel"
             Grid.Row="2">
         <Button x:Name="SaveButton"
@@ -203,7 +204,7 @@
     <GridSplitter Grid.Column="1"
                   Style="{StaticResource SplitterStyle}" />
 
-    <Grid x:Name="GridProject"
+    <Grid x:Name="ProjectContent"
           Grid.Column="2"
           MinWidth="250"
           Visibility="Visible">
@@ -227,8 +228,7 @@
                        Text="{Binding ElementName=ListProjects, Path=SelectedItem.ProjectName, FallbackValue='NotFound'}" />
             <Button Style="{StaticResource StartButton}"
                     Command="{Binding LaunchProjectCommand}"
-                    CommandParameter="{Binding SelectedProject}"
-                    />
+                    CommandParameter="{Binding SelectedProject}" />
           </StackPanel>
 
           <ToolBar Grid.Row="1"
@@ -249,7 +249,7 @@
             </Button>
 
             <Button Content="Заметки" />
-            
+
             <Separator />
             <Button Command="{Binding DeleteProjectCommand}">
               <StackPanel Orientation="Horizontal">
@@ -265,14 +265,14 @@
         </Grid>
 
         <Grid x:Name="ProjectPages"
-              Grid.Row="1"
-              IsEnabled="{Binding ProjectIsNotNull}">
+              Grid.Row="1">
+
           <ContentPresenter Content="{Binding Content,UpdateSourceTrigger=PropertyChanged}">
             <ContentPresenter.Resources>
-              <DataTemplate DataType="{x:Type viewmodelUC:ProjectTasksPageForNav}">
+              <DataTemplate DataType="{x:Type viewmodelUC:ProjectTasksPageVM}">
                 <localUC:ProjectTasksUC />
               </DataTemplate>
-              <DataTemplate DataType="{x:Type viewmodelUC:ProjectMaterialsPageForNav}">
+              <DataTemplate DataType="{x:Type viewmodelUC:ProjectMaterialsPageVM}">
                 <localUC:ProjectMaterialsUC />
               </DataTemplate>
             </ContentPresenter.Resources>
@@ -282,4 +282,5 @@
 
     </Grid>
   </Grid>
+
 </Window>
