@@ -7,7 +7,7 @@
              xmlns:viewmodel="clr-namespace:Launcher.ViewModel.Pages"
              Background="White"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance viewmodel:ProjectMaterialsPageForNav, IsDesignTimeCreatable=True}"
+             d:DataContext="{d:DesignInstance viewmodel:ProjectMaterialsPageVM, IsDesignTimeCreatable=True}"
              d:DesignHeight="450"
              d:DesignWidth="400">
 
@@ -145,7 +145,7 @@
     <!--#endregion-->
   </UserControl.Resources>
 
-  <Grid>
+  <Grid IsEnabled="{Binding ProjectIsNotNull}">
     <Grid.RowDefinitions>
       <RowDefinition Height="auto" />
       <RowDefinition Height="*" />

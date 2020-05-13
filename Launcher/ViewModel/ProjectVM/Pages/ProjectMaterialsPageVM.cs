@@ -3,7 +3,7 @@ using System;
 using System.Windows.Input;
 
 namespace Launcher.ViewModel.Pages {
-    internal class ProjectMaterialsPageForNav : BasePageVM {
+    internal class ProjectMaterialsPageVM : ProjectBasePageVM {
         public string NewMaterialTitle {
             get => _title;
             set {
@@ -38,7 +38,7 @@ namespace Launcher.ViewModel.Pages {
         }
         #endregion
 
-        public ProjectMaterialsPageForNav() {
+        public ProjectMaterialsPageVM() {
             Project = Project.EmptyProject;
             Project.ProjectTasks.Add(new Task("Первая задача"));
 
@@ -47,7 +47,7 @@ namespace Launcher.ViewModel.Pages {
             Project.Materials.Add(new LocalMaterialCreator().CreateMaterial("Material3", "\\help.txt"));
         }
 
-        public ProjectMaterialsPageForNav(Action<object> onGoPage, Func<object, bool> canGoPage) : base(onGoPage, canGoPage) { }
+        public ProjectMaterialsPageVM(Action<object> onGoPage, Func<object, bool> canGoPage) : base(onGoPage, canGoPage) { }
 
         #region private
         private string _title;
