@@ -81,7 +81,7 @@ namespace Launcher.Model {
             // работа начинается с 25 минут
             if (workTime >= TimeSpan.FromMinutes(25)) {
                 // Определить время работы над проектом
-                TimeSpan internalWorkTime = ( DateTime.Now - _iterationStartTime );
+                TimeSpan internalWorkTime = ( DateTime.Now - _iterationStartTime ) + TimeSpan.FromSeconds(1);
                 // Переданное время работы должно быть меньше
                 if (workTime < internalWorkTime) {
                     if (workTime.TotalMinutes < 90) { AddTimeSpentOnProject(workTime); }
