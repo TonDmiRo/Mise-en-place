@@ -9,14 +9,14 @@ namespace Launcher.Model.BuilderForUser {
         public NewUserBuilder(string username) {
             _user = new User(username);
             myDirectory = Environment.CurrentDirectory;
-            
+
         }
         public override void SetUserInformation() {
-
+            // не используется
         }
 
         public override void PrepareCustomFiles() {
-
+            // не используется
         }
 
         public override void SetProjects() {
