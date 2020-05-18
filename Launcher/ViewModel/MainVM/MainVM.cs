@@ -16,7 +16,14 @@ namespace Launcher.ViewModel {
         /// <summary>
         /// Время проведенное в программе
         /// </summary>
-        public TimeSpan UsageTimeTotal => _user.TotalUsageTime;
+        //public TimeSpan UsageTimeTotal => _user.TotalUsageTime;
+
+        public string RatioOfWorkToLeisure {
+            get {
+                double ratio = _user.GetRatioOfWorkToLeisure();
+                return $"T/O = " + ratio.ToString("N2");
+            }
+        }
         #endregion
 
         #region Projects
@@ -154,7 +161,7 @@ namespace Launcher.ViewModel {
 
         #region Model handlers
         private void PropUserChanged(object sender, PropertyChangedEventArgs e) {
-            if (e.PropertyName == "UsageTimeTotal") { OnPropertyChanged(nameof(UsageTimeTotal)); }
+            if (e.PropertyName == "UsageTimeTotal" || e.PropertyName == "ProductiveTime") { OnPropertyChanged(nameof(RatioOfWorkToLeisure)); }
         }
         private void NotifyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
             if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove) {

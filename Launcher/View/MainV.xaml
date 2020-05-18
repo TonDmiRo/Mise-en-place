@@ -133,7 +133,7 @@
       <ColumnDefinition x:Name="ColForProjectContent"
                         Width="7*" />
     </Grid.ColumnDefinitions>
-   
+
     <Grid x:Name="ProjectsSidebar"
           MinWidth="230"
           Grid.Column="0">
@@ -142,7 +142,7 @@
         <RowDefinition Height="*" />
         <RowDefinition  Height="40" />
       </Grid.RowDefinitions>
-      
+
       <Grid x:Name="SearchLine"
             Grid.Row="0">
         <Grid.ColumnDefinitions>
@@ -173,31 +173,34 @@
                   Command="{Binding AddProjectCommand}" />
         </ToolBar>
       </Grid>
-      
+
       <ListBox x:Name="ListProjects"
                Grid.Row="1"
                ItemsSource="{Binding Projects,UpdateSourceTrigger=PropertyChanged}"
                SelectedItem="{Binding SelectedProject,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                Style="{StaticResource ListProjectsStyle}">
       </ListBox>
-      
+
       <Grid x:Name="UserPanel"
             Grid.Row="2">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="100" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
         <Button x:Name="SaveButton"
                 Grid.Column="0"
                 Content="Save"
                 FontSize="24"
                 Command="{Binding SaveUserCommand}" />
 
-        <TextBlock Grid.Column="1"
-                   HorizontalAlignment="Right"
-                   VerticalAlignment="Bottom"
-                   Text="{Binding UsageTimeTotal}" />
 
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="100" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Column="1"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   FontSize="18"
+                   Text="{Binding RatioOfWorkToLeisure}"
+                   ToolTip="Труд/Отдых" />
       </Grid>
     </Grid>
 

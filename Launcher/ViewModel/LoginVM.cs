@@ -40,21 +40,29 @@ namespace Launcher.ViewModel {
             Administrator admin;
             UserBuilder builder = new JsonUserBuilder(Username);
             admin = new Administrator(builder);
-           
+            int numberOfAttempts = 2;
             while (true) {
                 try {
                     admin.Construct();
                     break;
                 }
-                catch (FileNotFoundException e) {
-                    MessageBoxResult result = MessageBox.Show(e.Message + "\n Продолжить?", "Файлы не найдены!", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.No) {
+                catch (ProjectsNotFoundException e) {
+                    if (numberOfAttempts > 0) {
+                        MessageBoxResult result = MessageBox.Show(e.Message + "Продолжить без них?",
+                            "Проекты не найдены.", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                        if (result == MessageBoxResult.Yes) {
+                            builder.SetProjects();
+                            return builder.GetUser();
+                        }
+
+                        numberOfAttempts--;
+                    }
+                    else {
                         throw new Exception("Не удалось загрузить пользователя.");
                     }
                 }
             }
-
-
 
             User user = builder.GetUser();
             return user;
