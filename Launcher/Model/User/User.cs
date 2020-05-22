@@ -144,13 +144,10 @@ namespace Launcher.Model {
 
             var list = Projects.Select(p => p.ProjectName);
             _listProjects.AddRange(list);
-            /// TODO: добавлять проекты отсутствующие в списке в архив
-            /// или это делать на этапе проверки папки?
         }
         #endregion
 
         #region INotifyPropertyChanged
-        //TODO: delete
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName]string propertyName = "") {
             string sfad = propertyName;
