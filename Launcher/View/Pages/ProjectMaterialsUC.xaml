@@ -77,13 +77,17 @@
                        FontSize="18"
                        FontWeight="Medium" />
             <TextBox Padding="2"
-                     Text="{Binding DataContext.NewMaterialTitle,ElementName=ListMaterials}"
-                     FontSize="18" />
+                     FontSize="18"
+                     Text="{Binding DataContext.NewMaterialTitle,Mode=TwoWay,
+              UpdateSourceTrigger = PropertyChanged, ElementName=ListMaterials}" />
+            
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         Margin="0,5,0,0">
               <Button Padding="10,5,10,5"
                       Content="Rename"
+                      Command="{Binding ElementName=ListMaterials, 
+                Path = DataContext.RenameSelectedMaterialCommand }"
                       FontSize="14" />
             </StackPanel>
 
@@ -91,24 +95,15 @@
                        Margin="20,10,0,0"
                        TextWrapping="Wrap"
                        FontSize="18" />
-            <StackPanel Orientation="Horizontal"
-                        Margin="20,5,0,0"
-                        HorizontalAlignment="Left">
-              <Button Content="Folder" />
-              <Button  Content="File" />
-              <Button Content="Web" />
-              <StackPanel.Resources>
-                <Style TargetType="{x:Type Button}">
-                  <Setter Property="Margin"
-                          Value="0,0,10,0" />
-                  <Setter Property="Padding"
-                          Value="10,0,10,0" />
-                  <Setter Property="FontSize"
-                          Value="14" />
-                </Style>
-              </StackPanel.Resources>
+            <Button Content="Change"
+                    Command="{Binding ElementName=ListMaterials, 
+                Path = DataContext.ChangePathOfSelectedMaterialCommand}"
+                    ToolTip="Измените путь к материалу"
+                    Margin="20,5,10,0"
+                    HorizontalAlignment="Left"
+                    Padding="10,0,10,0"
+                    FontSize="14" />
 
-            </StackPanel>
 
             <Button Content="Delete material"
                     Command="{Binding DataContext.RemoveSelectedMaterialCommand,ElementName=ListMaterials}"
@@ -210,7 +205,7 @@
                Stretch="Fill" />
       </ToggleButton>
     </Grid>
-    
+
     <Grid  Grid.Row="1">
       <ListBox x:Name="ListMaterials"
                Grid.Row="1"
@@ -229,6 +224,6 @@
         </ListBox.ContextMenu>
       </ListBox>
     </Grid>
-   
+
   </Grid>
 </UserControl>
