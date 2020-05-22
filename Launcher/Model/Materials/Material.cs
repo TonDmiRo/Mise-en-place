@@ -13,9 +13,24 @@ namespace Launcher.Model {
         }
         #region prop
         [JsonProperty("Title")]
-        public string MaterialTitle { get; protected set; }
+        public string MaterialTitle {
+            get => _materialTitle;
+            set {
+                if (!string.IsNullOrWhiteSpace(value)) {
+                    //TODO: Какие ещё нужны проверки?
+                    _materialTitle = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         [JsonProperty("Path")]
-        public string PathToMaterial { get; protected set; }
+        public string PathToMaterial {
+            get => _pathToMaterial;
+            protected set {
+                _pathToMaterial = value;
+                OnPropertyChanged();
+            }
+        }
         [JsonProperty("OpensAtLaunch")]
         public bool OpensAtLaunch {
             get => _opensAtLaunch;
@@ -48,7 +63,8 @@ namespace Launcher.Model {
                 throw new Exception("Путь не может быть пустым!");
             }
         }
-       
+
+        public abstract bool ChangePathToMaterial(string newPath);
         public void BlockMaterial() {
             OpensAtLaunch = false;
             Exists = false;
@@ -69,5 +85,7 @@ namespace Launcher.Model {
         #endregion
         private bool _opensAtLaunch;
         private bool _exists;
+        private string _materialTitle;
+        private string _pathToMaterial;
     }
 }
