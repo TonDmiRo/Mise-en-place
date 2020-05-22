@@ -1,13 +1,17 @@
 ﻿using Launcher.Model.SpecificMaterials;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Launcher.Model {
-    class LocalMaterialCreator : MaterialCreator {
+    internal class LocalMaterialCreator : MaterialCreator {
+        public static bool PathIsValid(string PathToMaterial) {
+            if (string.IsNullOrWhiteSpace(PathToMaterial)) { return false; }
+            if (PathToMaterial.IndexOfAny(Path.GetInvalidPathChars()) >= 0) { return false; }
+            if (( !Path.HasExtension(PathToMaterial) && ( !Directory.Exists(PathToMaterial) ) )) { return false; }
+            if (( Path.HasExtension(PathToMaterial) ) && ( !File.Exists(PathToMaterial) )) { return false; }
+            return true;
+        }
+
         protected override Material Create(string title, string path) {
             if (CanCreate(title, path)) {
                 return new LocalMaterial(title, path);
@@ -28,6 +32,6 @@ namespace Launcher.Model {
             return true;
         }
     }
-    
+
 
 }
