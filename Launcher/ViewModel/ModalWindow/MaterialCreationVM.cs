@@ -144,7 +144,7 @@ namespace Launcher.ViewModel.ModalWindow {
 
         public MaterialCreationVM() {
             MaterialTitle = "NewMaterial";
-            PathToMaterial = @"E:\Sources\9 - Библиотека\Справочник\Совершенный код. Стив Макконнелл.pdf";
+            PathToMaterial = System.IO.Directory.GetCurrentDirectory();
             SelectedType = MaterialType.Local;
         }
         #region private
