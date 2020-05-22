@@ -8,7 +8,7 @@ using WinForms = System.Windows.Forms;
 
 namespace Launcher.ViewModel {
 
-    public enum MaterialType {
+    public enum MaterialType1 {
         InvalidType,
         Local,
         ///video:local
@@ -25,14 +25,14 @@ namespace Launcher.ViewModel {
         private Material CreateMaterial() {
             Material material = null;
             switch (MaterialType) {
-                case MaterialType.InvalidType:
+                case MaterialType1.InvalidType:
                     material = null;
                     throw new ArgumentNullException("Вы создали пустой материал!");
                 // break;
-                case MaterialType.Local:
+                case MaterialType1.Local:
                     material = new LocalMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
-                case MaterialType.Web:
+                case MaterialType1.Web:
                     material = new WebMaterialCreator().CreateMaterial(MaterialTitle, PathToMaterial);
                     break;
                 default:
@@ -75,7 +75,7 @@ namespace Launcher.ViewModel {
                 OnPropertyChanged();
             }
         }
-        public MaterialType MaterialType { get; private set; }
+        public MaterialType1 MaterialType { get; private set; }
         #endregion
 
         public MaterialVM() {
@@ -110,10 +110,10 @@ namespace Launcher.ViewModel {
 
             if (titleAndPathNotIsNull && absentInvalidCharacters) {
 
-                if (MaterialType == MaterialType.Local && Directory.Exists(Path.GetDirectoryName(m_path))) {
+                if (MaterialType == MaterialType1.Local && Directory.Exists(Path.GetDirectoryName(m_path))) {
                     return true;
                 }
-                if (MaterialType == MaterialType.Web) {
+                if (MaterialType == MaterialType1.Web) {
                     return true;
                 }
             }
@@ -128,11 +128,11 @@ namespace Launcher.ViewModel {
             WinForms.DialogResult result = folderBrowserPath.ShowDialog();
 
             if (result == WinForms.DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserPath.SelectedPath)) {
-                MaterialType = MaterialType.Local;
+                MaterialType = MaterialType1.Local;
                 PathToMaterial = folderBrowserPath.SelectedPath;
             }
             else {
-                MaterialType = MaterialType.InvalidType;
+                MaterialType = MaterialType1.InvalidType;
                 PathToMaterial = string.Empty;
             }
         }
@@ -147,11 +147,11 @@ namespace Launcher.ViewModel {
             folderBrowserFile = new OpenFileDialog();
 
             if (folderBrowserFile.ShowDialog() == true) {
-                MaterialType = MaterialType.Local;
+                MaterialType = MaterialType1.Local;
                 PathToMaterial = folderBrowserFile.FileName;
             }
             else {
-                MaterialType = MaterialType.InvalidType;
+                MaterialType = MaterialType1.InvalidType;
                 PathToMaterial = string.Empty;
             }
         }
@@ -164,7 +164,7 @@ namespace Launcher.ViewModel {
             //TODO: Сделать проверку существования сайта
             if (true) {
                 PathToMaterial = PathEnteredByUser;
-                MaterialType = MaterialType.Web;
+                MaterialType = MaterialType1.Web;
                 AutomaticPathEntry = true;
             }
             else {

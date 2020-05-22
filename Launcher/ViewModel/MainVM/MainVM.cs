@@ -99,7 +99,7 @@ namespace Launcher.ViewModel {
             // Content
             using (DoingVM viewModel = new DoingVM()) {
                 using (DoingV doingV = new DoingV(viewModel)) {
-                    //TODO: не работает
+                    //TODO: не работает MainV.Hide();
                     doingV.ShowDialog();
                     return viewModel.ElapsedTime;
                 }
@@ -109,8 +109,7 @@ namespace Launcher.ViewModel {
         private ICommand _openPprojectEditorCommand;
         public ICommand OpenPprojectEditorCommand => _openPprojectEditorCommand ?? ( _openPprojectEditorCommand = new RelayCommand(OpenPprojectEditor) );
         private void OpenPprojectEditor(object parameter) {
-            /// TODO:
-            /// Открыть новое окно для редактирования 
+            /// TODO: Открыть новое окно для редактирования 
             /// передаем коллекцию проектов
             /// в этом окне как в примере с авто редактируем не изменяемые значения
 
@@ -169,19 +168,6 @@ namespace Launcher.ViewModel {
             }
         }
         #endregion
-        // TODO: перенести
-        private void CheckExistenceOfMaterials(ReadOnlyObservableCollection<Material> materials) {
-            StringBuilder damagedMaterials = new StringBuilder();
-            foreach (var item in materials) {
-                if (item.Exists != true) {
-                    item.BlockMaterial();
-                    damagedMaterials.AppendLine(item.MaterialTitle);
-                }
-            }
-            if (damagedMaterials.Length > 0) {
-                MessageBox.Show("Список поврежденных материалов:\n" + damagedMaterials);
-            }
-        }
 
         #region private
         private readonly User _user;

@@ -1,12 +1,13 @@
 ﻿using Launcher.Model.SpecificMaterials;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Launcher.Model {
     public class WebMaterialCreator : MaterialCreator {
+        public static bool PathIsValid(string PathToMaterial) {
+            if (string.IsNullOrWhiteSpace(PathToMaterial)) { return false; }
+            //TODO: реализовать проверки
+            return true;
+        }
         protected override Material Create(string title, string path) {
             if (CanCreate(title, path)) {
                 return new WebMaterial(title, path);
@@ -16,7 +17,7 @@ namespace Launcher.Model {
 
         private bool CanCreate(string title, string path) {
             CheckWhiteSpace(title, path);
-            //TODO: реализовать проверка на отклик сайта
+            //TODO: реализовать проверки
             return true;
         }
     }

@@ -78,6 +78,8 @@
     <Compile Include="ViewModel\MainVM\MainVMNavigation.cs" />
     <Compile Include="ViewModel\MainVM\INavigationPage.cs" />
     <Compile Include="ViewModel\BaseClasses\BasePageVM.cs" />
+    <Compile Include="ViewModel\ModalWindow\MaterialCreationVM.cs" />
+    <Compile Include="ViewModel\ModalWindow\MaterialPathEditorVM.cs" />
     <Compile Include="ViewModel\ProjectVM\Pages\ProjectBasePageVM.cs" />
     <Compile Include="ViewModel\ProjectVM\Pages\ProjectMaterialsPageVM.cs" />
     <Compile Include="ViewModel\ProjectVM\Pages\ProjectTasksPageVM.cs" />
@@ -121,6 +123,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ModalWindow\MaterialCreationV.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ModalWindow\MaterialPathEditorV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Pages\ProjectMaterialsUC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,6 +164,13 @@
     <Compile Include="View\Archive\Materials\NewMaterialV.xaml.cs">
       <DependentUpon>NewMaterialV.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ModalWindow\MaterialCreationV.xaml.cs">
+      <DependentUpon>MaterialCreationV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModalWindow\MaterialPathEditorV.xaml.cs">
+      <DependentUpon>MaterialPathEditorV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ModalWindow\MTypeEnumToBoolConverter.cs" />
     <Compile Include="View\Pages\ProjectMaterialsUC.xaml.cs">
       <DependentUpon>ProjectMaterialsUC.xaml</DependentUpon>
     </Compile>
