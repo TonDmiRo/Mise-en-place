@@ -70,9 +70,10 @@ namespace Launcher.ViewModel {
         }
         public string NextLesson {
             get {
-                TimeSpan timeBeforeLesson = ( CurrentProject.NextLesson() - DateTime.Now );
-                bool timeHasCome = timeBeforeLesson < TimeSpan.Zero;
-                return timeHasCome ? "NOW" : CurrentProject.NextLesson().ToString("dd/MM/yyyy");
+                //TimeSpan timeBeforeLesson = ( CurrentProject.NextLesson() - DateTime.Now );
+                //bool timeHasCome = timeBeforeLesson < TimeSpan.Zero;
+                //return timeHasCome ? "NOW" : CurrentProject.NextLesson().ToString("dd/MM/yyyy");
+                return "strign";
             }
         }
 

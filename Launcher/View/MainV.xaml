@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launcher.View"
+        xmlns:converter="clr-namespace:Launcher.View.Converter"
         xmlns:localUC="clr-namespace:Launcher.View.Pages"
         xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
         xmlns:viewmodelUC="clr-namespace:Launcher.ViewModel.Pages"
@@ -16,6 +17,8 @@
         d:DataContext="{d:DesignInstance viewmodel:MainVM, IsDesignTimeCreatable=True}"
         mc:Ignorable="d">
   <Window.Resources>
+    <converter:TimeSpanToTimeConverter x:Key="TimeSpanToTimeConverter" />
+
     <Style x:Key="StartButton"
            TargetType="Button">
       <Setter Property="Margin"
@@ -53,28 +56,18 @@
 
         <StackPanel>
           <StackPanel>
-            <TextBlock Text="{Binding Path=TimeSpentOnProject}"
+            <TextBlock Text="{Binding Path=TimeSpentOnProject,
+              StringFormat=Время проекта: {0},
+          Converter={StaticResource TimeSpanToTimeConverter}}"
                        FontSize="14" />
+            <TextBlock Text="{Binding Path=NextLesson, 
+              StringFormat=Следущий запуск: {0:dd.MM.yyyy}}"
+                       FontSize="14" />
+
           </StackPanel>
-          <TextBlock Text="{Binding Path=ProjectGoal}"
-                     FontSize="16"
-                     TextWrapping="Wrap" />
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Задачи"
-                       FontSize="18" />
-            <Button   Margin="2"
-                      Padding="3"
-                      Content="..."
-                      VerticalContentAlignment="Top" />
-          </StackPanel>
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Материалы"
-                       FontSize="18" />
-            <Button   Margin="2"
-                      Padding="3"
-                      Content="..."
-                      VerticalContentAlignment="Top" />
-          </StackPanel>
+          <TextBox Text="{Binding Path=ProjectGoal}"
+                   FontSize="16"
+                   TextWrapping="Wrap" />
         </StackPanel>
       </StackPanel>
     </DataTemplate>
@@ -90,7 +83,8 @@
         </WrapPanel>
 
         <StackPanel>
-          <TextBlock Text="{Binding Path=TimeSpentOnProject}"
+          <TextBlock Text="{Binding Path=TimeSpentOnProject,
+          Converter={StaticResource TimeSpanToTimeConverter}}"
                      FontSize="14" />
         </StackPanel>
       </StackPanel>
@@ -123,8 +117,7 @@
     </Style>
   </Window.Resources>
 
-  <Grid x:Name="MainGrid"
-        ShowGridLines="True">
+  <Grid x:Name="MainGrid">
     <Grid.ColumnDefinitions>
       <ColumnDefinition x:Name="ColForProjectsSidebar"
                         Width="3*"
@@ -138,51 +131,45 @@
           MinWidth="230"
           Grid.Column="0">
       <Grid.RowDefinitions>
-        <RowDefinition Height="40" />
+        <RowDefinition Height="auto" />
         <RowDefinition Height="*" />
+        <RowDefinition Height="auto" />
         <RowDefinition  Height="40" />
       </Grid.RowDefinitions>
-
-      <Grid x:Name="SearchLine"
-            Grid.Row="0">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="auto " />
-
-        </Grid.ColumnDefinitions>
-
-        <TextBox Text="Поиск..."
-                 Grid.Column="0"
-                 Margin="8"
-                 FontSize="16"
-                 TextAlignment="Left"
-                 VerticalContentAlignment="Center" />
-
-        <ToolBar  Grid.Column="1"
-                  ToolBarTray.IsLocked="True"
-                  Background="{x:Null}">
-
-          <Button Content="Открыть редактор проектов"
-                  ToolBar.OverflowMode="Always"
-                  FontSize="14"
-                  Command="{Binding OpenPprojectEditorCommand}" />
-
-          <Button Content="Добавить новый проект"
-                  ToolBar.OverflowMode="Always"
-                  FontSize="14"
-                  Command="{Binding AddProjectCommand}" />
-        </ToolBar>
-      </Grid>
-
+      <TextBlock Text="Проекты"
+                 VerticalAlignment="Top"
+                 FontSize="21"
+                 FontWeight="DemiBold"
+                 Margin="20,0,0,0"
+                 Grid.Row="0" />
       <ListBox x:Name="ListProjects"
                Grid.Row="1"
                ItemsSource="{Binding Projects,UpdateSourceTrigger=PropertyChanged}"
                SelectedItem="{Binding SelectedProject,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                Style="{StaticResource ListProjectsStyle}">
       </ListBox>
+      <Grid x:Name="ProjectsToolbar"
+            Grid.Row="2">
+        <ToolBar  Grid.Column="1"
+                  ToolBarTray.IsLocked="True"
+                  Background="{x:Null}">
+          <Button Content="Добавить новый проект"
+                  ToolBar.OverflowMode="AsNeeded"
+                  FontSize="14"
+                  Command="{Binding AddProjectCommand}" />
+          <Separator />
+          <Button Content="Открыть редактор проектов"
+                  ToolBar.OverflowMode="AsNeeded"
+                  FontSize="14"
+                  Command="{Binding OpenPprojectEditorCommand}" />
+
+
+        </ToolBar>
+      </Grid>
 
       <Grid x:Name="UserPanel"
-            Grid.Row="2">
+            Margin="0,5,0,0"
+            Grid.Row="3">
         <Grid.ColumnDefinitions>
           <ColumnDefinition Width="100" />
           <ColumnDefinition Width="*" />
@@ -238,6 +225,10 @@
                    ToolBarTray.IsLocked="True"
                    FontSize="18"
                    Background="{x:Null}">
+            <Button x:Name="BackButton"
+                    Visibility="Collapsed"
+                    Content="Back"
+                    Click="BackButton_Click" />
 
             <Button Command="{Binding SwitchPageCommand}"
                     CommandParameter="{x:Static viewmodel:PageNumEnum.First}">

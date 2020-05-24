@@ -39,7 +39,7 @@
   </Window.Style>
 
   <Window.Resources>
-    <convert:TimeSpanToTimeConverter x:Key="myTimeConverter" />
+   
     <!--#region baseStyle-->
     <Style TargetType="{x:Type Control}"
            x:Key="baseStyle">
@@ -193,7 +193,7 @@
                   FlowDirection="RightToLeft"
                   HorizontalAlignment="Right">
         <Label x:Name="nameLb1"
-               Content="{Binding UsageTimeTotal, Converter={StaticResource myTimeConverter}}"
+               Content="{Binding UsageTimeTotal}"
                ContentStringFormat="User in program {0}"
                FontSize="14"
                Height="30" />
