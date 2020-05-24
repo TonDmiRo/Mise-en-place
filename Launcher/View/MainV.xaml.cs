@@ -25,9 +25,12 @@ namespace Launcher.View {
             if (e.NewSize.Width > 640) {
                 if (widthReachedMinSize) {
                     ShowAllGrid();
+                   
                     ColForProjectsSidebar.Width = GridLengthForSidebar;
                     ColForProjectContent.Width = GridLengthForProjectContent;
                     widthReachedMinSize = false;
+
+                    BackButton.Visibility = Visibility.Collapsed;
                 }
             }
             else {
@@ -35,10 +38,13 @@ namespace Launcher.View {
                 if (ListProjects.SelectedItem == null) {
                     ShowOnlyOneGrid(ProjectsSidebar);
                     ShowOnlyOneColumn(ColForProjectsSidebar);
+                    
                 }
                 else {
                     ShowOnlyOneGrid(ProjectContent);
                     ShowOnlyOneColumn(ColForProjectContent);
+
+                    BackButton.Visibility = Visibility.Visible;
                 }
             }
         }
@@ -61,6 +67,12 @@ namespace Launcher.View {
             foreach (UIElement item in MainGrid.Children) {
                 item.Visibility = Visibility.Visible;
             }
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e) {
+            ListProjects.SelectedItem = null;
+            this.Width ++;
+            this.Width --;
         }
     }
 }

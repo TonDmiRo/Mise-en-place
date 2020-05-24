@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Launcher.View"
+        xmlns:converter="clr-namespace:Launcher.View.Converter"
         xmlns:localUC="clr-namespace:Launcher.View.Pages"
         xmlns:viewmodel="clr-namespace:Launcher.ViewModel"
         xmlns:viewmodelUC="clr-namespace:Launcher.ViewModel.Pages"
@@ -16,6 +17,8 @@
         d:DataContext="{d:DesignInstance viewmodel:MainVM, IsDesignTimeCreatable=True}"
         mc:Ignorable="d">
   <Window.Resources>
+    <converter:TimeSpanToTimeConverter x:Key="TimeSpanToTimeConverter" />
+
     <Style x:Key="StartButton"
            TargetType="Button">
       <Setter Property="Margin"
@@ -53,28 +56,18 @@
 
         <StackPanel>
           <StackPanel>
-            <TextBlock Text="{Binding Path=TimeSpentOnProject}"
+            <TextBlock Text="{Binding Path=TimeSpentOnProject,
+              StringFormat=Время проекта: {0},
+          Converter={StaticResource TimeSpanToTimeConverter}}"
                        FontSize="14" />
+            <TextBlock Text="{Binding Path=NextLesson, 
+              StringFormat=Следущий запуск: {0:dd.MM.yyyy}}"
+                       FontSize="14" />
+
           </StackPanel>
-          <TextBlock Text="{Binding Path=ProjectGoal}"
-                     FontSize="16"
-                     TextWrapping="Wrap" />
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Задачи"
-                       FontSize="18" />
-            <Button   Margin="2"
-                      Padding="3"
-                      Content="..."
-                      VerticalContentAlignment="Top" />
-          </StackPanel>
-          <StackPanel Orientation="Horizontal">
-            <TextBlock Text="Материалы"
-                       FontSize="18" />
-            <Button   Margin="2"
-                      Padding="3"
-                      Content="..."
-                      VerticalContentAlignment="Top" />
-          </StackPanel>
+          <TextBox Text="{Binding Path=ProjectGoal}"
+                   FontSize="16"
+                   TextWrapping="Wrap" />
         </StackPanel>
       </StackPanel>
     </DataTemplate>
@@ -90,7 +83,8 @@
         </WrapPanel>
 
         <StackPanel>
-          <TextBlock Text="{Binding Path=TimeSpentOnProject}"
+          <TextBlock Text="{Binding Path=TimeSpentOnProject,
+          Converter={StaticResource TimeSpanToTimeConverter}}"
                      FontSize="14" />
         </StackPanel>
       </StackPanel>
@@ -163,7 +157,7 @@
                   ToolBar.OverflowMode="AsNeeded"
                   FontSize="14"
                   Command="{Binding AddProjectCommand}" />
-
+          <Separator />
           <Button Content="Открыть редактор проектов"
                   ToolBar.OverflowMode="AsNeeded"
                   FontSize="14"
@@ -231,6 +225,10 @@
                    ToolBarTray.IsLocked="True"
                    FontSize="18"
                    Background="{x:Null}">
+            <Button x:Name="BackButton"
+                    Visibility="Collapsed"
+                    Content="Back"
+                    Click="BackButton_Click" />
 
             <Button Command="{Binding SwitchPageCommand}"
                     CommandParameter="{x:Static viewmodel:PageNumEnum.First}">

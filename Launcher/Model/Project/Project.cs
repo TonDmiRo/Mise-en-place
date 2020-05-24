@@ -42,7 +42,12 @@ namespace Launcher.Model {
         public TimeSpan TimeSpentOnProject { get; private set; }
         [JsonProperty("RepeatInterval")]
         public int RepeatInterval { get; set; }
-        public DateTime NextLesson() { return _lastStartTime.Add(TimeSpan.FromDays(RepeatInterval)); }
+        public DateTime NextLesson {
+            get {
+                DateTime date= _lastStartTime.Add(TimeSpan.FromDays(RepeatInterval));
+                return date;
+            }
+        }
         public void IncreaseTimeSpentOnProjectTime(TimeSpan time) {
             if (time < TimeSpan.FromHours(2)) {
                 TimeSpentOnProject += time;
