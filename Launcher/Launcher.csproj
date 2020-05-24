@@ -87,7 +87,7 @@
     <Compile Include="ViewModel\ProjectVM\ProjectEditorVM.cs" />
     <Compile Include="ViewModel\ProjectVM\archive\RemoveProject.cs" />
     <Compile Include="ViewModel\ProjectVM\archive\ProjectReceiver.cs" />
-    <Compile Include="View\Archive\Converter\TimeSpanToTimeConverter.cs" />
+    <Compile Include="View\Converter\TimeSpanToTimeConverter.cs" />
     <Compile Include="Model\Project\Project.cs" />
     <Compile Include="Model\Materials\MaterialCreator.cs" />
     <Compile Include="Model\Materials\Material.cs" />
